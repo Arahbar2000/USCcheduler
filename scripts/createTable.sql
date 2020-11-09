@@ -9,7 +9,7 @@ create table Users
 	lastName varchar(50) not null,
 	firstName varchar(50) not null,
 	email varchar(50) not null,
-	password int not null,
+	password varchar(50) not null,
 	constraint Users_pk
 		primary key (userId)
 );
