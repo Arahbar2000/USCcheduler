@@ -2,13 +2,13 @@ import java.util.ArrayList;
 
 public class User {
 	public String firstName;
-	String lastName;
-	int id;
-	String email;
-	String password;
-	ArrayList<Integer> friends ;
-	ArrayList<Schedule> currentSchedule;
-	Preference prefs;
+	public String lastName;
+	public int id;
+	public String email;
+	public String password;
+	public ArrayList<Integer> friends ;
+	public ArrayList<Schedule> currentSchedule;
+	public Preferences prefs;
 	
 	public User(String firstName,String lastName, int id, String email,	String password)
 	{
@@ -19,5 +19,11 @@ public class User {
 		this.password = password;		
 		
 	}
+	
+	//make preferences, push to table
+	
+	
+	
+	
 
 }
