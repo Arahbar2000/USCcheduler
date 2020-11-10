@@ -1,1 +1,4 @@
 /.metadata/
+scaledFablix/*
+*.iml
+*.idea
