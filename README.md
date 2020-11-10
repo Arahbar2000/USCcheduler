@@ -2,6 +2,10 @@
 
 Now if you run it you should see a blank "This is CSCI 201 Project" page
 
+Remember to change:
+
+1. `FinalProj/web/META-INF/context.xml`: username and password
+
 
 # SQL
 

@@ -14,18 +14,37 @@ create table Users
 		primary key (userId)
 );
 
+#
+# drop table if exists Course;
+# create table Course
+# (
+# 	courseId int not null auto_increment,
+# 	department VARCHAR(50) not null,
+# 	courseNumber int not null,
+# 	startTime varchar(50) not null,
+# 	endTime varchar(50) not null,
+# 	section varchar(50) not null,
+# 	instructor varchar(50) not null,
+# 	units int not null,
+# 	required BOOLEAN not null,
+# 	daysOfWeek varchar(50) not null comment 'use string like "MW"',
+# 	constraint Course_pk
+# 		primary key (courseId)
+# );
+
+
 drop table if exists Course;
 create table Course
 (
-	courseId int not null,
+	courseId int not null auto_increment,
 	department VARCHAR(50) not null,
 	courseNumber int not null,
+    title varchar(50) not null,
 	startTime varchar(50) not null,
 	endTime varchar(50) not null,
 	section varchar(50) not null,
 	instructor varchar(50) not null,
 	units int not null,
-	required BOOLEAN not null,
 	daysOfWeek varchar(50) not null comment 'use string like "MW"',
 	constraint Course_pk
 		primary key (courseId)
