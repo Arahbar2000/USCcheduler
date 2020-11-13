@@ -2,4 +2,4 @@
 scaledFablix/*
 *.iml
 *.idea
-target/*
+*/target/*
