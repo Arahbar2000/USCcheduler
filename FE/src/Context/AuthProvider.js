@@ -61,6 +61,7 @@ const AuthProvider = (props) => {
         await fetch("http://localhost:8080/cs201/api/session", {
             method: "DELETE",
         });
+        alert("Bye!");
         setAuth(false);
     }
 

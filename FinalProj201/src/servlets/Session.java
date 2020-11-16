@@ -1,8 +1,7 @@
-package servelet;
+package servlets;
 
 import com.google.gson.JsonObject;
 
-import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 
@@ -30,7 +29,7 @@ public class Session extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         // allow cors
-        response.addHeader("Access-Control-Allow-Origin", "*");
+//        response.addHeader("Access-Control-Allow-Origin", "*");
         response.setContentType("application/json"); // Response mime type
 
         // write to response
@@ -122,18 +121,26 @@ public class Session extends HttpServlet {
     }
 
     @Override
-    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) {
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         System.out.println("deleting current user session...");
 
         // allow cors
-        resp.addHeader("Access-Control-Allow-Origin", "*");
+//        resp.addHeader("Access-Control-Allow-Origin", "*");
         resp.setContentType("application/json"); // Response mime type
+
+        PrintWriter out = resp.getWriter();
+        JsonObject responseJsonObject = new JsonObject();
+
         Object user = req.getSession().getAttribute("user");
         if (user != null){
             System.out.println("deleted user" + user.toString());
             req.getSession().removeAttribute("user");
+            responseJsonObject.addProperty("message", "deleted user session");
         }
+        else responseJsonObject.addProperty("message", "user session not exist");
+        out.println(responseJsonObject.toString());
         resp.setStatus(200);
+        out.close();
     }
 }
 
