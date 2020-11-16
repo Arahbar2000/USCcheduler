@@ -48,7 +48,6 @@ public class User {
 			conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/cs201", "chris", "1313");
 			st = conn.createStatement();
 
-
 			String insertString = "INSERT INTO Users(firstName, lastName, email, password) values ('" +
 					a.firstName + "','" + a.lastName + "','" + a.email + "','" + a.password+ "')";
 

@@ -15,12 +15,13 @@ import java.sql.ResultSet;
 import java.util.HashMap;
 import java.util.Map;
 
-@WebServlet(name = "LoginServlet", urlPatterns = "/api/courses")
-public class Login extends HttpServlet {
+@WebServlet(name = "CourseServlet", urlPatterns = "/api/courses")
+public class Courses extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
     @Resource(name = "jdbc/cs201")
     private DataSource dataSource;
+
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
@@ -29,8 +30,12 @@ public class Login extends HttpServlet {
         // write to response
         PrintWriter out = response.getWriter();
 
-        String email = request.getParameter("email");
-        String password = request.getParameter("password");
+        String department = request.getParameter("department");
+        int courseNumber = Integer.parseInt(request.getParameter("courseNumber"));
+        // like 'TTh'
+        String days = request.getParameter("days");
+        String startTime = request.getParameter("startTime");
+        String endTime = request.getParameter("endTime");
 
         JsonObject responseJsonObject = new JsonObject();
 
@@ -45,8 +50,8 @@ public class Login extends HttpServlet {
             // Declare our statement
             PreparedStatement statement = dbcon.prepareStatement(query);
 
-            statement.setString(1, email);
-            statement.setString(2, password);
+//            statement.setString(1, email);
+//            statement.setString(2, password);
 
             // Perform the query
             ResultSet rs = statement.executeQuery();
