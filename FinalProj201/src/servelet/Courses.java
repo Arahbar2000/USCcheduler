@@ -1,3 +1,5 @@
+package servelet;
+
 import com.google.gson.JsonObject;
 
 import javax.servlet.annotation.WebServlet;

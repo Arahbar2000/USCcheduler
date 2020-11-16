@@ -1,5 +1,8 @@
+package servelet;
+
 import com.google.gson.JsonObject;
 
+import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 
@@ -15,14 +18,15 @@ import java.sql.ResultSet;
 import java.util.HashMap;
 import java.util.Map;
 
-@WebServlet(name = "LoginServlet", urlPatterns = "/api/login")
-public class Login extends HttpServlet {
+@WebServlet(name = "SessionServlet", urlPatterns = "/api/session")
+public class Session extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
 
     @Resource(name = "jdbc/cs201")
     private DataSource dataSource;
 
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         // allow cors
@@ -114,8 +118,22 @@ public class Login extends HttpServlet {
             }
         }
 
-
         out.close();
+    }
+
+    @Override
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) {
+        System.out.println("deleting current user session...");
+
+        // allow cors
+        resp.addHeader("Access-Control-Allow-Origin", "*");
+        resp.setContentType("application/json"); // Response mime type
+        Object user = req.getSession().getAttribute("user");
+        if (user != null){
+            System.out.println("deleted user" + user.toString());
+            req.getSession().removeAttribute("user");
+        }
+        resp.setStatus(200);
     }
 }
 

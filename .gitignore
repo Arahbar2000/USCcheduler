@@ -7,3 +7,4 @@ scaledFablix/*
 */.classpath
 */.project
 */node_modules/*
+**/*.iml
