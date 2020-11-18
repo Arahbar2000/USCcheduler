@@ -129,9 +129,7 @@ public class Session extends HttpServlet {
         JsonObject responseJsonObject = new JsonObject();
 
         // right now Cors doesn't allow cookies
-//        HttpSession session = req.getSession();
         HttpSession session = req.getSession(false);
-//        Object user = req.getSession().getAttribute("user");
         if (session != null){
             HashMap<String, String> user = (HashMap<String, String>) session.getAttribute("user");
             System.out.println("deleted user" + user.toString());

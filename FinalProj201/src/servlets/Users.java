@@ -24,6 +24,9 @@ public class Users extends HttpServlet{
     @Resource(name = "jdbc/cs201")
     private DataSource dataSource;
 
+    // create new user
+    // TODO
+    // consider duplicate
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
@@ -59,7 +62,6 @@ public class Users extends HttpServlet{
                 out.println(responseJsonObject.toString());
                 stmt.close();
                 resp.setStatus(200);
-
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
                 resp.setStatus(500);

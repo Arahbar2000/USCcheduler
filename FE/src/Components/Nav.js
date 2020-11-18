@@ -87,18 +87,10 @@ const SignUpButton = (props) => {
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
-    // const emailInput = useRef(null);
-    // const passwordInput = useRef(null);
-    const formInput = useRef(null);
-
     const submitForm = (event) => {
         const formdata = new URLSearchParams(new FormData(event.target));
-        // console.log(formdata.toString());
         props.singUp(formdata);
-        // fetch("http://localhost:8080/cs201/api/users",{
-        //     method: "POST",
-        //     body: formdata,
-        // })
+
         handleClose();
         event.preventDefault();
     }
@@ -114,7 +106,7 @@ const SignUpButton = (props) => {
                     <Modal.Title>Please Sign in</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <Form onSubmit={submitForm} ref={formInput}>
+                    <Form onSubmit={submitForm}>
                         <Form.Group controlId="fname">
                             <Form.Label>First Name</Form.Label>
                             <Form.Control type="text" placeholder="Tom" name="fname"

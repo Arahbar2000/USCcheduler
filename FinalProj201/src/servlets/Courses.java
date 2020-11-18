@@ -1,5 +1,7 @@
 package servlets;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import javax.servlet.annotation.WebServlet;
@@ -24,6 +26,7 @@ public class Courses extends HttpServlet {
     @Resource(name = "jdbc/cs201")
     private DataSource dataSource;
 
+    // get courses that satisfy the requirement (return json)
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         response.setContentType("application/json"); // Response mime type
@@ -31,78 +34,75 @@ public class Courses extends HttpServlet {
         // write to response
         PrintWriter out = response.getWriter();
 
+        // assume there would always be department and courseNumber
         String department = request.getParameter("department");
         int courseNumber = Integer.parseInt(request.getParameter("courseNumber"));
         // like 'TTh'
-        String days = request.getParameter("days");
-        String startTime = request.getParameter("startTime");
-        String endTime = request.getParameter("endTime");
+//        String days = request.getParameter("days");
+//        String startTime = request.getParameter("startTime");
+//        String endTime = request.getParameter("endTime");
 
-        JsonObject responseJsonObject = new JsonObject();
-
+        JsonObject respJson = new JsonObject();
         try {
             Connection dbcon = dataSource.getConnection();
 
             String query = "select *\n" +
-                    "from Users\n" +
-                    "where email = ?" +
-                    "and password = ?";
+                    "from Course\n" +
+                    "where department = ?" +
+                    "and courseNumber = ?";
 
             // Declare our statement
             PreparedStatement statement = dbcon.prepareStatement(query);
 
-//            statement.setString(1, email);
-//            statement.setString(2, password);
+            statement.setString(1, department);
+            statement.setInt(2, courseNumber);
 
             // Perform the query
             ResultSet rs = statement.executeQuery();
 
-            System.out.println("getting login");
+            System.out.println("getting courses");
 
-
-            if (rs.next()) {
+            while (rs.next()) {
                 // login success
-                System.out.println("\tlogin success!!");
-                Map<String, String> userInfo = new HashMap<>();
-                userInfo.put("id", rs.getString("userId"));
-                userInfo.put("firstName", rs.getString("firstName"));
-                userInfo.put("lastName", rs.getString("lastName"));
-                userInfo.put("email", rs.getString("email"));
+                JsonObject course = new JsonObject();
+                course.addProperty("department", rs.getString("department"));
+                course.addProperty("courseNumber", rs.getString("courseNumber"));
+                course.addProperty("title", rs.getString("title"));
+                course.addProperty("startTime", rs.getString("startTime"));
+                course.addProperty("endTime", rs.getString("endTime"));
+                course.addProperty("instructor", rs.getString("instructor"));
+                course.addProperty("units", rs.getString("units"));
+                course.addProperty("daysOfWeek", rs.getString("daysOfWeek"));
+                course.addProperty("spots", rs.getString("spots"));
 
-                System.out.println("hello there! \n");
-                for (String k: userInfo.keySet()){
-                    System.out.println("\t " + k + userInfo.get(k));
+                String section = rs.getString("section");
+                if (respJson.has(section)){
+                    JsonArray courses_list = (JsonArray) respJson.get(section);
+                    courses_list.add(course);
                 }
-
-                request.getSession().setAttribute("user", userInfo);
-                request.getSession().setAttribute("employee", "no");
-
-                responseJsonObject.addProperty("status", "success");
-                responseJsonObject.addProperty("message", "success!");
+                else{
+                    JsonArray courses_list = new JsonArray();
+                    courses_list.add(course);
+                    respJson.add(section, courses_list);
+                }
             }
-            else{
-                System.out.println("login fail");
-                responseJsonObject.addProperty("status", "fail");
-                responseJsonObject.addProperty("message", "Invalid email or password. Please try again.");
-            }
-            response.setStatus(200);
-            out.println(responseJsonObject.toString());
             rs.close();
             statement.close();
             dbcon.close();
+            response.setStatus(200);
         }
         catch (Exception e) {
             System.out.println("error");
             e.printStackTrace();
 
             // write error message JSON object to output
-            responseJsonObject.addProperty("status", "fail");
-            responseJsonObject.addProperty("message", e.getMessage());
+            respJson.addProperty("status", "fail");
+            respJson.addProperty("message", e.getMessage());
 
             // set response status to 500 (Internal Server Error)
             response.setStatus(500);
         }
-
+        out.println(respJson.toString());
         out.close();
     }
 }
