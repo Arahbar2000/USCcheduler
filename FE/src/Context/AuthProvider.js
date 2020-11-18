@@ -50,7 +50,8 @@ const AuthProvider = (props) => {
         await fetch("http://localhost:8080/cs201/api/session", {
             method: "POST",
             body: formdata,
-        }).then(response => response.json())
+            })
+            .then(response => response.json())
             .then(data => {
                 console.log(data);
                 if (data.status === "success") {
@@ -71,13 +72,7 @@ const AuthProvider = (props) => {
         await fetch("http://localhost:8080/cs201/api/session", {
             method: "DELETE",
             credentials: 'include',
-        })
-            // .then(data => data.json())
-            // .then(data => {
-            //     console.log(data);
-                // fName = data.user;
-            // });
-        // alert("Bye!" + fName);
+        });
         alert("Bye!");
         setAuth(false);
     }
