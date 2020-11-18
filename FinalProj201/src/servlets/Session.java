@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServlet;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -28,8 +29,6 @@ public class Session extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-        // allow cors
-//        response.addHeader("Access-Control-Allow-Origin", "*");
         response.setContentType("application/json"); // Response mime type
 
         // write to response
@@ -124,20 +123,24 @@ public class Session extends HttpServlet {
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         System.out.println("deleting current user session...");
 
-        // allow cors
-//        resp.addHeader("Access-Control-Allow-Origin", "*");
         resp.setContentType("application/json"); // Response mime type
 
         PrintWriter out = resp.getWriter();
         JsonObject responseJsonObject = new JsonObject();
 
-        Object user = req.getSession().getAttribute("user");
-        if (user != null){
+        // right now Cors doesn't allow cookies
+//        HttpSession session = req.getSession();
+        HttpSession session = req.getSession(false);
+//        Object user = req.getSession().getAttribute("user");
+        if (session != null){
+            HashMap<String, String> user = (HashMap<String, String>) session.getAttribute("user");
             System.out.println("deleted user" + user.toString());
             req.getSession().removeAttribute("user");
+            responseJsonObject.addProperty("user", user.get("firstName"));
             responseJsonObject.addProperty("message", "deleted user session");
         }
         else responseJsonObject.addProperty("message", "user session not exist");
+        System.out.println(responseJsonObject.toString());
         out.println(responseJsonObject.toString());
         resp.setStatus(200);
         out.close();

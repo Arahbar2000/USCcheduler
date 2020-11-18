@@ -9,7 +9,7 @@ const AuthProvider = (props) => {
             method: "POST",
         }).then(response => response.json())
         .then(data => {
-            console.log(data);
+            // console.log(data);
             if (data.status === "success"){
                 setAuth(true);
             }
@@ -30,6 +30,15 @@ const AuthProvider = (props) => {
     const signUp = (data) => {
         // sends form data to signup endpoint of server
         // if successful, sets auth to true
+        fetch("http://localhost:8080/cs201/api/users",{
+            method:"POST",
+            body: data,
+            })
+            .then(resp => resp.json())
+            .then(data => {
+                console.log(data);
+            });
+        setAuth(true);
 
     }
 
@@ -58,9 +67,17 @@ const AuthProvider = (props) => {
 
     const signOut = async () => {
         // sets auth to false and if necessary, communicates with signout endpoint of api to sign out
+        // let fName = "";
         await fetch("http://localhost:8080/cs201/api/session", {
             method: "DELETE",
-        });
+            credentials: 'include',
+        })
+            // .then(data => data.json())
+            // .then(data => {
+            //     console.log(data);
+                // fName = data.user;
+            // });
+        // alert("Bye!" + fName);
         alert("Bye!");
         setAuth(false);
     }

@@ -24,7 +24,6 @@ public class Courses extends HttpServlet {
     @Resource(name = "jdbc/cs201")
     private DataSource dataSource;
 
-
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         response.setContentType("application/json"); // Response mime type
