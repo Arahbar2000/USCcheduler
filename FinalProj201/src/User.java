@@ -23,7 +23,7 @@ public class User {
 		this.email = email;
 		this.password = password;
 
-		//addUserToDB(this);
+		addUserToDB(this);
 	}
 
 	public static void main(String args[]) {
