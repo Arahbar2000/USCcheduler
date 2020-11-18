@@ -30,7 +30,7 @@ def writeData(department, year, filename):
         except Exception:
             print(f"department {dept} is not found!")
             continue
-        # courseID, department, courseNumber, title, startTime, endTime, section, instructors, units, daysOfWeek
+        # courseID, department, courseNumber, title, startTime, endTime, section, instructors, units, daysOfWeek, currentSpots
         for course in response["OfferedCourses"]["course"]:
             try:
                 courseId = course["ScheduledCourseID"]
@@ -38,26 +38,9 @@ def writeData(department, year, filename):
                 print(f"no scheduled class in department {dept}!")
                 break
             course = course["CourseData"]
-            if type(course["SectionData"]) is list:
-                for section in course["SectionData"]:
-                    if "instructor" in section:
-                        instructors = section["instructor"]
-                        # multiple instructors
-                        if type(instructors) is list:
-                            instructor = "&".join([inst["first_name"] + " " + inst["last_name"] for inst in instructors])
-                        else:
-                            instructor = instructors["first_name"] + " " + instructors["last_name"]
-                    else:
-                        instructor = "TBA"
-                    f.write(
-                        f''',{section["id"]}|{dept}|{courseId.split("-")[-1]}|{section["title"]}|'''
-                        f'''{section["start_time"] if "start_time" in section else "TBA"}|'''
-                        f'''{section["end_time"] if "end_time" in section else "TBA"}|{section["type"]}|'''
-                        f'''{instructor}|{section["units"]}|'''
-                        f'''{section["day"] if "day" in section and section["day"] else "TBA"}\n'''
-                    )
-            else:
-                section = course["SectionData"]
+            sections = [course["SectionData"]] if type(course["SectionData"]) is not list else course["SectionData"]
+
+            for section in sections:
                 if "instructor" in section:
                     instructors = section["instructor"]
                     # multiple instructors
@@ -72,8 +55,10 @@ def writeData(department, year, filename):
                     f'''{section["start_time"] if "start_time" in section else "TBA"}|'''
                     f'''{section["end_time"] if "end_time" in section else "TBA"}|{section["type"]}|'''
                     f'''{instructor}|{section["units"]}|'''
-                    f'''{section["day"] if "day" in section and section["day"] else "TBA"}\n'''
+                    f'''{section["day"] if "day" in section and section["day"] else "TBA"}|'''
+                    f'''{section["number_registered"]}/{section["spaces_available"]}\n'''
                 )
+
     f.close()
 
     # get rid of multiple session at different time

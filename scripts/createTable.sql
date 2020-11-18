@@ -46,6 +46,7 @@ create table Course
 	instructor varchar(50) not null,
 	units int not null,
 	daysOfWeek varchar(50) not null comment 'use string like "MW"',
+    spots varchar(50) not null comment 'use string like "3/25"',
 	constraint Course_pk
 		primary key (courseId)
 );
