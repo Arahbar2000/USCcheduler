@@ -1,3 +1,5 @@
+package main;
+
 import java.util.ArrayList;
 
 import java.sql.Connection;
@@ -17,20 +19,22 @@ public class User {
 	public ArrayList<Schedule> currentSchedule;
 	public Preferences prefs;
 
-	public User(String firstName, String lastName, String email, String password) {
+	public User(int id, String firstName, String lastName, String email, String password) {
+		this.id = id;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.email = email;
 		this.password = password;
 
-		addUserToDB(this);
+//		addUserToDB(this);
 	}
+
 
 	public static void main(String args[]) {
 		testAdd();
 	}
 	public static void testAdd() {
-		User test = new User("Joe", "Mo", "test@gmail.com", "supersecret");
+//		User test = new User("Joe", "Mo", "test@gmail.com", "supersecret");
 
 	}
 

@@ -1,3 +1,5 @@
+package main;
+
 import java.time.LocalTime;
 import java.util.ArrayList;
 
@@ -5,27 +7,49 @@ public class Course {
 	
 	public String department;
 	public int courseNumber;
+	public String title;
 	public String daysOfWeek;
 	public LocalTime startTime;
 	public LocalTime endTime;
 	public String sectionType; //"Lec", "Lab", "Qz", "Dis"
 	public String instructor;
 	public int units;
-	public boolean required;
+	public String spots;
 	public boolean []days; //sets true to respective day if section on that day
 	public boolean usedFirst;
-	
-	public Course (String department, int courseNumber, String daysOfWeek, LocalTime startTime, LocalTime endTime,
-			String sectionType, String instructor, int units, boolean required) {
+
+	@Override
+	public String toString() {
+		return "Course{" +
+				"department='" + department + '\'' +
+				", courseNumber=" + courseNumber +
+				", title='" + title + '\'' +
+				", daysOfWeek='" + daysOfWeek + '\'' +
+				", startTime=" + startTime +
+				", endTime=" + endTime +
+				", sectionType='" + sectionType + '\'' +
+				", instructor='" + instructor + '\'' +
+				", units=" + units +
+				", spots='" + spots + '\'' +
+				'}';
+	}
+
+	public Course (String department, int courseNumber,
+				   String title,
+				   String daysOfWeek,
+				   LocalTime startTime, LocalTime endTime,
+				   String sectionType, String instructor, int units, String spots) {
 		this.department = department;
 		this.courseNumber = courseNumber;
+		this.title = title;
 		this.daysOfWeek = daysOfWeek;
 		this.startTime = startTime;
 		this.endTime = endTime;
 		this.sectionType = sectionType;
 		this.instructor = instructor;
 		this.units = units;
-		this.required = required;
+		this.spots = spots;
+
 		this.usedFirst = false;
 		
 		days = new boolean[5];
@@ -64,7 +88,8 @@ public class Course {
 		else
 			return false;
 	}
-	
+
+	// same department & courseNumber & sectionType
 	public boolean sameType(Course other) {
 		
 		if(this.department.equals(other.department) && this.courseNumber == other.courseNumber

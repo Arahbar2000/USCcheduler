@@ -1,3 +1,5 @@
+package main;
+
 import java.util.ArrayList;
 
 public class Schedule {
@@ -6,7 +8,6 @@ public class Schedule {
 	public Schedule() {
 		decidedClasses = new ArrayList<Course>();
 	}
-	
 	
 	public void addCourse(Course c) {
 		decidedClasses.add(c);
