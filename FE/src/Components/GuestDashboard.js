@@ -21,10 +21,17 @@ const GuestDashboard = () => {
   return (
     <div>
       <Form>
+        {" "}
         <Form.Group controlId="class">
           <Form.Label>Add a class:</Form.Label>
           <Form.Control type="text" placeholder="Enter a class e.g. CSCI201" />
         </Form.Group>
+        <Button variant="primary" type="submit">
+          Add
+        </Button>
+      </Form>
+
+      <Form>
         <Form.Group controlId="start">
           <Form.Label>Earliest start time:</Form.Label>
           <Form.Control type="time" />
