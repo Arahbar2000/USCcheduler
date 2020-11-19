@@ -69,12 +69,11 @@ create table Friends
 drop table if exists Schedule;
 create table Schedule
 (
-	courseId int not null,
-	userId int not null,
+    userId int not null,
+    department varchar(50) not null,
+	courseNumber int not null,
 	constraint Schedule_pk
-		primary key (courseId, userId),
-	constraint Schedule_Course_courseId_fk
-		foreign key (courseId) references Course (courseId),
+		primary key (userId, department, courseNumber),
 	constraint Schedule_Users_userId_fk
 		foreign key (userId) references Users (userId)
 );
