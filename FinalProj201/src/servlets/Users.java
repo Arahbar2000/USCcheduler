@@ -18,7 +18,6 @@ import java.sql.SQLException;
 @WebServlet(name = "UsersServlet", urlPatterns = "/api/users")
 public class Users extends HttpServlet{
 
-
     private static final long serialVersionUID = 1L;
 
     @Resource(name = "jdbc/cs201")
@@ -29,7 +28,6 @@ public class Users extends HttpServlet{
     // consider duplicate
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
         resp.setContentType("application/json"); // Response mime type
         PrintWriter out = resp.getWriter();
 
@@ -70,4 +68,5 @@ public class Users extends HttpServlet{
 
         out.close();
     }
+
 }

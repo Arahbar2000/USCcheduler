@@ -9,7 +9,6 @@ public class CreateSchedule {
 	Preferences pref;
 	
 	public CreateSchedule(User user) {
-		
 		this.user = user;
 		all_courses = new ArrayList<Course>();
 		
@@ -58,8 +57,7 @@ public class CreateSchedule {
 		
 		schedule.decidedClasses.removeIf(c -> (!c.sectionType.equals("Lec") 
 				&& !verifyLecture(c, schedule)));
-			
-		return schedule;	
+		return schedule;
 		
 	}
 	
