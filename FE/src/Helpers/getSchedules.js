@@ -55,6 +55,34 @@ const schedulesMock = [
                 sectionType: 'Lec'
             }
         ]
+    },
+    {
+        decidedClasses: [
+            {
+                department: 'CSCI',
+                courseNumber: 201,
+                daysOfWeek: 'MWF',
+                startTime: '12:00',
+                endTime: '14:00',
+                sectionType: 'Lec'
+            },
+            {
+                department: 'CSCI',
+                courseNumber: 270,
+                daysOfWeek: 'TH',
+                startTime: '14:00',
+                endTime: '15:00',
+                sectionType: 'Lec'
+            },
+            {
+                department: 'Stupid-GE',
+                courseNumber: 100,
+                daysOfWeek: 'MWF',
+                startTime: '010:00',
+                endTime: '11:00',
+                sectionType: 'Lec'
+            }
+        ]
     }
 ]
 export const getSchedules2 = () => {

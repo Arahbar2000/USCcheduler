@@ -4,19 +4,24 @@ import timeGridPlugin from '@fullcalendar/timegrid'
 import { getSchedules2 } from '../Helpers/getSchedules'
 
 const Schedule = () => {
-    // useEffect(() => {
-    //     if (localStorage.getItem('schedules') == null) {
-
-    //         localStorage.setItem('schedules') = getSchedules2()
-    //     }
-    //     else {
-
-    //     }
-    // })
     let schedules = getSchedules2();
-    console.log(schedules)
-    const [selectedSchedule, setSchedule] = useState(schedules[0])
-    console.log(selectedSchedule)
+    const [scheduleIndex, setIndex] = useState(0)
+    const handleRightClick = () => {
+        if(scheduleIndex < schedules.length - 1) {
+            setIndex(scheduleIndex + 1)
+        }
+        else {
+            setIndex(0)
+        }
+    }
+    const handleLeftClick = () => {
+        if(scheduleIndex > 0) {
+            setIndex(scheduleIndex - 1)
+        }
+        else {
+            setIndex(schedules.length - 1)
+        }
+    }
     return (
         <FullCalendar
             schedulerLicenseKey={'CC-Attribution-NonCommercial-NoDerivatives'}
@@ -26,10 +31,25 @@ const Schedule = () => {
             initialDate={'2020-12-07'}
             hiddenDays={[0, 6]}
             dayHeaderFormat={{weekday: 'long'}}
-            events={selectedSchedule}
+            events={schedules[scheduleIndex]}
             allDaySlot={false}
             slotMinTime={'07:00:00'}
             slotMaxTime={'22:00:00'}
+            customButtons={{
+                right: {
+                    text: 'Next',
+                    click: handleRightClick
+                },
+                left: {
+                    text: 'Prev',
+                    click: handleLeftClick
+                }
+            }}
+            headerToolbar = {{
+                left: 'left',
+                right: 'right',
+                title: 'title'
+            }}
         />
     );
 }
