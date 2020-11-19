@@ -6,7 +6,7 @@ public class Preferences {
 	public LocalTime startTime;
 	public LocalTime endTime;
 	public int desiredUnits;
-	public ArrayList<Course> extraCurriculars; // Stores time windows that are blocked in user’s schedule
+	public ArrayList<Course> extraCurriculars; // Stores time windows that are blocked in users schedule
 	
 	
 	//User will make preferences, push with their ID and all these preferences

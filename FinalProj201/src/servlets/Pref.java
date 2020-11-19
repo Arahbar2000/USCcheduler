@@ -24,6 +24,11 @@ public class Pref extends HttpServlet {
     @Resource(name = "jdbc/cs201")
     private DataSource dataSource;
 
+    // TODO
+    // 1. I just realized that preference is not only courseName but also starttime & endtime & extra-curriculum,
+    //      can you modify the table?
+    // 2. Also insert the corresponding startime & endtime & extra-curriculum,
+
     // user input preferences
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

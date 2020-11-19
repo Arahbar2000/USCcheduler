@@ -4,7 +4,9 @@ import java.util.Collections;
 public class CreateSchedule {
 	
 	User user;
+	// user's preference courses
 	ArrayList<String> courses;
+	//
 	ArrayList<Course> all_courses;
 	Preferences pref;
 	
