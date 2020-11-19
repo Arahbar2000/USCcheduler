@@ -68,5 +68,129 @@ public class Users extends HttpServlet{
 
         out.close();
     }
+    
+    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+
+		resp.setContentType("application/json"); // Response mime type
+		PrintWriter out = resp.getWriter();
+
+		String email = req.getParameter("email");
+		String password = req.getParameter("password");
+		
+		
+		
+
+		BufferedReader br = new BufferedReader(new InputStreamReader(req.getInputStream()));
+
+		String paramToUpdate = br.readLine();
+
+		JsonObject responseJsonObject = new JsonObject();
+
+		try {
+			Connection dbcon = dataSource.getConnection();
+			
+			String query =  "select *\n" + "from Users\n" + "where email = ?" + "and password = ?";
+
+			
+			// Declare our statement
+			PreparedStatement statement = dbcon.prepareStatement(query);
+
+			statement.setString(1, email);
+			statement.setString(2, password);
+
+			System.out.println(statement);
+
+			// Perform the query
+			ResultSet rs = statement.executeQuery();
+			
+			
+			
+
+			
+			String currId;
+			String currFname;
+			String currLname;
+			String currEmail;
+			
+			while (rs.next()) {
+
+				currId = rs.getString("userId");
+				currFname = rs.getString("firstName");
+				currLname = rs.getString("lastName");
+				currEmail = rs.getString("email");
+			}
+			
+
+			// paramToUpdate must be decided by the String data, which reads the body
+			//have to talk to front end about this
+			
+			//paramToUpdate should be like 'email = newemail@gmail.com'
+			String updateQuery = "UPDATE USERS \n" + "SET " + paramToUpdate + " WHERE firstName = '" + currFname
+					+ "' and lastName = '" + currLname + "';";
+			
+			
+			Statement st =  dbcon.createStatement();
+			st.execute(updateQuery);
+			
+			
+			
+			
+		} catch (Exception e) {
+			System.out.println("error");
+			e.printStackTrace();
+		}
+
+	}
+	
+	protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+		resp.setContentType("application/json"); // Response mime type
+		PrintWriter out = resp.getWriter();
+
+		String email = req.getParameter("email");
+		String password = req.getParameter("password");
+
+		try {
+			Connection dbcon = dataSource.getConnection();
+
+			String query = "select *\n" + "from Users\n" + "where email = ?" + "and password = ?";
+
+			// Declare our statement
+			PreparedStatement statement = dbcon.prepareStatement(query);
+
+			statement.setString(1, email);
+			statement.setString(2, password);
+
+			System.out.println(statement);
+
+			// Perform the query
+			ResultSet rs = statement.executeQuery();
+
+			
+			String currId;
+			String currFname;
+			String currLname;
+			String currEmail;
+			
+			while (rs.next()) {
+
+				currId = rs.getString("userId");
+				currFname = rs.getString("firstName");
+				currLname = rs.getString("lastName");
+				currEmail = rs.getString("email");
+			}
+			
+
+			String updateQuery = "SET SQL_SAFE_UPDATES = 0;" + "DELETE FROM USERS WHERE firstName = '" + currFname + "' and lastName = '"
+					+ currLname + "'";
+			
+			Statement st =  dbcon.createStatement();
+			st.execute(updateQuery);
+			
+
+		} catch (Exception e) {
+			System.out.println("error");
+			e.printStackTrace();
+		}
+	}
 
 }
