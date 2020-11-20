@@ -37,18 +37,19 @@ const Schedule = () => {
             slotMaxTime={'22:00:00'}
             customButtons={{
                 right: {
-                    text: 'Next',
+                    text: 'Next Schedule',
                     click: handleRightClick
                 },
                 left: {
-                    text: 'Prev',
+                    text: 'Prev Schedule',
                     click: handleLeftClick
                 }
             }}
             headerToolbar = {{
-                left: 'left',
-                right: 'right',
-                title: 'title'
+                left: '',
+                right: '',
+                title: 'title',
+                center: 'left right'
             }}
         />
     );

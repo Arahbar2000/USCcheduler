@@ -14,6 +14,10 @@ const UserProvider = () => {
         // must be logged on in order to communicate with database
     }
 
+    const updateUser = () => {
+        
+    }
+
     // All components that nested under this component will have access to these elements, and will be able to call these functions
     return <UserContext.Provider value={{userData, getUser}}/>;
 }
