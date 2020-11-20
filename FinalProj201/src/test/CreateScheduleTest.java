@@ -6,8 +6,8 @@ import main.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -34,11 +34,26 @@ class CreateScheduleTest{
     void TestGetSchedule(){
         for (int i = 1; i < 6; i++){
             List<Schedule> scheduleList = cs.getSchedules(i);
-            assertTrue(scheduleList.stream().allMatch(
+
+            Set<String> unique_courses_name = new HashSet<>();
+            scheduleList.stream().forEach(
                     schedule -> schedule.decidedClasses
                             .stream()
-                            .anyMatch(course -> course.sectionType.equals("Lec"))
-            ));
+                            .filter(course -> unique_courses_name
+                                    .add(course.department+course.courseNumber)
+                            ).collect(Collectors.toList())
+                    );
+            for (String unique_name: unique_courses_name){
+                assertTrue(scheduleList.stream().allMatch(
+                        schedule -> schedule.decidedClasses
+                                .stream()
+                                .anyMatch(course -> course.sectionType.equals("Lec")
+                                        && (course.department + course.courseNumber).equals(unique_name)
+                                )
+                        )
+                );
+            }
+
 
             System.out.println("+++++++" + i + "+++++++");
             printSchedule(scheduleList);

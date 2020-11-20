@@ -12,9 +12,9 @@ public class CreateSchedule {
 
 	User user;
 	// user's classes in table `Schedule`
-	public List<Course> all_courses = new LinkedList<>();
+	public List<Course> all_courses = new ArrayList<>();
 	// user's classes in table `Schedule`, but with TBA startime/endtime
-	public List<Course> TBA_courses = new LinkedList<>();
+	public List<Course> TBA_courses = new ArrayList<>();
 	Preferences pref;
 
 	public CreateSchedule(User user) {
