@@ -28,10 +28,20 @@ public class User {
 		this.lastName = lastName;
 		this.email = email;
 		this.password = password;
-		this.prefs = getUserPref();
+		updatePref();
 	}
 
-	private Preferences getUserPref(){
+	@Override
+	public String toString() {
+		return "User{" +
+				"firstName='" + firstName + '\'' +
+				", lastName='" + lastName + '\'' +
+				", id=" + id +
+				", prefs=" + prefs +
+				'}';
+	}
+
+	public void updatePref(){
 		Preferences pref = null;
 		try (Connection dbcon = DriverManager.getConnection(
 				JDBCCredential.url, JDBCCredential.username, JDBCCredential.password)){
@@ -52,12 +62,12 @@ public class User {
 
 				String startTime = rs.getString("startTime");
 				String endTime = rs.getString("endTime");
-				LocalTime startLocalTime = startTime.equals("") ? null : LocalTime.parse(startTime);
-				LocalTime endLocalTime = endTime.equals("") ? null: LocalTime.parse(endTime);
+				LocalTime startLocalTime = startTime == null ? null : LocalTime.parse(startTime);
+				LocalTime endLocalTime = endTime == null ? null: LocalTime.parse(endTime);
 
 				pref = new Preferences(
 				        // empty list if course_str is null
-						Arrays.asList( courses_str.split(",")),
+						courses_str == null ? null: Arrays.asList( courses_str.split(",\\s*")),
 						startLocalTime,
 						endLocalTime,
 						rs.getInt("desiredUnits")
@@ -65,9 +75,9 @@ public class User {
 
 				String extraCurriculumStr = rs.getString("extraCurriculum");
 				List<Map<String, LocalTime>> extraCurriculum = new ArrayList<>();
-				if (!extraCurriculumStr.equals("")){
+				if (extraCurriculumStr != null){
 					// [{"startTime":08:00, "endTime":10:00}, ... ]
-					for (String times: Arrays.asList(extraCurriculumStr.split(","))){
+					for (String times: Arrays.asList(extraCurriculumStr.split(",\\s*"))){
 						int splitPos = times.indexOf(' ');
 						Map<String, LocalTime> m = new HashMap<>();
 						m.put("startTime", LocalTime.parse(
@@ -88,7 +98,7 @@ public class User {
 			System.out.println("error");
 			e.printStackTrace();
 		}
-		return pref;
+		this.prefs = pref;
 	}
 
 

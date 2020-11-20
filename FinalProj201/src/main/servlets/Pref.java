@@ -89,6 +89,11 @@ public class Pref extends HttpServlet {
                     stmt.setInt(6, user.id);
                     respJson.addProperty("message", "updated");
                 }
+                // update = 0/1
+                else{
+                    resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
+                    return;
+                }
                 stmt.executeUpdate();
 
                 respJson.addProperty("status", "success");
@@ -100,9 +105,10 @@ public class Pref extends HttpServlet {
                 respJson.addProperty("message", "SQL database error");
                 resp.setStatus(500);
             }
+            user.updatePref();
+            System.out.println(user);
         }
         out.println(respJson.toString());
         out.close();
     }
 }
-

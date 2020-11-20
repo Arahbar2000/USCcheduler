@@ -24,4 +24,15 @@ public class Preferences {
 	public void setExtraCurriculum(List<Map<String, LocalTime>> extraCurriculum){
 		this.extraCurriculum = extraCurriculum;
 	}
+
+	@Override
+	public String toString() {
+		return "Preferences{" +
+				"courseList=" + courseList +
+				", startTime=" + startTime +
+				", endTime=" + endTime +
+				", desiredUnits=" + desiredUnits +
+				", extraCurriculum=" + extraCurriculum +
+				'}';
+	}
 }
