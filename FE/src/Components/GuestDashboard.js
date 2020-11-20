@@ -132,8 +132,8 @@ const GuestDashboard = () => {
           Submit
         </Button>
       </Form>
-
-      <h4>Current Courses</h4>
+      <br/>
+      <h4>Current Courses </h4>
       <ul className="list-group">
         {courses.map((course) => (
           <li

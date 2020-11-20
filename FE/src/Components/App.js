@@ -20,7 +20,7 @@ const App = () => {
     <div>
       <Nav />
       <Container>
-        {auth} ? <UserProvider><AuthApp/></UserProvider> : <GuestApp/>
+        {auth ? <UserProvider><AuthApp/></UserProvider> : <GuestApp/>}
       </Container>
     </div>
   )
