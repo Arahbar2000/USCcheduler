@@ -9,3 +9,4 @@ scaledFablix/*
 */.project
 */node_modules/*
 **/*.iml
+/FinalProj201/src/main/JDBCCredential.*
