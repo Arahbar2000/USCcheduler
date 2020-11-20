@@ -1,5 +1,6 @@
 package test;
 
+import main.Course;
 import main.CreateSchedule;
 import main.Schedule;
 import main.User;
@@ -31,12 +32,26 @@ class CreateScheduleTest{
     }
 
     @Test
+    void TestGetStringCourses(){
+        List<Course> courses = CreateSchedule.getStringCourses("CSCI270, CSCI201");
+        assertTrue(
+                courses.stream()
+                        .anyMatch(c -> c.department.equals("CSCI")
+                                && c.courseNumber == 270
+                                && c.sectionType.equals("Lec")
+                        ));
+        assertTrue(
+                courses.stream()
+                        .anyMatch(c -> c.department.equals("CSCI")
+                                && c.courseNumber == 201
+                                && c.sectionType.equals("Lec")
+                        ));
+    }
+
+    @Test
     void TestGetSchedule(){
         for (int i = 1; i < 6; i++){
             List<Schedule> scheduleList = cs.getSchedules(i);
-            System.out.println(
-                    scheduleList.get(0).decidedClasses.stream().collect(
-                            Collectors.groupingBy(course -> course.department + course.courseNumber)).values().stream().flatMap(ls -> ls.stream().limit(1)).collect(Collectors.toList()));
 
             Set<String> unique_courses_name = new HashSet<>();
             scheduleList.stream().forEach(

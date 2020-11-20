@@ -51,7 +51,7 @@ def writeData(department, year, filename):
                 else:
                     instructor = "TBA"
                 f.write(
-                    f''',{section["id"]}|{dept}|{courseId.split("-")[-1]}|{section["title"]}|'''
+                    f'''{section["id"]}|{dept}|{courseId.split("-")[-1]}|{section["title"]}|'''
                     f'''{section["start_time"] if "start_time" in section else "TBA"}|'''
                     f'''{section["end_time"] if "end_time" in section else "TBA"}|{section["type"]}|'''
                     f'''{instructor}|{section["units"]}|'''

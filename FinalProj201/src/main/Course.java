@@ -5,6 +5,7 @@ import java.time.LocalTime;
 public class Course {
 	
 	public String department;
+	public int sectionId;
 	public int courseNumber;
 	public String title;
 	public String daysOfWeek;
@@ -32,11 +33,12 @@ public class Course {
 				'}';
 	}
 
-	public Course (String department, int courseNumber,
+	public Course (int sectionId, String department, int courseNumber,
 				   String title,
 				   String daysOfWeek,
 				   LocalTime startTime, LocalTime endTime,
 				   String sectionType, String instructor, int units, String spots) {
+		this.sectionId = sectionId;
 		this.department = department;
 		this.courseNumber = courseNumber;
 		this.title = title;

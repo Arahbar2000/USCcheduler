@@ -1,59 +1,55 @@
 package main;
 
 
-import jdk.nashorn.internal.scripts.JD;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.time.LocalTime;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class CreateSchedule {
 
 	User user;
 	// user's classes in table `Schedule`
 	public List<Course> all_courses = new ArrayList<>();
-	// user's classes in table `Schedule`, but with TBA startime/endtime
-	public List<Course> TBA_courses = new ArrayList<>();
 	Preferences pref;
 
 	public CreateSchedule(User user) {
 		this.user = user;
-		// assign all_courses & TBA_courses
-		getUserSchedule();
-
-		if (user != null)
-			pref = user.prefs;
+		all_courses = getUserCourses(this.user);
+		pref = user.prefs;
 	}
 
-	private void getUserSchedule() {
+	// fetch courses
+	private static List<Course> getUserCourses(User user) {
+		List<Course> courses = new ArrayList<>();
 		try (Connection dbcon = DriverManager.getConnection(
 				JDBCCredential.url, JDBCCredential.username, JDBCCredential.password)){
-		    String query = "select userId, department, courseNumber, title, startTime, endTime, section, instructor, " +
-					"units, daysOfWeek, spots\n" +
+		    String query = "select userId, courseId, department, courseNumber, title, " +
+					"startTime, endTime, section, instructor, units, daysOfWeek, spots\n" +
 					"from Schedule s natural join Course c\n" +
-					"where s.userId = ?;";
+					"where s.userId = ?\n" +
+					"and startTime != 'TBA'\n" +
+					"and endTime != 'TBA';";
 
 			// Declare our statement
 			PreparedStatement statement = dbcon.prepareStatement(query);
 
-			statement.setInt(1, this.user.id);
+			statement.setInt(1, user.id);
 
 			// Perform the query
 			ResultSet rs = statement.executeQuery();
 
-
 			while (rs.next()) {
-			    String startTime = rs.getString("startTime");
-				String endTime = rs.getString("endTime");
-				LocalTime startLocalTime = startTime.equals("TBA") ? null : LocalTime.parse(startTime);
-				LocalTime endLocalTime = endTime.equals("TBA") ? null: LocalTime.parse(endTime);
+				LocalTime startLocalTime = LocalTime.parse(rs.getString("startTime"));
+				LocalTime endLocalTime = LocalTime.parse(rs.getString("endTime"));
 
-
-				// login success
-                Course c = new Course(rs.getString("department"),
+                Course c = new Course(
+                		rs.getInt("courseId"),
+                		rs.getString("department"),
 						rs.getInt("courseNumber"),
 						rs.getString("title"),
 						rs.getString("daysOfWeek"),
@@ -64,10 +60,8 @@ public class CreateSchedule {
                         rs.getInt("units"),
 						rs.getString("spots")
 						);
-                if (startLocalTime == null || endLocalTime == null)
-                	TBA_courses.add(c);
-                else
-                	all_courses.add(c);
+
+                courses.add(c);
 			}
 			rs.close();
 			statement.close();
@@ -76,6 +70,67 @@ public class CreateSchedule {
 			System.out.println("error");
 			e.printStackTrace();
 		}
+		return courses;
+	}
+
+	// assume courses_str ='CSCI201,CSCI270‘
+	public static List<Course> getStringCourses(String courses_str){
+		List<Course> courses = new ArrayList<>();
+		try (Connection dbcon = DriverManager.getConnection(
+				JDBCCredential.url, JDBCCredential.username, JDBCCredential.password)){
+
+			String query = "select userId, courseId, department, courseNumber, title, startTime," +
+					" endTime, section, instructor, units, daysOfWeek, spots\n" +
+					"from Schedule s natural join Course c\n" +
+					"where department=? and courseNumber=?\n" +
+					"and startTime != 'TBA'\n" +
+					"and endTime != 'TBA';";
+
+			PreparedStatement statement = dbcon.prepareStatement(query);
+			Pattern pat = Pattern.compile("\\d+|\\D+");
+
+			for (String course: courses_str.split(",\\s*")){
+				Matcher match = pat.matcher(course);
+				match.find();
+				String department = match.group();
+				match.find();
+				String courseNumber = match.group();
+				System.out.println(department + courseNumber);
+
+				statement.setString(1, department);
+				statement.setInt(2, Integer.parseInt(courseNumber));
+
+				// Perform the query
+				ResultSet rs = statement.executeQuery();
+
+				while (rs.next()) {
+					LocalTime startLocalTime = LocalTime.parse(rs.getString("startTime"));
+					LocalTime endLocalTime = LocalTime.parse(rs.getString("endTime"));
+
+					Course c = new Course(
+							rs.getInt("courseId"),
+							rs.getString("department"),
+							rs.getInt("courseNumber"),
+							rs.getString("title"),
+							rs.getString("daysOfWeek"),
+							startLocalTime,
+							endLocalTime,
+							rs.getString("section"),
+							rs.getString("instructor"),
+							rs.getInt("units"),
+							rs.getString("spots")
+					);
+					courses.add(c);
+				}
+				rs.close();
+			}
+			statement.close();
+		}
+		catch (Exception e) {
+			System.out.println("error");
+			e.printStackTrace();
+		}
+		return courses;
 	}
 
 
