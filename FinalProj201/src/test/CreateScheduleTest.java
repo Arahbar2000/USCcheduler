@@ -34,6 +34,9 @@ class CreateScheduleTest{
     void TestGetSchedule(){
         for (int i = 1; i < 6; i++){
             List<Schedule> scheduleList = cs.getSchedules(i);
+            System.out.println(
+                    scheduleList.get(0).decidedClasses.stream().collect(
+                            Collectors.groupingBy(course -> course.department + course.courseNumber)).values().stream().flatMap(ls -> ls.stream().limit(1)).collect(Collectors.toList()));
 
             Set<String> unique_courses_name = new HashSet<>();
             scheduleList.stream().forEach(

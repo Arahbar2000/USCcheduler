@@ -159,7 +159,6 @@ public class CreateSchedule {
 			}
 
 			if(add && validSchedule(sched)) {
-				sched.decidedClasses.addAll(TBA_courses);
 				schedules.add(sched);
 			}
 		}
