@@ -1,6 +1,8 @@
 package main;
 
 
+import jdk.nashorn.internal.scripts.JD;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -27,7 +29,8 @@ public class CreateSchedule {
 	}
 
 	private void getUserSchedule() {
-		try (Connection dbcon = DriverManager.getConnection("jdbc:mysql://localhost:3306/cs201", "chris", "1313")){
+		try (Connection dbcon = DriverManager.getConnection(
+				JDBCCredential.url, JDBCCredential.username, JDBCCredential.password)){
 		    String query = "select userId, department, courseNumber, title, startTime, endTime, section, instructor, " +
 					"units, daysOfWeek, spots\n" +
 					"from Schedule s natural join Course c\n" +

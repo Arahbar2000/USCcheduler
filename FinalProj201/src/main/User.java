@@ -33,7 +33,8 @@ public class User {
 
 	private Preferences getUserPref(){
 		Preferences pref = null;
-		try (Connection dbcon = DriverManager.getConnection("jdbc:mysql://localhost:3306/cs201", "chris", "1313")){
+		try (Connection dbcon = DriverManager.getConnection(
+				JDBCCredential.url, JDBCCredential.username, JDBCCredential.password)){
 			String query = "select * " +
 					"from Preferences " +
 					"where userId = ?;";

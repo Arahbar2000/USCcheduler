@@ -4,7 +4,9 @@ Now if you run it you should see a blank "This is CSCI 201 Project" page
 
 Remember to change:
 
-1. `FinalProj/web/META-INF/context.xml`: username and password
+1. `FinalProj201/web/META-INF/context.xml`: username and password
+
+2. `FinalProj201/src/main/JDBCCredential`: username and password
 
 
 # SQL
