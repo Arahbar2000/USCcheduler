@@ -60,8 +60,6 @@ public class Courses extends HttpServlet {
             // Perform the query
             ResultSet rs = statement.executeQuery();
 
-            System.out.println("getting courses");
-
             while (rs.next()) {
                 // login success
                 JsonObject course = new JsonObject();

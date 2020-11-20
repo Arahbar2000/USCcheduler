@@ -2,21 +2,26 @@ package main;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class Preferences {
-	public ArrayList<String> courseList; // unordered list of desired classe NAMES
+	public List<String> courseList; // unordered list of desired classe NAMES
 	public LocalTime startTime;
 	public LocalTime endTime;
 	public int desiredUnits;
-	public ArrayList<Course> extraCurriculars; // Stores time windows that are blocked in users schedule
+	public List<Map<String, LocalTime>> extraCurriculum = new ArrayList<>(); // Stores time windows that are blocked in users schedule
 	
 	
 	//User will make preferences, push with their ID and all these preferences
-	Preferences(ArrayList<String> courseList, LocalTime startTime, LocalTime endTime, int desiredUnits, ArrayList<Course> extraCurriculars){
+	Preferences(List<String> courseList, LocalTime startTime, LocalTime endTime, int desiredUnits ){
 		this.courseList = courseList;
 		this.startTime = startTime;
 		this.endTime = endTime;
 		this.desiredUnits = desiredUnits;
-		this.extraCurriculars = extraCurriculars;
+	}
+
+	public void setExtraCurriculum(List<Map<String, LocalTime>> extraCurriculum){
+		this.extraCurriculum = extraCurriculum;
 	}
 }

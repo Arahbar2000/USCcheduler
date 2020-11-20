@@ -1,38 +1,32 @@
 package main;
 
-import javax.annotation.Resource;
-import javax.sql.DataSource;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class CreateSchedule {
 
 	User user;
-	// user's preference courses
-	List<String> courses;
 	// user's classes in table `Schedule`
-	public List<Course> all_courses;
+	public List<Course> all_courses = new LinkedList<>();
+	// user's classes in table `Schedule`, but with TBA startime/endtime
+	public List<Course> TBA_courses = new LinkedList<>();
 	Preferences pref;
 
 	public CreateSchedule(User user) {
 		this.user = user;
-		all_courses = getUserSchedule(user);
+		// assign all_courses & TBA_courses
+		getUserSchedule();
 
-		if(user != null) {
-			courses = user.prefs.courseList;
+		if (user != null)
 			pref = user.prefs;
-		}
 	}
 
-	private List<Course> getUserSchedule(User user) {
-		List<Course> courses = new LinkedList<>();
+	private void getUserSchedule() {
 		try (Connection dbcon = DriverManager.getConnection("jdbc:mysql://localhost:3306/cs201", "chris", "1313")){
 		    String query = "select userId, department, courseNumber, title, startTime, endTime, section, instructor, " +
 					"units, daysOfWeek, spots\n" +
@@ -42,12 +36,11 @@ public class CreateSchedule {
 			// Declare our statement
 			PreparedStatement statement = dbcon.prepareStatement(query);
 
-			statement.setInt(1, user.id);
+			statement.setInt(1, this.user.id);
 
 			// Perform the query
 			ResultSet rs = statement.executeQuery();
 
-			System.out.println("getting courses");
 
 			while (rs.next()) {
 			    String startTime = rs.getString("startTime");
@@ -68,9 +61,10 @@ public class CreateSchedule {
                         rs.getInt("units"),
 						rs.getString("spots")
 						);
-				System.out.println(c);
-
-                courses.add(c);
+                if (startLocalTime == null || endLocalTime == null)
+                	TBA_courses.add(c);
+                else
+                	all_courses.add(c);
 			}
 			rs.close();
 			statement.close();
@@ -79,95 +73,6 @@ public class CreateSchedule {
 			System.out.println("error");
 			e.printStackTrace();
 		}
-		return courses;
-	}
-
-
-	public ArrayList<Schedule> getSchedules(int n) {
-
-		// remove courses that are 1. not in user's preference
-		// 					   AND 2. already exist a section of same type that meet user's pref
-		all_courses.removeIf(c -> (!meetsPreferences(c) && multipleSections(c)));
-		// now every interchangeable courses are removed
-
-		ArrayList<Schedule> schedules = new ArrayList<Schedule>();
-		int i = 0;
-		while(i++ < n || schedules.isEmpty()) {
-
-			boolean add = true;
-			Schedule sched = makeSchedule();
-			for(Schedule s: schedules) {
-				if(s.equals(sched))
-					add = false;
-			}
-
-			if(add && validSchedule(sched)) {
-				schedules.add(sched);
-
-			}
-
-		}
-		return schedules;
-	}
-
-	//creates 1 schedule
-	private Schedule makeSchedule() {
-
-		Schedule schedule = new Schedule();
-		Collections.shuffle(all_courses);
-
-		for(Course c: all_courses) {
-
-			if(!conflict(c, schedule) && !schedule.typeInSchedule(c))
-				schedule.addCourse(c);
-		}
-
-		schedule.decidedClasses.removeIf(c -> (!c.sectionType.equals("Lec")
-				&& !verifyLecture(c, schedule)));
-		return schedule;
-
-	}
-
-
-	//Checks if course has conflict with already given schedule
-	public boolean conflict(Course c, Schedule s) {
-
-		ArrayList<Course> decided = s.decidedClasses;
-		for(Course other: decided) {
-			if(sameTime(c, other))
-				return true;
-		}
-
-		return false;
-
-	}
-
-
-	//Checks if classes are on same time if they are on same day
-	private boolean sameTime(Course c, Course other) {
-
-		if(sameDay(c, other)) {
-
-			if(c.startTime.equals(other.startTime))
-				return true;
-
-			if(c.startTime.isBefore(other.endTime) && other.startTime.isBefore(c.endTime))
-				return true;
-
-		}
-		return false;
-	}
-
-
-	//Checks if classes are on same day
-	private boolean sameDay(Course c, Course other) {
-
-		for(int i = 0; i < 5; i++) {
-			if(c.days[i] && other.days[i])
-				return true;
-		}
-
-		return false;
 	}
 
 
@@ -183,22 +88,25 @@ public class CreateSchedule {
 		if(c.endTime.isAfter(pref.endTime))
 			return false;
 
-		for(Course other: pref.extraCurriculars) {
-			if(sameTime(c, other))
+		for(Map<String, LocalTime> other: pref.extraCurriculum) {
+			// c is in interval of [s, e]
+			LocalTime s = other.get("startTime");
+			LocalTime e = other.get("endTime");
+
+			if ((s.isBefore(c.endTime) && e.isAfter(c.endTime))
+				|| (s.isBefore(c.startTime) && e.isAfter(c.startTime)))
 				return false;
 		}
 
 		return true;
 	}
 
-	private boolean verifyLecture(Course co, Schedule s) {
-
-		for(Course c: s.decidedClasses) {
-
-			if(c.department.equals(co.department) && c.courseNumber == co.courseNumber
-					&& c.sectionType.equals("Lec"))
-				return true;
-
+	// return T if already exists a valid course of same type and meet user's pref
+	private boolean multipleSections(Course c) {
+		for(Course co: all_courses) {
+			if(co.sameType(c) && meetsPreferences(co))
+			    return true;
+			//EDIT: only remove if other section does not violate, otherwise keep all
 		}
 
 		return false;
@@ -227,24 +135,105 @@ public class CreateSchedule {
 		return true;
 	}
 
-	// return T if already exists a course of same type and meet user's pref
-	private boolean multipleSections(Course c) {
 
-		ArrayList<Course> sameType = new ArrayList<Course>();
-		for(Course co: all_courses) {
-			// same department & courseNumber & sectionType
-			if(co.sameType(c))
-				sameType.add(co);
-			//EDIT: only remove if other section does not violate, otherwise keep all
+	// return at most n schedules
+    // 		each schedule contains valid courses combination (eg. lec + dis + qz)
+	//		also includes TBA sections
+	public ArrayList<Schedule> getSchedules(int n) {
+
+		all_courses.removeIf(c -> (!meetsPreferences(c) && multipleSections(c)));
+		// now every interchangeable courses are removed
+
+		ArrayList<Schedule> schedules = new ArrayList<Schedule>();
+		int i = 0;
+		while(i++ < n || schedules.isEmpty()) {
+
+			boolean add = true;
+			Schedule sched = makeSchedule();
+			for(Schedule s: schedules) {
+				if(s.equals(sched))
+					add = false;
+			}
+
+			if(add && validSchedule(sched)) {
+				sched.decidedClasses.addAll(TBA_courses);
+				schedules.add(sched);
+			}
+		}
+		return schedules;
+	}
+
+	//creates 1 schedule
+	private Schedule makeSchedule() {
+
+		Schedule schedule = new Schedule();
+		// introduce randomness
+		Collections.shuffle(all_courses);
+
+		for(Course c: all_courses) {
+
+			if(!conflict(c, schedule) && !schedule.typeInSchedule(c))
+				schedule.addCourse(c);
 		}
 
-		for(Course co: sameType) {
-			if(meetsPreferences(co))
+		// cleanup, remove classes that are in schedule but have no lec section
+		schedule.decidedClasses.removeIf(c -> (!c.sectionType.equals("Lec")
+				&& !verifyLecture(c, schedule)));
+		return schedule;
+	}
+
+
+	//Checks if course has conflict with already given schedule
+	public boolean conflict(Course c, Schedule s) {
+
+		ArrayList<Course> decided = s.decidedClasses;
+		for(Course other: decided) {
+			if(sameTime(c, other))
 				return true;
 		}
 
 		return false;
 
 	}
+
+
+	//Checks if classes are on same time if they are on same day
+	private boolean sameTime(Course c, Course other) {
+
+		if(sameDay(c, other)) {
+
+			if(c.startTime.equals(other.startTime))
+				return true;
+
+			return c.startTime.isBefore(other.endTime) && other.startTime.isBefore(c.endTime);
+
+		}
+		return false;
+	}
+
+
+	//Checks if classes are on same day
+	private boolean sameDay(Course c, Course other) {
+
+		for(int i = 0; i < 5; i++) {
+			if(c.days[i] && other.days[i])
+				return true;
+		}
+
+		return false;
+	}
+
+	private boolean verifyLecture(Course co, Schedule s) {
+
+		for(Course c: s.decidedClasses) {
+			if(c.department.equals(co.department) && c.courseNumber == co.courseNumber
+					&& c.sectionType.equals("Lec"))
+				return true;
+		}
+
+		return false;
+
+	}
+
 
 }
