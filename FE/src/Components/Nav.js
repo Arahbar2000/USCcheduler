@@ -7,6 +7,7 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import GuestDashboard from "./GuestDashboard";
+import Swal from 'sweetalert2';
 
 const SignInButton = (props) => {
   const [show, setShow] = useState(false);
@@ -26,9 +27,12 @@ const SignInButton = (props) => {
     promise.then((msg) => {
       // not login correctly
       if (msg !== null) {
-        alert(msg);
+        Swal.fire({
+          icon: 'error',
+          text: msg,
+        });
       } else {
-        alert("welcome!");
+          Swal.fire("Welcome!");
       }
     });
     handleClose();

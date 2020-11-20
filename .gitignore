@@ -3,6 +3,7 @@ scaledFablix/*
 *.iml
 *.idea
 */target/*
+**/context.xml
 */.settings/*
 */.classpath
 */.project
