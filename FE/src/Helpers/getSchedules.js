@@ -102,10 +102,8 @@ const generateEvents = (schedules) => {
             for(let i = 0; i < section.daysOfWeek.length; i++) {
                 const start = new Date(DATE_CONVERTER[section.daysOfWeek[i]])
                 start.setHours(section.startTime.split(':')[0], section.startTime.split(':')[1], 0);
-                console.log(start)
                 const end = new Date(DATE_CONVERTER[section.daysOfWeek[i]])
                 end.setHours(section.endTime.split(':')[0], section.endTime.split(':')[1], 0);
-                console.log(end)
                 const title = section.department + section.courseNumber.toString() + '-' + section.sectionType;
                 events.push({
                     id,

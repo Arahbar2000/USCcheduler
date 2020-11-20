@@ -169,11 +169,11 @@ const Nav = (props) => {
   // otherwise, navbar shows signUp and signIn buttons
   return (
     <Navbar>
-      <Navbar.Brand href="#home">Navbar with text</Navbar.Brand>
-      <Link to="/authdashboard">Dashboard</Link>
-      <Route path="/authdashboard" component={GuestDashboard} />
+      <Navbar.Brand href="/">Home</Navbar.Brand>
+      <Link to="/dashboard">Dashboard</Link>
       <Navbar.Toggle />
       <Navbar.Collapse className="justify-content-end">
+        
         {auth ? (
           <Button onClick={signOut}>Sign Out</Button>
         ) : (

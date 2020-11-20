@@ -14,6 +14,9 @@ const AuthProvider = (props) => {
             if (data.status === "success"){
                 setAuth(true);
             }
+        })
+        .catch(error => {
+            console.log(error);
         });
     }
 
@@ -38,12 +41,15 @@ const AuthProvider = (props) => {
             .then(resp => resp.json())
             .then(data => {
                 console.log(data);
+                Swal.fire({
+                    icon: 'success',
+                    text: 'welcome!'
+                });
+                setAuth(true);
+            })
+            .catch(error => {
+                console.log(error);
             });
-        Swal.fire({
-            icon: 'success',
-            text: 'welcome!'
-        })
-        setAuth(true);
     }
 
     const signIn = async (formdata) => {
@@ -66,6 +72,9 @@ const AuthProvider = (props) => {
                     msg = data.message;
                     setAuth(false);
                 }
+            })
+            .catch(error => {
+                console.log(error);
             });
         return msg;
     }
@@ -76,9 +85,11 @@ const AuthProvider = (props) => {
         await fetch("http://localhost:8080/cs201/api/session", {
             method: "DELETE",
             credentials: 'include',
+        })
+        .then(() => {
+            Swal.fire("Bye!");
+            setAuth(false);
         });
-        Swal.fire("Bye!");
-        setAuth(false);
     }
 
     // All components that nested under this component will have access to these elements, and will be able to call these functions

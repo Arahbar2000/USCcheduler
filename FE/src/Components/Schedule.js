@@ -35,7 +35,6 @@ const Schedule = () => {
 
     return (
         <div>
-            Select this schedule as your favorite! <Button variant='primary' onClick={handleSelectFavoriteSchedule}>Select</Button>
             <FullCalendar
                 schedulerLicenseKey={'CC-Attribution-NonCommercial-NoDerivatives'}
                 plugins={[ timeGridPlugin ]}
@@ -56,10 +55,14 @@ const Schedule = () => {
                     left: {
                         text: 'Prev Schedule',
                         click: handleLeftClick
+                    },
+                    select: {
+                        text: 'Select this schedule',
+                        click: handleSelectFavoriteSchedule
                     }
                 }}
                 headerToolbar = {{
-                    left: '',
+                    left: 'select',
                     right: '',
                     title: 'title',
                     center: 'left right'
