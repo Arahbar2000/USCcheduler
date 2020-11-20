@@ -65,14 +65,14 @@ drop table if exists Preferences;
 create table Preferences
 (
 	userId int not null,
-	courseName varchar(50) not null comment 'CS201,CS270',
+	courseName varchar(50) comment 'CS201,CS270',
 	startTime varchar(50) comment 'if not specified TBA',
 	endTime varchar(50) comment 'if not specified TBA',
     extraCurriculum varchar(50) comment '[13:00 14:00],[15:00 17:00]',
     desiredUnits int,
 
 	constraint Takes_pk
-		primary key (userId, courseName,extraCurriculum),
+		primary key (userId),
 	constraint Takes_Users_userId_fk
 		foreign key (userId) references Users (userId)
 );

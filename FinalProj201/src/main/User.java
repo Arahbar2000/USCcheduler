@@ -52,10 +52,11 @@ public class User {
 
 				String startTime = rs.getString("startTime");
 				String endTime = rs.getString("endTime");
-				LocalTime startLocalTime = startTime.equals("TBA") ? null : LocalTime.parse(startTime);
-				LocalTime endLocalTime = endTime.equals("TBA") ? null: LocalTime.parse(endTime);
+				LocalTime startLocalTime = startTime.equals("") ? null : LocalTime.parse(startTime);
+				LocalTime endLocalTime = endTime.equals("") ? null: LocalTime.parse(endTime);
 
 				pref = new Preferences(
+				        // empty list if course_str is null
 						Arrays.asList( courses_str.split(",")),
 						startLocalTime,
 						endLocalTime,
@@ -63,18 +64,20 @@ public class User {
 				);
 
 				String extraCurriculumStr = rs.getString("extraCurriculum");
-				// [{"startTime":08:00, "endTime":10:00}, ... ]
 				List<Map<String, LocalTime>> extraCurriculum = new ArrayList<>();
-				for (String times: Arrays.asList(extraCurriculumStr.split(","))){
-					int splitPos = times.indexOf(' ');
-					Map<String, LocalTime> m = new HashMap<>();
-					m.put("startTime", LocalTime.parse(
-							times.substring(1, splitPos))
-					);
-					m.put("endTime", LocalTime.parse(
-							times.substring(splitPos + 1, times.length() -1))
-					);
-					extraCurriculum.add(m);
+				if (!extraCurriculumStr.equals("")){
+					// [{"startTime":08:00, "endTime":10:00}, ... ]
+					for (String times: Arrays.asList(extraCurriculumStr.split(","))){
+						int splitPos = times.indexOf(' ');
+						Map<String, LocalTime> m = new HashMap<>();
+						m.put("startTime", LocalTime.parse(
+								times.substring(1, splitPos))
+						);
+						m.put("endTime", LocalTime.parse(
+								times.substring(splitPos + 1, times.length() -1))
+						);
+						extraCurriculum.add(m);
+					}
 				}
 				pref.setExtraCurriculum(extraCurriculum);
 			}

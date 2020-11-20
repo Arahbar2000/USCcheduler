@@ -1,6 +1,7 @@
 package main.servlets;
 
 import com.google.gson.JsonObject;
+import main.User;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -76,21 +77,19 @@ public class Session extends HttpServlet {
                 if (rs.next()) {
                     // login success
                     System.out.println("\tlogin success!!");
-                    Map<String, String> userInfo = new HashMap<>();
-                    userInfo.put("id", rs.getString("userId"));
-                    userInfo.put("firstName", rs.getString("firstName"));
-                    userInfo.put("lastName", rs.getString("lastName"));
-                    userInfo.put("email", rs.getString("email"));
-
+                    User user = new User(
+                            rs.getInt("userId"),
+                            rs.getString("firstName"),
+                            rs.getString("lastName"),
+                            rs.getString("email"),
+                            rs.getString("password")
+                    );
                     System.out.println("hello there! \n");
-                    for (String k: userInfo.keySet()){
-                        System.out.println("\t " + k + userInfo.get(k));
-                    }
 
-                    request.getSession().setAttribute("user", userInfo);
+                    request.getSession().setAttribute("user", user);
 
                     responseJsonObject.addProperty("status", "success");
-                    responseJsonObject.addProperty("message", "success!");
+                    responseJsonObject.addProperty("message", "login in success");
                 }
                 else{
                     System.out.println("login fail");
@@ -131,10 +130,10 @@ public class Session extends HttpServlet {
         // right now Cors doesn't allow cookies
         HttpSession session = req.getSession(false);
         if (session != null){
-            HashMap<String, String> user = (HashMap<String, String>) session.getAttribute("user");
+            User user = (User) session.getAttribute("user");
             System.out.println("deleted user" + user.toString());
             req.getSession().removeAttribute("user");
-            responseJsonObject.addProperty("user", user.get("firstName"));
+            responseJsonObject.addProperty("user", user.firstName);
             responseJsonObject.addProperty("message", "deleted user session");
         }
         else responseJsonObject.addProperty("message", "user session not exist");
