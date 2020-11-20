@@ -27,6 +27,7 @@ const DATE_CONVERTER = {
     'F': '2020-12-12'
 }
 
+
 const schedulesMock = [
     {
         decidedClasses: [
@@ -88,7 +89,7 @@ const schedulesMock = [
 export const getSchedules2 = () => {
     return generateEvents(schedulesMock)
 }
-
+const colors = ['blue', 'green', 'purple', 'red', 'yellow', 'orange', 'brown']
 // helper function for getSchedules
 const generateEvents = (schedules) => {
     // parses schedules in order to convert schedules into lists of events that are able to serve as input to calendar component
@@ -96,6 +97,7 @@ const generateEvents = (schedules) => {
     schedules.forEach(schedule => {
         const events = [];
         let id = 0;
+        let colorIndex = 0;
         schedule.decidedClasses.forEach(section => {
             for(let i = 0; i < section.daysOfWeek.length; i++) {
                 const start = new Date(DATE_CONVERTER[section.daysOfWeek[i]])
@@ -109,10 +111,12 @@ const generateEvents = (schedules) => {
                     id,
                     title,
                     start: start,
-                    end: end
+                    end: end,
+                    color: colors[colorIndex % colors.length]
                 })
                 id++;
             }
+            colorIndex++;
         })
         eventSchedules.push(events)
     })
