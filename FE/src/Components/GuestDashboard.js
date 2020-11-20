@@ -75,6 +75,7 @@ const GuestDashboard = () => {
         </Button>
       </Form>
 
+      <h4>Current Courses</h4>
       <ul className="list-group">
         {listItems.map((listitem) => (
           <li
