@@ -1,6 +1,9 @@
 package main;
 
-import java.util.ArrayList;
+import main.servlets.Pref;
+
+import java.time.LocalTime;
+import java.util.*;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -25,8 +28,64 @@ public class User {
 		this.lastName = lastName;
 		this.email = email;
 		this.password = password;
+		this.prefs = getUserPref();
+	}
 
-//		addUserToDB(this);
+	private Preferences getUserPref(){
+		Preferences pref = null;
+		try (Connection dbcon = DriverManager.getConnection(
+				JDBCCredential.url, JDBCCredential.username, JDBCCredential.password)){
+			String query = "select * " +
+					"from Preferences " +
+					"where userId = ?;";
+
+			// Declare our statement
+			PreparedStatement statement = dbcon.prepareStatement(query);
+
+			statement.setInt(1, this.id);
+
+			// Perform the query
+			ResultSet rs = statement.executeQuery();
+
+			while (rs.next()) {
+				String courses_str = rs.getString("courseName");
+
+				String startTime = rs.getString("startTime");
+				String endTime = rs.getString("endTime");
+				LocalTime startLocalTime = startTime.equals("TBA") ? null : LocalTime.parse(startTime);
+				LocalTime endLocalTime = endTime.equals("TBA") ? null: LocalTime.parse(endTime);
+
+				pref = new Preferences(
+						Arrays.asList( courses_str.split(",")),
+						startLocalTime,
+						endLocalTime,
+						rs.getInt("desiredUnits")
+				);
+
+				String extraCurriculumStr = rs.getString("extraCurriculum");
+				// [{"startTime":08:00, "endTime":10:00}, ... ]
+				List<Map<String, LocalTime>> extraCurriculum = new ArrayList<>();
+				for (String times: Arrays.asList(extraCurriculumStr.split(","))){
+					int splitPos = times.indexOf(' ');
+					Map<String, LocalTime> m = new HashMap<>();
+					m.put("startTime", LocalTime.parse(
+							times.substring(1, splitPos))
+					);
+					m.put("endTime", LocalTime.parse(
+							times.substring(splitPos + 1, times.length() -1))
+					);
+					extraCurriculum.add(m);
+				}
+				pref.setExtraCurriculum(extraCurriculum);
+			}
+			rs.close();
+			statement.close();
+		}
+		catch (Exception e) {
+			System.out.println("error");
+			e.printStackTrace();
+		}
+		return pref;
 	}
 
 

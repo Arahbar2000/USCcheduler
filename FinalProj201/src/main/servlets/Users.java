@@ -107,14 +107,11 @@ public class Users extends HttpServlet{
 
 			// Perform the query
 			ResultSet rs = statement.executeQuery();
-			
-			
-			
 
 			
 			String currId;
-			String currFname;
-			String currLname;
+			String currFname = null;
+			String currLname = null;
 			String currEmail;
 			
 			while (rs.next()) {
@@ -136,10 +133,7 @@ public class Users extends HttpServlet{
 			
 			Statement st =  dbcon.createStatement();
 			st.execute(updateQuery);
-			
-			
-			
-			
+
 		} catch (Exception e) {
 			System.out.println("error");
 			e.printStackTrace();
@@ -172,8 +166,8 @@ public class Users extends HttpServlet{
 
 			
 			String currId;
-			String currFname;
-			String currLname;
+			String currFname = null;
+			String currLname = null;
 			String currEmail;
 			
 			while (rs.next()) {
