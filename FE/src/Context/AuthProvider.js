@@ -1,4 +1,5 @@
 import React, {useState, createContext, useContext, useEffect} from 'react';
+import Swal from 'sweetalert2';
 
 const AuthContext = createContext();
 const AuthProvider = (props) => {
@@ -38,8 +39,11 @@ const AuthProvider = (props) => {
             .then(data => {
                 console.log(data);
             });
+        Swal.fire({
+            icon: 'success',
+            text: 'welcome!'
+        })
         setAuth(true);
-
     }
 
     const signIn = async (formdata) => {
@@ -73,7 +77,7 @@ const AuthProvider = (props) => {
             method: "DELETE",
             credentials: 'include',
         });
-        alert("Bye!");
+        Swal.fire("Bye!");
         setAuth(false);
     }
 
