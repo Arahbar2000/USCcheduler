@@ -107,9 +107,6 @@ public class Users extends HttpServlet{
 
 			// Perform the query
 			ResultSet rs = statement.executeQuery();
-			
-			
-			
 
 			
 			String currId;
@@ -136,10 +133,7 @@ public class Users extends HttpServlet{
 			
 			Statement st =  dbcon.createStatement();
 			st.execute(updateQuery);
-			
-			
-			
-			
+
 		} catch (Exception e) {
 			System.out.println("error");
 			e.printStackTrace();

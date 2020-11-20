@@ -1,7 +1,6 @@
 package main;
 
 import java.time.LocalTime;
-import java.util.ArrayList;
 
 public class Course {
 	
@@ -16,7 +15,6 @@ public class Course {
 	public int units;
 	public String spots;
 	public boolean []days; //sets true to respective day if section on that day
-	public boolean usedFirst;
 
 	@Override
 	public String toString() {
@@ -50,8 +48,6 @@ public class Course {
 		this.units = units;
 		this.spots = spots;
 
-		this.usedFirst = false;
-		
 		days = new boolean[5];
 		for(int i = 0; i < days.length; i++)
 			days[i] = false;
@@ -80,23 +76,17 @@ public class Course {
 	}
 	
 	public boolean equals(Course other) {
-		
-		if(this.department.equals(other.department) && this.courseNumber == other.courseNumber &&
+
+		return this.department.equals(other.department) && this.courseNumber == other.courseNumber &&
 				this.daysOfWeek.equals(other.daysOfWeek) && this.startTime.equals(other.startTime) &&
-				this.endTime.equals(other.endTime) && this.instructor.equals(other.instructor))
-			return true;
-		else
-			return false;
+				this.endTime.equals(other.endTime) && this.instructor.equals(other.instructor);
 	}
 
 	// same department & courseNumber & sectionType
 	public boolean sameType(Course other) {
-		
-		if(this.department.equals(other.department) && this.courseNumber == other.courseNumber
-				&& this.sectionType.equals(other.sectionType))
-			return true;
-		
-		return false;
+
+		return this.department.equals(other.department) && this.courseNumber == other.courseNumber
+				&& this.sectionType.equals(other.sectionType);
 	}
 
 
