@@ -113,8 +113,8 @@ public class Users extends HttpServlet{
 
 			
 			String currId;
-			String currFname;
-			String currLname;
+			String currFname = null;
+			String currLname = null;
 			String currEmail;
 			
 			while (rs.next()) {
@@ -172,8 +172,8 @@ public class Users extends HttpServlet{
 
 			
 			String currId;
-			String currFname;
-			String currLname;
+			String currFname = null;
+			String currLname = null;
 			String currEmail;
 			
 			while (rs.next()) {
