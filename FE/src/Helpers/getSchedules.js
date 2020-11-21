@@ -10,7 +10,7 @@ export const getSchedules = () => {
         })
         .then(response => {
             // if server call is successfull, generates calendar compatible events and generates a new promise with the events
-            resolve(generateEvents(response.data.schedules))
+            resolve(generateSchedules(response.data.schedules))
         })
         .catch(error => {
             // if server responded with an error, handle this
@@ -86,25 +86,24 @@ const schedulesMock = [
         ]
     }
 ]
-export const getSchedules2 = () => {
-    return generateEvents(schedulesMock)
-}
-const colors = ['blue', 'green', 'purple', 'red', 'yellow', 'orange', 'brown']
+
+const colors = ['blue', 'green', 'purple', 'red', 'orange', 'brown']
 // helper function for getSchedules
-const generateEvents = (schedules) => {
+export const generateSchedules = (schedules) => {
     // parses schedules in order to convert schedules into lists of events that are able to serve as input to calendar component
     const eventSchedules = []
     schedules.forEach(schedule => {
         const events = [];
-        let id = 0;
         let colorIndex = 0;
-        schedule.decidedClasses.forEach(section => {
+        schedule.forEach(section => {
+            console.log("processing schedules")
             for(let i = 0; i < section.daysOfWeek.length; i++) {
+                const id = section.sectionId;
                 const start = new Date(DATE_CONVERTER[section.daysOfWeek[i]])
-                start.setHours(section.startTime.split(':')[0], section.startTime.split(':')[1], 0);
+                start.setHours(section.startTime.hour, section.startTime.minute, 0);
                 const end = new Date(DATE_CONVERTER[section.daysOfWeek[i]])
-                end.setHours(section.endTime.split(':')[0], section.endTime.split(':')[1], 0);
-                const title = section.department + section.courseNumber.toString() + '-' + section.sectionType;
+                end.setHours(section.endTime.hour, section.endTime.minute, 0);
+                const title = section.department + section.courseNumber.toString() + '-' + section.sectionType + '-' + section.sectionId;
                 events.push({
                     id,
                     title,
@@ -112,7 +111,6 @@ const generateEvents = (schedules) => {
                     end: end,
                     color: colors[colorIndex % colors.length]
                 })
-                id++;
             }
             colorIndex++;
         })

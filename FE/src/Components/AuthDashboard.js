@@ -7,6 +7,7 @@ import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import ListGroup from "react-bootstrap/ListGroup"
 import { API_URL } from '../env'
+import { generateSchedules } from '../Helpers/getSchedules'
 
 const AuthDashboard = () => {
     // displays current chosen courses
@@ -181,8 +182,15 @@ const AuthDashboard = () => {
         credentials: 'include'
       })
       .then(response => response.json())
-      .then(response => {
-        console.log(response);
+      .then(schedules => {
+        // response.forEach(schedule => {
+        //   schedule.forEach(section => {
+        //     console.log(section);
+        //   })
+        // })
+        const allEvents = generateSchedules(schedules);
+        localStorage.setItem("events", JSON.stringify(allEvents));
+
       })
       .catch(error => {
         console.log(error);
