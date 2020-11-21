@@ -1,12 +1,13 @@
 import React, {useState, createContext, useContext, useEffect} from 'react';
 import Swal from 'sweetalert2';
+import { API_URL } from '../env'
 
 const AuthContext = createContext();
 const AuthProvider = (props) => {
     const [auth, setAuth] = useState(false)
 
     let checkIsLogined = async () => {
-        await fetch("http://localhost:8080/cs201/api/session", {
+        await fetch(API_URL + "session", {
             method: "POST",
         }).then(response => response.json())
         .then(data => {
@@ -31,16 +32,17 @@ const AuthProvider = (props) => {
         // return () => setAuth(false);
     });
 
-    const signUp = (data) => {
+    const signUp = ({ fname, lname, email, password }) => {
         // sends form data to signup endpoint of server
         // if successful, sets auth to true
-        fetch("http://localhost:8080/cs201/api/users",{
-            method:"POST",
-            body: data,
+        const url = new URL(API_URL + 'users');
+        url.search = new URLSearchParams({fname, lname, email, password})
+        fetch(url,{
+            method:"POST"
             })
             .then(resp => resp.json())
             .then(data => {
-                console.log(data);
+                console.log(data)
                 Swal.fire({
                     icon: 'success',
                     text: 'welcome!'
@@ -52,14 +54,15 @@ const AuthProvider = (props) => {
             });
     }
 
-    const signIn = async (formdata) => {
+    const signIn = async ({ email, password }) => {
         // sends form data to signin endpoint of server
         // if successful, sets auth to true
         let msg = null;
-
-        await fetch("http://localhost:8080/cs201/api/session", {
-            method: "POST",
-            body: formdata,
+        const url = new URL(API_URL + "session");
+        console.log(email, password)
+        url.search = new URLSearchParams({ email, password })
+        await fetch(url, {
+            method: "POST"
             })
             .then(response => response.json())
             .then(data => {
@@ -82,7 +85,7 @@ const AuthProvider = (props) => {
     const signOut = async () => {
         // sets auth to false and if necessary, communicates with signout endpoint of api to sign out
         // let fName = "";
-        await fetch("http://localhost:8080/cs201/api/session", {
+        await fetch(API_URL + "session", {
             method: "DELETE",
             credentials: 'include',
         })

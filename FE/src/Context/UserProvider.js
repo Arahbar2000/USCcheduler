@@ -1,5 +1,5 @@
 import React, {useState, createContext, useContext, useEffect} from 'react';
-
+import { API_URL } from '../env'
 const UserContext = createContext();
 const UserProvider = () => {
     const [userProfile, setUser ] = useState({
@@ -22,7 +22,7 @@ const UserProvider = () => {
     const getUser = async () => {
         // gets the user information from the server database
         // must be logged on in order to communicate with database
-        await fetch("http://localhost:8080/cs201/api/users", {
+        await fetch(API_URL + "users", {
             method: "GET",
         }).then(response => response.json())
         .then(data => {

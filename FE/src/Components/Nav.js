@@ -8,6 +8,7 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import GuestDashboard from "./GuestDashboard";
 import Swal from 'sweetalert2';
+import { API_URL } from "../env";
 
 const SignInButton = (props) => {
   const [show, setShow] = useState(false);
@@ -19,11 +20,11 @@ const SignInButton = (props) => {
   const passwordInput = useRef(null);
 
   const submitForm = (event) => {
-    let formdata = new URLSearchParams();
-    formdata.append("email", emailInput.current.value);
-    formdata.append("password", passwordInput.current.value);
+    event.preventDefault();
+    const email = emailInput.current.value;
+    const password = passwordInput.current.value;
 
-    let promise = props.signin(formdata);
+    let promise = props.signIn({ email, password });
     promise.then((msg) => {
       // not login correctly
       if (msg !== null) {
@@ -35,8 +36,7 @@ const SignInButton = (props) => {
           Swal.fire("Welcome!");
       }
     });
-    handleClose();
-    event.preventDefault();
+    // handleClose();
   };
 
   return (
@@ -95,12 +95,19 @@ const SignUpButton = (props) => {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-  const submitForm = (event) => {
-    const formdata = new URLSearchParams(new FormData(event.target));
-    props.singUp(formdata);
+  const fnameInput = useRef(null);
+  const lnameInput = useRef(null);
+  const emailInput = useRef(null);
+  const passwordInput = useRef(null);
 
-    handleClose();
+  const submitForm = (event) => {
     event.preventDefault();
+    const fname = fnameInput.current.value;
+    const lname = lnameInput.current.value;
+    const email = emailInput.current.value;
+    const password = emailInput.current.value;
+    props.singUp({ fname, lname, email, password });
+    handleClose();
   };
 
   return (
@@ -117,11 +124,11 @@ const SignUpButton = (props) => {
           <Form onSubmit={submitForm}>
             <Form.Group controlId="fname">
               <Form.Label>First Name</Form.Label>
-              <Form.Control type="text" placeholder="Tom" name="fname" />
+              <Form.Control type="text" placeholder="Tom" name="fname" ref={fnameInput} />
             </Form.Group>
             <Form.Group controlId="lname">
               <Form.Label>Last Name</Form.Label>
-              <Form.Control type="text" placeholder="Trojan" name="lname" />
+              <Form.Control type="text" placeholder="Trojan" name="lname" ref={lnameInput} />
             </Form.Group>
 
             <Form.Group controlId="Email">
@@ -130,6 +137,7 @@ const SignUpButton = (props) => {
                 type="email"
                 placeholder="Enter email"
                 name="email"
+                ref={emailInput}
               />
               <Form.Text className="text-muted">
                 Login in with usc email
@@ -142,6 +150,7 @@ const SignUpButton = (props) => {
                 type="password"
                 placeholder="Password"
                 name="password"
+                ref={passwordInput}
               />
             </Form.Group>
 
@@ -180,7 +189,7 @@ const Nav = (props) => {
           <>
             <SignUpButton singUp={signUp} />
             &nbsp;&nbsp;&nbsp;
-            <SignInButton signin={signIn} />
+            <SignInButton signIn={signIn} />
           </>
         )}
       </Navbar.Collapse>
