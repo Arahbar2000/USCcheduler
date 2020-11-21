@@ -8,6 +8,8 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 
 import main.User;
+import main.JDBCCredential;
+import java.sql.DriverManager;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -32,6 +34,12 @@ public class Courses extends HttpServlet {
 
     // get courses that satisfy the requirement (return json)
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+        }
+        catch(ClassNotFoundException e) {
+
+        }
 
         response.setContentType("application/json"); // Response mime type
 
@@ -41,12 +49,14 @@ public class Courses extends HttpServlet {
         // assume there would always be department and courseNumber
         String department = request.getParameter("department");
         int courseNumber = Integer.parseInt(request.getParameter("courseNumber"));
+        System.out.println(department);
+        System.out.println(courseNumber);
 
         JsonObject respJson = new JsonObject();
         User user = (User) request.getSession().getAttribute("user");
         try {
-            Connection dbcon = dataSource.getConnection();
-
+            // Connection dbcon = dataSource.getConnection();
+            Connection dbcon = DriverManager.getConnection(JDBCCredential.url, JDBCCredential.username, JDBCCredential.password);
             String query = "SELECT *\n" +
                     "FROM Course\n" +
                     "WHERE department = ?" +
@@ -78,7 +88,7 @@ public class Courses extends HttpServlet {
                 respJson.addProperty("message", "inserted");
                 response.setStatus(200);
             }
-            else response.setStatus(404);//course does not exist
+            else response.setStatus(500);//course does not exist
 
             rs.close();
             statement.close();
@@ -105,19 +115,29 @@ public class Courses extends HttpServlet {
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("application/json"); // Response mime type
         PrintWriter out = response.getWriter();
+        // try {
+        //     Class.forName("com.mysql.jdbc.Driver");
+        // }
+        // catch(ClassNotFoundException e) {
+
+        // }
 
         JsonObject respJson = new JsonObject();
         User user = (User) request.getSession().getAttribute("user");
+        System.out.println("TRYING TO REMOVE A COURSE");
         if (user == null) {//not logged in
+            System.out.println("USER IS NULL");
             respJson.addProperty("status", "error");
             respJson.addProperty("message", "user if not logged in");
             response.setStatus(500);
         }
         else{//user is logged in
-            try (Connection dbcon = dataSource.getConnection()) {
+            try {
+                Connection dbcon = DriverManager.getConnection(JDBCCredential.url, JDBCCredential.username, JDBCCredential.password);
                 String department = request.getParameter("department");
                 int courseNumber = Integer.parseInt(request.getParameter("courseNumber"));
-
+                System.out.println(department);
+                System.out.println(courseNumber);
                 String query = "SELECT * FROM Schedule WHERE userId = ? AND department = ? AND courseNumber = ?";
 
                 // Declare our statement
@@ -138,7 +158,7 @@ public class Courses extends HttpServlet {
                     statement = dbcon.prepareStatement(query);
                     statement.setInt(1, user.id);
                     statement.setString(2, department);
-                    statement.setInt(2, courseNumber);
+                    statement.setInt(3, courseNumber);
                     statement.executeUpdate();
                     respJson.addProperty("message", "deleted");
                     user.updatePref();
@@ -147,6 +167,7 @@ public class Courses extends HttpServlet {
                 statement.close();
                 response.setStatus(200);
             } catch (SQLException throwables){
+                System.out.println("SQL ERROR");
                 throwables.printStackTrace();
                 respJson.addProperty("status", "error");
                 respJson.addProperty("message", "SQL database error");
