@@ -48,9 +48,9 @@ const AuthDashboard = (props) => {
     event.preventDefault();
     // given a course, communicates with the server to check if course is valid
     // if valid, display course on dashboard add to courses, and save to localStorage
-    const courseName = event.target.elements.add.value.toUpperCase();
-    const department = courseName.slice(0, 4);
-    const courseNumber = parseInt(courseName.slice(4, courseName.length));
+    const courseName = event.target.elements.add.value.toUpperCase().split(" ");
+    const department = courseName[0];
+    const courseNumber = parseInt(courseName[1]);
     verifyCourse(department, courseNumber, true)
     .then(() => {
       alert("Valid Course!");
@@ -92,9 +92,9 @@ const AuthDashboard = (props) => {
 
   const removeCourse = (event) => {
     event.preventDefault();
-    const courseName = event.target.elements.remove.value.toUpperCase();
-    const department = courseName.slice(0, 4);
-    const courseNumber = parseInt(courseName.slice(4, courseName.length));
+    const courseName = event.target.elements.remove.value.toUpperCase().split(" ");
+    const department = courseName[0];
+    const courseNumber = parseInt(courseName[1]);
     // given a course, removes course from list of courses
     verifyCourse(department, courseNumber, false)
     .then(() => {
@@ -228,7 +228,8 @@ const AuthDashboard = (props) => {
           {" "}
           <Form.Group controlId="add">
           <Form.Label>Add a class:</Form.Label>
-          <Form.Control type="text" placeholder="Enter a class e.g. CSCI201" />
+          <Form.Control type="text" placeholder="Enter a class e.g. CSCI 201" />
+          <Form.Text>Make sure there is a space between department and course number</Form.Text>
         </Form.Group>
         <Button variant="primary" type="submit">
           Add
@@ -240,7 +241,8 @@ const AuthDashboard = (props) => {
         {" "}
         <Form.Group controlId="remove">
           <Form.Label>Remove a class:</Form.Label>
-          <Form.Control type="text" placeholder="Enter a class e.g. CSCI201" />
+          <Form.Control type="text" placeholder="Enter a class e.g. CSCI 201" />
+          <Form.Text>Make sure there is a space between department and course number</Form.Text>
         </Form.Group>
         <Button variant="primary" type="submit">
           Remove
