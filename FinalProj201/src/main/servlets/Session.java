@@ -1,6 +1,8 @@
 package main.servlets;
 
 import com.google.gson.JsonObject;
+
+import main.JDBCCredential;
 import main.User;
 
 import javax.servlet.annotation.WebServlet;
@@ -18,6 +20,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.HashMap;
 import java.util.Map;
+import java.sql.DriverManager;
 
 @WebServlet(name = "SessionServlet", urlPatterns = "/api/session")
 public class Session extends HttpServlet {
@@ -32,11 +35,19 @@ public class Session extends HttpServlet {
 
         response.setContentType("application/json"); // Response mime type
 
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
         // write to response
         PrintWriter out = response.getWriter();
-
+        System.out.println("SIGNIN REQUEST:");
         String email = request.getParameter("email");
         String password = request.getParameter("password");
+        System.out.println(email);
+        System.out.println(password);
 
         JsonObject responseJsonObject = new JsonObject();
 
@@ -54,7 +65,14 @@ public class Session extends HttpServlet {
         }
         else{
             try {
-                Connection dbcon = dataSource.getConnection();
+                Class.forName("com.mysql.cj.jdbc.Driver");
+            } catch (ClassNotFoundException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            try {
+                Connection dbcon = DriverManager.getConnection(
+				JDBCCredential.url, JDBCCredential.username, JDBCCredential.password);
 
                 String query = "select *\n" +
                         "from Users\n" +
