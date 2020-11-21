@@ -20,6 +20,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.HashMap;
 import java.util.Map;
+import javax.servlet.ServletException;
+import java.sql.SQLException;
 
 @WebServlet(name = "CourseServlet", urlPatterns = "/api/courses")
 public class Courses extends HttpServlet {
@@ -101,7 +103,7 @@ public class Courses extends HttpServlet {
 
 
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        resp.setContentType("application/json"); // Response mime type
+        response.setContentType("application/json"); // Response mime type
         PrintWriter out = response.getWriter();
 
         JsonObject respJson = new JsonObject();
