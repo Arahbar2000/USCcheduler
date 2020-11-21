@@ -8,8 +8,9 @@ import Row from "react-bootstrap/Row";
 import ListGroup from "react-bootstrap/ListGroup"
 import { API_URL } from '../env'
 import { generateSchedules } from '../Helpers/getSchedules'
+import { isPropsEqual } from "@fullcalendar/react";
 
-const AuthDashboard = () => {
+const AuthDashboard = (props) => {
     // displays current chosen courses
   // allows user to add new courses
   // saves course preferences in localStorage so that preferences don't get deleted later on
@@ -196,6 +197,7 @@ const AuthDashboard = () => {
         // })
         const allEvents = generateSchedules(schedules);
         localStorage.setItem("events", JSON.stringify(allEvents));
+        props.history.push('/')
 
       })
       .catch(error => {
