@@ -2,11 +2,7 @@ package main.servlets;
 
 import com.google.gson.JsonObject;
 
-<<<<<<< HEAD
 import main.JDBCCredential;
-=======
-import main.*;
->>>>>>> af3d656d82469570897c66cbb4af3d8fb4d67117
 import main.User;
 
 import javax.servlet.annotation.WebServlet;
@@ -75,7 +71,6 @@ public class Session extends HttpServlet {
         }
         else{
             try {
-<<<<<<< HEAD
                 Class.forName("com.mysql.cj.jdbc.Driver");
             } catch (ClassNotFoundException e) {
                 // TODO Auto-generated catch block
@@ -84,10 +79,6 @@ public class Session extends HttpServlet {
             try {
                 Connection dbcon = DriverManager.getConnection(
 				JDBCCredential.url, JDBCCredential.username, JDBCCredential.password);
-=======
-                Connection dbcon = DriverManager.getConnection(
-        				JDBCCredential.url, JDBCCredential.username, JDBCCredential.password);
->>>>>>> af3d656d82469570897c66cbb4af3d8fb4d67117
 
                 String query = "select *\n" +
                         "from Users\n" +

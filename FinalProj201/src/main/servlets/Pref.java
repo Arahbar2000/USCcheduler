@@ -46,8 +46,6 @@ public class Pref extends HttpServlet {
         // if logged in
         else {
             // Null if not provided
-            // eg. CSCI201,CSCI270
-            String courseName = req.getParameter("courseName");
             // eg. 08:00
             String startTime = req.getParameter("startTime");
             String endTime = req.getParameter("endTime");
