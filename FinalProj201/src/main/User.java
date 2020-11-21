@@ -121,7 +121,8 @@ public class User {
 		ResultSet rs = null;
 
 		try {
-			conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/cs201", "chris", "1313");
+			conn = DriverManager.getConnection(JDBCCredential.url, JDBCCredential.username, 
+					JDBCCredential.password);
 			st = conn.createStatement();
 
 

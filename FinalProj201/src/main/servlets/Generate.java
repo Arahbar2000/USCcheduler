@@ -1,6 +1,11 @@
 package main.servlets;
 
+import main.User;
+import main.CreateSchedule;
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonParser;
 
 import main.Course;
 import main.CreateSchedule;
@@ -38,28 +43,27 @@ public class Generate extends HttpServlet {
 
 		// write to response
 		PrintWriter out = response.getWriter();
+		User user = (User) request.getSession().getAttribute("user");
 
-		String email = request.getParameter("email");
-		String password = request.getParameter("password");
+		CreateSchedule mySch = new CreateSchedule(user);
 
-		@SuppressWarnings("unchecked")
-		HashMap<String, String> userMap = (HashMap<String, String>) request.getSession().getAttribute("user");
+		ArrayList<Schedule> genSchedulesList = mySch.getSchedules(15);
+		Gson gson = new Gson();
 
-		int userID = Integer.parseInt(userMap.get("userId"));
-
-		// parameter is user object
-//		CreateSchedule mySch = new CreateSchedule(userID);
-
-//		ArrayList<Schedule> genSchedulesList = mySch.getSchedule(15);
-
-//		JsonObject jsonToReturn = new JsonObject();
-//
-//		for (Schedule s : genSchedulesList) {
-//			for (Course c : s) {
-//
-//			}
-//		}
-
+		JsonArray packet = new JsonArray();
+		for (Schedule s : genSchedulesList) {
+			JsonArray courseList = new JsonArray();
+			for (Course c : s.decidedClasses) {
+				
+				JsonObject course = new JsonParser().parse(gson.toJson(c, Course.class)).getAsJsonObject();
+				courseList.add(course);
+			}
+			packet.add(courseList);
+		}
+		
+		out.println(packet.toString());
+		out.close();
+		
 	}
 
 }
