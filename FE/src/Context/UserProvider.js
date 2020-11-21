@@ -1,7 +1,7 @@
 import React, {useState, createContext, useContext, useEffect} from 'react';
 import { API_URL } from '../env'
 const UserContext = createContext();
-const UserProvider = () => {
+const UserProvider = (props) => {
     const [userProfile, setUser ] = useState({
         firstName: null,
         lastName: null,
@@ -16,7 +16,7 @@ const UserProvider = () => {
 
     useEffect(() => {
         // this function is called everytime the browser is refreshed
-        getUser();
+        // getUser();
     });
 
     const getUser = async () => {
@@ -35,7 +35,7 @@ const UserProvider = () => {
     }
 
     // All components that nested under this component will have access to these elements, and will be able to call these functions
-    return <UserContext.Provider value={{userProfile, courses, preferences, getUser}}/>;
+    return <UserContext.Provider value={{userProfile, courses, preferences, getUser}} {...props}/>;
 }
 
 // useAuth returns an object containing the elements in the provider

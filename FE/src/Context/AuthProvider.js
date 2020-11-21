@@ -7,6 +7,7 @@ const AuthProvider = (props) => {
     const [auth, setAuth] = useState(false)
 
     let checkIsLogined = async () => {
+        console.log("checking if logged in");
         await fetch(API_URL + "session", {
             method: "POST",
         }).then(response => response.json())
@@ -14,6 +15,9 @@ const AuthProvider = (props) => {
             // console.log(data);
             if (data.status === "success"){
                 setAuth(true);
+            }
+            else {
+                console.log(data);
             }
         })
         .catch(error => {
@@ -30,7 +34,7 @@ const AuthProvider = (props) => {
         }
         // cleanup auth
         // return () => setAuth(false);
-    });
+    }, []);
 
     const signUp = ({ fname, lname, email, password }) => {
         // sends form data to signup endpoint of server

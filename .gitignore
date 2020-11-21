@@ -4,6 +4,7 @@ scaledFablix/*
 *.idea
 */target/*
 **/context.xml
+**/.vscode
 */.settings/*
 */.classpath
 */.project

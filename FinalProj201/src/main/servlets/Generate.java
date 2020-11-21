@@ -62,7 +62,8 @@ public class Generate extends HttpServlet {
 		}
 		
 		out.println(packet.toString());
-
+		out.close();
+		
 	}
 
 }

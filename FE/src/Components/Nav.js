@@ -105,7 +105,7 @@ const SignUpButton = (props) => {
     const fname = fnameInput.current.value;
     const lname = lnameInput.current.value;
     const email = emailInput.current.value;
-    const password = emailInput.current.value;
+    const password = password.current.value;
     props.singUp({ fname, lname, email, password });
     handleClose();
   };
