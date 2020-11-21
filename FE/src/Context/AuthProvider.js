@@ -40,7 +40,8 @@ const AuthProvider = (props) => {
         const url = new URL(API_URL + 'users');
         url.search = new URLSearchParams({fname, lname, email, password})
         fetch(url,{
-            method:"POST"
+            method:"POST",
+            credentials: 'include'
             })
             .then(resp => resp.json())
             .then(data => {

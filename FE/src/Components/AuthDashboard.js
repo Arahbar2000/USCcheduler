@@ -35,7 +35,7 @@ const AuthDashboard = () => {
     const courseName = event.target.elements.add.value.toUpperCase();
     const department = courseName.slice(0, 4);
     const courseNumber = parseInt(courseName.slice(4, courseName.length));
-    verifyCourse(department, courseNumber)
+    verifyCourse(department, courseNumber, true)
     .then(() => {
       // add course to storage
       let coursesData = JSON.parse(localStorage.getItem("courses"));
@@ -53,18 +53,19 @@ const AuthDashboard = () => {
     });
   };
 
-  const verifyCourse = async (department, courseNumber) => {
-    const url = new URL("http://localhost:8080/cs201/api/courses")
+  const verifyCourse = async (department, courseNumber, add) => {
+    const url = new URL("http://localhost:8080/CS201/api/courses")
     url.search = new URLSearchParams({department, courseNumber})
     await fetch(url, {
-            method: "GET",
+            method: add ? "GET": "DELETE",
+            credentials: 'include'
         }).then(response => response.json())
         .then(() => {
             return true;
         })
         .catch(() => {
           // testing purposes, later change to false
-            return true;
+            return false;
         });
   };
 
@@ -74,11 +75,12 @@ const AuthDashboard = () => {
     const department = courseName.slice(0, 4);
     const courseNumber = parseInt(courseName.slice(4, courseName.length));
     // given a course, removes course from list of courses
-    let coursesData = JSON.parse(localStorage.getItem("courses"))
-    if (coursesData == null) {
-      alert("You currently do not have any courses");
-    }
-    else {
+    verifyCourse(department, courseNumber, false)
+    .then(() => {
+      let coursesData = JSON.parse(localStorage.getItem("courses"))
+      if ( coursesData == null ) {
+        alert("You currently do not have any courses");
+      }
       let notFound = true;
       for(let i = 0; i < courses.length; i++) {
         if (coursesData[i].department == department 
@@ -93,7 +95,9 @@ const AuthDashboard = () => {
       if (notFound) {
         alert("Course does not exist");
       }
-    }
+    }).catch(error => {
+      alert("Course does not exist")
+    })
   };
 
   const addExtracurricular = (event) => {
