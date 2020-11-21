@@ -164,11 +164,17 @@ const AuthDashboard = () => {
     const generateURL = new URL(API_URL + "generate");
     const extracurriculars = JSON.parse(localStorage.getItem("extracurriculars"))
     let extracurriculum = "";
-    extracurriculars.forEach(extracurricular => {
-      const strFormat = JSON.stringify(extracurricular) + ",";
-      extracurriculum += strFormat;
-    })
-    extracurriculum = extracurriculum.slice(0, -1)
+    if (extracurriculars != null) {
+      extracurriculars.forEach(extracurricular => {
+        const strFormat = JSON.stringify(extracurricular) + ",";
+        extracurriculum += strFormat;
+      })
+      extracurriculum = extracurriculum.slice(0, -1)
+    }
+    else {
+      extracurriculum = null;
+    }
+    
     const startTime = localStorage.getItem("startTime");
     const endTime = localStorage.getItem("endTime");
     prefURL.search = new URLSearchParams({startTime, endTime, extracurriculum})
