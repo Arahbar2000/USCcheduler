@@ -9,6 +9,7 @@ const AuthProvider = (props) => {
     let checkIsLogined = async () => {
         await fetch(API_URL + "session", {
             method: "POST",
+            credentials: 'include'
         }).then(response => response.json())
         .then(data => {
             console.log(data);
@@ -63,7 +64,8 @@ const AuthProvider = (props) => {
         console.log(email, password)
         url.search = new URLSearchParams({ email, password })
         await fetch(url, {
-            method: "POST"
+            method: "POST",
+            credentials: 'include'
             })
             .then(response => response.json())
             .then(data => {

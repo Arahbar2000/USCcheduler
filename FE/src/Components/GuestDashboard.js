@@ -95,6 +95,18 @@ const GuestDashboard = () => {
     }
   };
 
+  const addExtracurricular = (event) => {
+      event.preventDefault();
+      const start = event.target.elements.start.value;
+      const end = event.target.elements.end.value;
+      console.log(start);
+      console.log(end);
+  }
+
+  const addStartTime = () => {
+
+  }
+
   return (
     <div>
       <Form onSubmit={addCourse}>
@@ -116,6 +128,20 @@ const GuestDashboard = () => {
         </Form.Group>
         <Button variant="primary" type="submit">
           Remove
+        </Button>
+      </Form>
+
+      <Form onSubmit={addExtracurricular}>
+        <Form.Group controlId="start">
+          <Form.Label>Extracurricular start time:</Form.Label>
+          <Form.Control type="time" />
+        </Form.Group>
+        <Form.Group controlId="end">
+          <Form.Label>Extracurricular end time:</Form.Label>
+          <Form.Control type="time" />
+        </Form.Group>
+        <Button variant="primary" type="submit">
+          Submit
         </Button>
       </Form>
 

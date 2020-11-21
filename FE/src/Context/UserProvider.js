@@ -22,12 +22,14 @@ const UserProvider = (props) => {
     const getUser = async () => {
         // gets the user information from the server database
         // must be logged on in order to communicate with database
-        await fetch(API_URL + "users", {
+        await fetch(API_URL + "profile", {
             method: "GET",
+            credentials: 'include'
         }).then(response => response.json())
         .then(data => {
             // calls setUser, setCourses, and setPreferences
             // waiting on response format from backend
+            console.log(data);
         })
         .catch(error => {
             console.log(error)
