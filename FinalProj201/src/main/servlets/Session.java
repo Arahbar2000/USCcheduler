@@ -1,6 +1,8 @@
 package main.servlets;
 
 import com.google.gson.JsonObject;
+
+import main.*;
 import main.User;
 
 import javax.servlet.annotation.WebServlet;
@@ -14,6 +16,7 @@ import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.HashMap;
@@ -39,22 +42,28 @@ public class Session extends HttpServlet {
         String password = request.getParameter("password");
 
         JsonObject responseJsonObject = new JsonObject();
+        JsonObject userProfile = new JsonObject();
 
         if (email == null && password == null){
-            if (request.getSession().getAttribute("user") != null){
+        	User user = (User) request.getSession().getAttribute("user");
+            if (user != null){
+            	
                 System.out.println("already login in");
                 responseJsonObject.addProperty("status", "success");
                 responseJsonObject.addProperty("message", "already login in");
+                
             }
             else{
                 responseJsonObject.addProperty("status", "error");
                 responseJsonObject.addProperty("message", "not logined in");
             }
-            out.println(responseJsonObject.toString());
+            userProfile = getUserProfile(user);
+            out.println(userProfile.toString());
         }
         else{
             try {
-                Connection dbcon = dataSource.getConnection();
+                Connection dbcon = DriverManager.getConnection(
+        				JDBCCredential.url, JDBCCredential.username, JDBCCredential.password);
 
                 String query = "select *\n" +
                         "from Users\n" +
@@ -85,6 +94,7 @@ public class Session extends HttpServlet {
                             rs.getString("password")
                     );
                     System.out.println("hello there! \n");
+                    userProfile = getUserProfile(user);
 
                     request.getSession().setAttribute("user", user);
 
@@ -97,7 +107,7 @@ public class Session extends HttpServlet {
                     responseJsonObject.addProperty("message", "Invalid email or password. Please try again.");
                 }
                 response.setStatus(200);
-                out.println(responseJsonObject.toString());
+                out.println(userProfile.toString());
                 rs.close();
                 statement.close();
                 dbcon.close();
@@ -116,6 +126,32 @@ public class Session extends HttpServlet {
         }
 
         out.close();
+    }
+    
+    private JsonObject getUserProfile(User user) {
+    	
+    	JsonObject profile = new JsonObject();
+    	if(user == null)
+    		return profile;
+    	
+    	profile.addProperty("Fname", user.firstName);
+    	profile.addProperty("Lname", user.lastName);
+    	profile.addProperty("Email", user.email);
+    	profile.addProperty("ID", user.id);
+    	profile.addProperty("StartTime", user.prefs.startTime.toString());
+    	profile.addProperty("Endtime", user.prefs.endTime.toString());
+    	String courses = "";
+    	for(int i = 0; i < user.prefs.courseList.size(); i++) {
+    		String c = user.prefs.courseList.get(i);
+    		
+    		courses += c;
+    		if(i != user.prefs.courseList.size()-1) {
+    			courses += ",";
+    		} 
+    		
+    	}
+    	return profile;
+    	
     }
 
     @Override
