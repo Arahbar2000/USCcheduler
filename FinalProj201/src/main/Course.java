@@ -1,6 +1,7 @@
 package main;
 
 import java.time.LocalTime;
+import java.util.Arrays;
 
 public class Course {
 	
@@ -51,8 +52,7 @@ public class Course {
 		this.spots = spots;
 
 		days = new boolean[5];
-		for(int i = 0; i < days.length; i++)
-			days[i] = false;
+		Arrays.fill(days, false);
 		
 		parseDays();
 	}

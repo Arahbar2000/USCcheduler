@@ -58,8 +58,6 @@ public class User {
 			ResultSet rs = statement.executeQuery();
 
 			while (rs.next()) {
-				String courses_str = rs.getString("courseName");
-
 				String startTime = rs.getString("startTime");
 				String endTime = rs.getString("endTime");
 				LocalTime startLocalTime = startTime == null ? null : LocalTime.parse(startTime);
@@ -67,7 +65,6 @@ public class User {
 
 				pref = new Preferences(
 				        // empty list if course_str is null
-						courses_str == null ? null: Arrays.asList( courses_str.split(",\\s*")),
 						startLocalTime,
 						endLocalTime,
 						rs.getInt("desiredUnits")
@@ -90,9 +87,29 @@ public class User {
 					}
 				}
 				pref.setExtraCurriculum(extraCurriculum);
+
 			}
 			rs.close();
 			statement.close();
+
+			if (pref != null){
+				// get pref::courseList from schedule table
+				query = "select * from Schedule where userId = ?;";
+				statement = dbcon.prepareStatement(query);
+				statement.setInt(1, this.id);
+
+				// Perform the query
+				rs = statement.executeQuery();
+				List<String> courseList = new ArrayList<>();
+
+				while (rs.next()) {
+					courseList.add(rs.getString("department") + rs.getInt("courseNumber"));
+				}
+				pref.setCourseList(courseList);
+
+				rs.close();
+				statement.close();
+			}
 		}
 		catch (Exception e) {
 			System.out.println("error");
@@ -100,7 +117,6 @@ public class User {
 		}
 		this.prefs = pref;
 	}
-
 
 	public static void main(String args[]) {
 		testAdd();

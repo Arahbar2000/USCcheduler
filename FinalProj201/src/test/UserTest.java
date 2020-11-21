@@ -25,9 +25,10 @@ public class UserTest {
 
     @Test
     void TestPref(){
-        assertArrayEquals(user.prefs.courseList.toArray(), new String[]{"CSCI270", "CSCI201"});
         assertEquals(user.prefs.desiredUnits, 18);
         assertEquals(user.prefs.extraCurriculum.size(), 2);
         assertTrue(user.prefs.extraCurriculum.stream().anyMatch(m -> m.containsValue(LocalTime.parse("08:00"))));
+        assertTrue(user.prefs.courseList.stream().anyMatch(s -> s.equals("CSCI201")));
+        assertTrue(user.prefs.courseList.stream().anyMatch(s -> s.equals("CSCI270")));
     }
 }

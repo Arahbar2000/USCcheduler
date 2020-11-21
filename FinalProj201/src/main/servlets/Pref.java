@@ -58,35 +58,33 @@ public class Pref extends HttpServlet {
                 // insert db
                 else if (update.equals("0")) {
                     String query =
-                            "INSERT INTO Preferences(userId, courseName, startTime, endTime, extraCurriculum, desiredUnits)\n" +
-                                    "VALUES (?,?,?,?,?,?);\n";
+                            "INSERT INTO Preferences(userId, startTime, endTime, extraCurriculum, desiredUnits)\n" +
+                                    "VALUES (?,?,?,?,?);\n";
                     stmt = dbcon.prepareStatement(query);
 
                     stmt.setInt(1, user.id);
                     // use setObject to insert NULL if object == null
-                    stmt.setObject(2, courseName);
-                    stmt.setObject(3, startTime);
-                    stmt.setObject(4, endTime);
-                    stmt.setObject(5, extraCurriculum);
-                    stmt.setObject(6, desiredUnits);
+                    stmt.setObject(2, startTime);
+                    stmt.setObject(3, endTime);
+                    stmt.setObject(4, extraCurriculum);
+                    stmt.setObject(5, desiredUnits);
                     respJson.addProperty("message", "inserted");
                 }
                 // update db
                 else if (update.equals("1")) {
                     String query =
                             "UPDATE Preferences\n" +
-                                    "   SET courseName = ?, startTime=?, endTime=?, extraCurriculum = ?, desiredUnits=?\n" +
+                                    "   SET startTime=?, endTime=?, extraCurriculum = ?, desiredUnits=?\n" +
                                     "WHERE userId = ?";
                     stmt = dbcon.prepareStatement(query);
 
                     // use setObject to insert NULL if object == null
-                    stmt.setObject(1, courseName);
-                    stmt.setObject(2, startTime);
-                    stmt.setObject(3, endTime);
-                    stmt.setObject(4, extraCurriculum);
-                    stmt.setObject(5, desiredUnits);
+                    stmt.setObject(1, startTime);
+                    stmt.setObject(2, endTime);
+                    stmt.setObject(3, extraCurriculum);
+                    stmt.setObject(4, desiredUnits);
 
-                    stmt.setInt(6, user.id);
+                    stmt.setInt(5, user.id);
                     respJson.addProperty("message", "updated");
                 }
                 // update = 0/1

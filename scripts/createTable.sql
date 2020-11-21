@@ -48,6 +48,7 @@ create table Friends
 );
 
 
+# the classes user wants to take
 drop table if exists Schedule;
 create table Schedule
 (
@@ -60,20 +61,32 @@ create table Schedule
 		foreign key (userId) references Users (userId)
 );
 
+# the classes user takes
+drop table if exists Takes;
+create table Takes
+(
+    userId int not null,
+    courseId int not null,
+    constraint takes_pk
+        primary key (userId, courseId),
+    constraint Takes_Users_userId_fk
+        foreign key (userId) references Users (userId),
+    constraint Takes_Courses_courseId_fk
+        foreign key (courseId) references Course (courseId)
+);
 
 drop table if exists Preferences;
 create table Preferences
 (
 	userId int not null,
-	courseName varchar(50) comment 'CS201,CS270',
 	startTime varchar(50) comment 'if not specified TBA',
 	endTime varchar(50) comment 'if not specified TBA',
     extraCurriculum varchar(50) comment '[13:00 14:00],[15:00 17:00]',
     desiredUnits int,
 
-	constraint Takes_pk
+	constraint Preferences_pk
 		primary key (userId),
-	constraint Takes_Users_userId_fk
+	constraint Preferences_Users_userId_fk
 		foreign key (userId) references Users (userId)
 );
 
