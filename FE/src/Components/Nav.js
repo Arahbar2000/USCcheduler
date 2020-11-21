@@ -36,7 +36,7 @@ const SignInButton = (props) => {
           Swal.fire("Welcome!");
       }
     });
-    // handleClose();
+    handleClose();
   };
 
   return (

@@ -11,9 +11,10 @@ const AuthProvider = (props) => {
             method: "POST",
         }).then(response => response.json())
         .then(data => {
-            // console.log(data);
+            console.log(data);
             if (data.status === "success"){
                 setAuth(true);
+                console.log('is logged in');
             }
         })
         .catch(error => {
