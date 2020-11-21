@@ -16,6 +16,7 @@ import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -103,4 +104,33 @@ public class Courses extends HttpServlet {
         out.println(respJson.toString());
         out.close();
     }
+    
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+		resp.setContentType("application/json"); // Response mime type
+		PrintWriter out = resp.getWriter();
+
+		
+		//assumed get this data from request
+        String department = req.getParameter("department");
+        int courseNumber = Integer.parseInt(req.getParameter("courseNumber"));
+        
+
+		try {
+			Connection dbcon = dataSource.getConnection();
+
+
+			String updateQuery = "SET SQL_SAFE_UPDATES = 0;" + "DELETE FROM COURSES WHERE department = '" + department + "' and courseNumber = '"
+					+ courseNumber + "'";
+			
+			Statement st =  dbcon.createStatement();
+			st.execute(updateQuery);
+
+			
+
+		} catch (Exception e) {
+			System.out.println("error");
+			e.printStackTrace();
+		}
+	}
+
 }
