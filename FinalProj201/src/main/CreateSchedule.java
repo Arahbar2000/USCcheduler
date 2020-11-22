@@ -24,6 +24,13 @@ public class CreateSchedule {
 		pref = user.prefs;
 
 	}
+	
+	//Guest Constructor
+	public CreateSchedule(List<Course> courses, Preferences prefs_) {
+		this.user = null;
+		all_courses = courses;
+		pref = prefs_;
+	}
 
 	// fetch courses
 	private static List<Course> getUserCourses(User user) {
