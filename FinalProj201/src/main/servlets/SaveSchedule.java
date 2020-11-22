@@ -31,12 +31,12 @@ public class SaveSchedule extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// try {
-        //     Class.forName("com.mysql.jdbc.Driver");
-        // }
-        // catch(ClassNotFoundException e) {
+		try {
+            Class.forName("com.mysql.jdbc.Driver");
+        }
+        catch(ClassNotFoundException e) {
 
-        // }
+        }
 		// TODO Auto-generated method stub
 		JsonArray schedule = new JsonArray();
 		User user = (User) request.getSession().getAttribute("user");
@@ -50,7 +50,7 @@ public class SaveSchedule extends HttpServlet {
 		    String query = "select courseId, department, courseNumber, title, " +
 					"startTime, endTime, section, instructor, units, daysOfWeek, spots\n" +
 					"from Takes t natural join Course c\n" +
-					"where s.userId = ?;";
+					"where t.userId = ?;";
 		    
 			PreparedStatement statement = dbcon.prepareStatement(query);
 			statement.setInt(1, user.id);
@@ -78,6 +78,7 @@ public class SaveSchedule extends HttpServlet {
 			out.println(schedule.toString());
 			
 		} catch (SQLException sqlE) {
+			System.out.println(sqlE);
 			System.out.println("SQL Exception");
 		}
 		
@@ -88,12 +89,12 @@ public class SaveSchedule extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// try {
-        //     Class.forName("com.mysql.jdbc.Driver");
-        // }
-        // catch(ClassNotFoundException e) {
+		try {
+            Class.forName("com.mysql.jdbc.Driver");
+        }
+        catch(ClassNotFoundException e) {
 
-        // }
+        }
 		// TODO Auto-generated method stub
 		
 		User user = (User) request.getSession().getAttribute("user");
