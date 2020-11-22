@@ -49,12 +49,19 @@ const AuthProvider = (props) => {
             })
             .then(resp => resp.json())
             .then(data => {
-                console.log(data)
-                Swal.fire({
-                    icon: 'success',
-                    text: 'welcome!'
-                });
-                setAuth(true);
+                if (data.message === "success"){
+                    Swal.fire({
+                        icon: 'success',
+                        text: 'welcome!'
+                    });
+                    setAuth(true);
+                }
+                else{
+                    Swal.fire({
+                        icon: 'error',
+                        text: data.message,
+                    })
+                }
             })
             .catch(error => {
                 console.log(error);

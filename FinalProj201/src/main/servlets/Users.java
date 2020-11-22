@@ -34,11 +34,8 @@ public class Users extends HttpServlet{
     @Resource(name = "jdbc/cs201")
     private DataSource dataSource;
 
-    // create new user
-    // TODO
-    // consider duplicate
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         resp.setContentType("application/json"); // Response mime type
 		PrintWriter out = resp.getWriter();
 		// try {
@@ -55,7 +52,7 @@ public class Users extends HttpServlet{
 
         JsonObject responseJsonObject = new JsonObject();
 
-        if (email == null || password == null || fname == null || lname == null){
+        if (email.equals("") || password.equals("") || fname.equals("") || lname.equals("")){
             responseJsonObject.addProperty("message", "some fields are empty");
             out.println(responseJsonObject.toString());
             resp.setStatus(500);
@@ -63,36 +60,48 @@ public class Users extends HttpServlet{
         else{
             try (Connection dbcon = DriverManager.getConnection(JDBCCredential.url, 
             		JDBCCredential.username, JDBCCredential.password)){
-                String query = "Insert into Users(lastName, firstName, email, password)" +
-                        "values (?, ?, ?, ?)";
-                PreparedStatement stmt = dbcon.prepareStatement(query);
 
-                stmt.setString(1, lname);
-                stmt.setString(2, fname);
-                stmt.setString(3, email);
-                stmt.setString(4, password);
-                stmt.executeUpdate();
-                System.out.println("updating!");
-                System.out.println(stmt);
-                responseJsonObject.addProperty("message", "inserted");
-                out.println(responseJsonObject.toString());
-				query = "SELECT  LAST_INSERT_ID() as ID";
-                stmt = dbcon.prepareStatement(query);
-                ResultSet rs = stmt.executeQuery();
-                String id = null;
-                while(rs.next()){
-                	id = rs.getString("ID");
+            	String query = "SELECT * from Users where email = ?";
+				PreparedStatement stmt = dbcon.prepareStatement(query);
+				stmt.setString(1, email);
+				ResultSet rs = stmt.executeQuery();
+				// if already registered
+				if (rs.next()){
+					System.out.println("no data");
+					responseJsonObject.addProperty("message", "The email is already registered");
 				}
-				System.out.println(id);
-                User user = new User(Integer.parseInt(id), fname, lname, email, password);
-				System.out.println(user);
-				req.getSession().setAttribute("user", user);
-                resp.setStatus(200);
-                rs.close();
+				// if not
+				else{
+					query = "Insert into Users(lastName, firstName, email, password)" +
+							"values (?, ?, ?, ?)";
+					stmt = dbcon.prepareStatement(query);
+
+					stmt.setString(1, lname);
+					stmt.setString(2, fname);
+					stmt.setString(3, email);
+					stmt.setString(4, password);
+					stmt.executeUpdate();
+					System.out.println("updating!");
+					System.out.println(stmt);
+					responseJsonObject.addProperty("message", "success");
+					query = "SELECT  LAST_INSERT_ID() as ID";
+					stmt = dbcon.prepareStatement(query);
+					rs = stmt.executeQuery();
+					String id = null;
+					while(rs.next()){
+						id = rs.getString("ID");
+					}
+					User user = new User(Integer.parseInt(id), fname, lname, email, password);
+					req.getSession().setAttribute("user", user);
+					resp.setStatus(200);
+				}
+				out.println(responseJsonObject.toString());
+				rs.close();
 				stmt.close();
-            } catch (SQLException throwables) {
-                throwables.printStackTrace();
-                resp.setStatus(500);
+			} catch (SQLException throwables) {
+				responseJsonObject.addProperty("message", "sql exception");
+				out.println(responseJsonObject.toString());
+				resp.setStatus(500);
             }
         }
 
