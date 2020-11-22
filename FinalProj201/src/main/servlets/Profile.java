@@ -37,8 +37,6 @@ public class Profile extends HttpServlet {
 		JsonObject profile = getUserProfile(user);
 		
 		out.println(profile.toString());
-		
-		
 	}
 	
     private JsonObject getUserProfile(User user) {
