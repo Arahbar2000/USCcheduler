@@ -34,12 +34,12 @@ public class Pref extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("application/json"); // Response mime type
         PrintWriter out = resp.getWriter();
-        // try {
-        //     Class.forName("com.mysql.jdbc.Driver");
-        // }
-        // catch(ClassNotFoundException e) {
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+        }
+        catch(ClassNotFoundException e) {
 
-        // }
+        }
 
         JsonObject respJson = new JsonObject();
         User user = (User) req.getSession().getAttribute("user");

@@ -26,7 +26,7 @@ public class CreateSchedule {
 	}
 
 	// fetch courses
-	private static List<Course> getUserCourses(User user) {
+	private List<Course> getUserCourses(User user) {
 		try {
             Class.forName("com.mysql.jdbc.Driver");
         }
@@ -86,7 +86,7 @@ public class CreateSchedule {
 	}
 
 	// assume courses_str ='CSCI201,CSCI270‘
-	public List<Course> getStringCourses(String courses_str){
+	static public List<Course> getStringCourses(String courses_str){
 		List<Course> courses = new ArrayList<>();
 		try {
             Class.forName("com.mysql.jdbc.Driver");
