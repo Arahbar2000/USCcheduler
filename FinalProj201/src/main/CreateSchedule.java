@@ -198,8 +198,6 @@ public class CreateSchedule {
 	//		also includes TBA sections
 	public ArrayList<Schedule> getSchedules(int n) {
 		
-		for(String s: req)
-			System.out.println(s);
 		
 		all_courses.removeIf(c -> (!meetsPreferences(c) && multipleSections(c)));
 		// now every interchangeable courses are removed
