@@ -39,6 +39,7 @@ public class Generate extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
+		System.out.println("GENERATING SCHEDULES");
 		response.setContentType("application/json"); // Response mime type
 
 		// write to response
@@ -46,19 +47,23 @@ public class Generate extends HttpServlet {
 		User user = (User) request.getSession().getAttribute("user");
 
 		CreateSchedule mySch = new CreateSchedule(user);
+		System.out.println("CREATING SCHEDULE OBJECT");
 
 		ArrayList<Schedule> genSchedulesList = mySch.getSchedules(15);
+		System.out.println("SUCESSFULLY OBTAINED SCHEDULES");
 		Gson gson = new Gson();
-
+		System.out.println(genSchedulesList.size());
 		JsonArray packet = new JsonArray();
 		for (Schedule s : genSchedulesList) {
+			System.out.println("GETTING ONE SCHEDULE");
 			JsonArray courseList = new JsonArray();
 			for (Course c : s.decidedClasses) {
-				
 				JsonObject course = new JsonParser().parse(gson.toJson(c, Course.class)).getAsJsonObject();
 				courseList.add(course);
+				System.out.println(course);
 			}
 			packet.add(courseList);
+			System.out.println(packet.toString());
 		}
 		
 		out.println(packet.toString());

@@ -33,6 +33,7 @@ public class Profile extends HttpServlet {
 		PrintWriter out = response.getWriter();
 		
 		User user = (User) request.getSession().getAttribute("user");
+		System.out.println(user);
 		JsonObject profile = getUserProfile(user);
 		
 		out.println(profile.toString());

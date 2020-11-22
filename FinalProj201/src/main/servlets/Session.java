@@ -5,6 +5,9 @@ import main.User;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpSession;
+import java.sql.DriverManager;
+import main.JDBCCredential;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -29,6 +32,12 @@ public class Session extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        // try {
+        //     Class.forName("com.mysql.jdbc.Driver");
+        // }
+        // catch(ClassNotFoundException e) {
+
+        // }
 
         response.setContentType("application/json"); // Response mime type
 
@@ -41,12 +50,15 @@ public class Session extends HttpServlet {
         JsonObject responseJsonObject = new JsonObject();
 
         if (email == null && password == null){
-            if (request.getSession().getAttribute("user") != null){
+            HttpSession session = request.getSession();
+            Boolean loggedIn = false;
+            if (session.getAttribute("user") != null){
                 System.out.println("already login in");
                 responseJsonObject.addProperty("status", "success");
                 responseJsonObject.addProperty("message", "already login in");
+                loggedIn = true;
             }
-            else{
+            else {
                 responseJsonObject.addProperty("status", "error");
                 responseJsonObject.addProperty("message", "not logined in");
             }
@@ -54,7 +66,8 @@ public class Session extends HttpServlet {
         }
         else{
             try {
-                Connection dbcon = dataSource.getConnection();
+                // Connection dbcon = dataSource.getConnection();
+                Connection dbcon = DriverManager.getConnection(JDBCCredential.url, JDBCCredential.username, JDBCCredential.password);
 
                 String query = "select *\n" +
                         "from Users\n" +
@@ -87,6 +100,7 @@ public class Session extends HttpServlet {
                     System.out.println("hello there! \n");
 
                     request.getSession().setAttribute("user", user);
+                    System.out.println(request.getSession().getAttribute("user"));
 
                     responseJsonObject.addProperty("status", "success");
                     responseJsonObject.addProperty("message", "login in success");
