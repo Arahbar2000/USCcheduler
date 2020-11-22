@@ -75,6 +75,9 @@ public class Course {
 			
 		} 
 		
+		if(daysOfWeek.contains("h") || daysOfWeek.contains("H"))
+			days[1] = true;
+		
 	}
 	
 	public boolean equals(Course other) {
