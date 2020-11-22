@@ -16,7 +16,7 @@ const UserProvider = (props) => {
 
     useEffect(() => {
         // this function is called everytime the browser is refreshed
-        getUser();
+        // getUser();
     });
 
     const getUser = async () => {

@@ -32,6 +32,12 @@ public class Pref extends HttpServlet {
     // user input preferences
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
         resp.setContentType("application/json"); // Response mime type
         PrintWriter out = resp.getWriter();
         try {
@@ -51,8 +57,6 @@ public class Pref extends HttpServlet {
         // if logged in
         else {
             // Null if not provided
-            // eg. CSCI201,CSCI270
-            String courseName = req.getParameter("courseName");
             // eg. 08:00
             String startTime = req.getParameter("startTime");
             System.out.println(startTime);
