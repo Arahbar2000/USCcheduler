@@ -14,6 +14,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
 import java.sql.DriverManager;
 import main.JDBCCredential;
+import main.User;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -74,8 +76,20 @@ public class Users extends HttpServlet{
                 System.out.println(stmt);
                 responseJsonObject.addProperty("message", "inserted");
                 out.println(responseJsonObject.toString());
-                stmt.close();
+				query = "SELECT  LAST_INSERT_ID() as ID";
+                stmt = dbcon.prepareStatement(query);
+                ResultSet rs = stmt.executeQuery();
+                String id = null;
+                while(rs.next()){
+                	id = rs.getString("ID");
+				}
+				System.out.println(id);
+                User user = new User(Integer.parseInt(id), fname, lname, email, password);
+				System.out.println(user);
+				req.getSession().setAttribute("user", user);
                 resp.setStatus(200);
+                rs.close();
+				stmt.close();
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
                 resp.setStatus(500);
@@ -92,12 +106,12 @@ public class Users extends HttpServlet{
 
 		String email = req.getParameter("email");
 		String password = req.getParameter("password");
-		// try {
-        //     Class.forName("com.mysql.jdbc.Driver");
-        // }
-        // catch(ClassNotFoundException e) {
+		try {
+            Class.forName("com.mysql.jdbc.Driver");
+        }
+        catch(ClassNotFoundException e) {
 
-        // }
+        }
 		
 		
 		
@@ -162,12 +176,12 @@ public class Users extends HttpServlet{
 	protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 		resp.setContentType("application/json"); // Response mime type
 		PrintWriter out = resp.getWriter();
-		// try {
-        //     Class.forName("com.mysql.jdbc.Driver");
-        // }
-        // catch(ClassNotFoundException e) {
+		try {
+            Class.forName("com.mysql.jdbc.Driver");
+        }
+        catch(ClassNotFoundException e) {
 
-        // }
+        }
 
 		String email = req.getParameter("email");
 		String password = req.getParameter("password");

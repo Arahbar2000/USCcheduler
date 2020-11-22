@@ -19,7 +19,7 @@ cp ./target/*.war <tomcat-home>/webapps/
 
 Now the tomcat starts on port 8080 and visit `http://localhost:8080/cs201` to visit our project.
 
-==Note that if you deploy the project through IDE and you experience the CORS issue, then it is probably because your IDE is deployed in IDE's cache folder but not `<tomcat-home>/webapps/` which can cause trouble when using CORS. Please make sure that you are deploying to `<tomcat-home>/webapps/`, you can  deploy the war file manually in `http://localhost:8080/manager/html`==
+Note that if you deploy the project through IDE and you experience the CORS issue, then it is probably because your IDE is deployed in IDE's cache folder but not `<tomcat-home>/webapps/` which can cause trouble when using CORS. Please make sure that you are deploying to `<tomcat-home>/webapps/`, you can  deploy the war file manually in `http://localhost:8080/manager/html`.
 
 # React
 
@@ -29,7 +29,7 @@ npm i
 npm run start
 ```
 
-then react would be start on port 3000.
+then react would be started on port 3000.
 
 # SQL
 
