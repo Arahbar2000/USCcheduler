@@ -1,6 +1,8 @@
 package main.servlets;
 
 import com.google.gson.JsonObject;
+import java.util.List;
+import java.util.HashSet;
 import main.JDBCCredential;
 import main.*;
 import main.User;
@@ -50,23 +52,27 @@ public class Profile extends HttpServlet {
     	profile.addProperty("Email", user.email);
     	profile.addProperty("ID", user.id);
     	
+    	CreateSchedule cs = new CreateSchedule(user);
+    	List<String> co = cs.req;
+    	
+    	HashSet<String> unique_courses = new HashSet<>(co);
+    	String courses = ""; 
+
+
+    	for(String s: unique_courses) {
+    		
+    		courses += s + ",";
+    		
+    	}
+    	
+    	profile.addProperty("Courses", courses);
+    	
     	if(user.prefs != null) {
 	    	profile.addProperty("StartTime", user.prefs.startTime.toString());
 	    	profile.addProperty("Endtime", user.prefs.endTime.toString());
-	    	String courses = "";
-	    	for(int i = 0; i < user.prefs.courseList.size(); i++) {
-	    		String c = user.prefs.courseList.get(i);
-	    		
-	    		courses += c;
-	    		if(i != user.prefs.courseList.size()-1) {
-	    			courses += ",";
-	    		} 
-	    		
-	    	}
-	    	profile.addProperty("Courses", courses);
-    	}
+	    	
+    }
     	return profile;
-    	
     }
 
 
