@@ -2,6 +2,8 @@ package main.servlets;
 
 import com.google.gson.JsonObject;
 
+import main.JDBCCredential;
+
 import java.sql.Statement;
 import javax.annotation.Resource;
 import javax.servlet.ServletException;
@@ -17,6 +19,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -56,8 +59,8 @@ public class Users extends HttpServlet{
             resp.setStatus(500);
         }
         else{
-            try {
-				Connection dbcon = DriverManager.getConnection(JDBCCredential.url, JDBCCredential.username, JDBCCredential.password);
+            try (Connection dbcon = DriverManager.getConnection(JDBCCredential.url, 
+            		JDBCCredential.username, JDBCCredential.password)){
                 String query = "Insert into Users(lastName, firstName, email, password)" +
                         "values (?, ?, ?, ?)";
                 PreparedStatement stmt = dbcon.prepareStatement(query);
@@ -106,7 +109,8 @@ public class Users extends HttpServlet{
 		JsonObject responseJsonObject = new JsonObject();
 
 		try {
-			Connection dbcon = DriverManager.getConnection(JDBCCredential.url, JDBCCredential.username, JDBCCredential.password);
+			Connection dbcon = DriverManager.getConnection(JDBCCredential.url, 
+					JDBCCredential.username, JDBCCredential.password);
 			
 			String query =  "select *\n" + "from Users\n" + "where email = ?" + "and password = ?";
 
