@@ -1,6 +1,9 @@
 package main.servlets;
 
+ import com.google.gson.JsonArray;
  import com.google.gson.JsonObject;
+
+ import java.time.LocalTime;
  import java.util.List;
  import java.util.HashSet;
  import main.JDBCCredential;
@@ -15,7 +18,9 @@ import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.PrintWriter;
-import main.User;
+ import java.util.Map;
+
+ import main.User;
 /**
  * Servlet implementation class Profile
  */
@@ -36,8 +41,6 @@ public class Profile extends HttpServlet {
 		JsonObject profile = getUserProfile(user);
 		
 		out.println(profile.toString());
-		
-		
 	}
 	
     private JsonObject getUserProfile(User user) {
@@ -55,31 +58,38 @@ public class Profile extends HttpServlet {
      	List<String> co = cs.req;
 
      	HashSet<String> unique_courses = new HashSet<>(co);
-     	String courses = ""; 
+     	StringBuilder courses = new StringBuilder();
 
 
      	for(String s: unique_courses) {
-
-     		courses += s + ",";
-
+     		courses.append(s).append(",");
      	}
 
-     	profile.addProperty("Courses", courses);
+     	profile.addProperty("Courses", courses.toString());
 
      	if(user.prefs != null) {
  	    	profile.addProperty("StartTime", user.prefs.startTime.toString());
 			profile.addProperty("Endtime", user.prefs.endTime.toString());
-			courses = "";
+			courses = new StringBuilder();
+
  	    	for(int i = 0; i < user.prefs.courseList.size(); i++) {
  	    		String c = user.prefs.courseList.get(i);
 
- 	    		courses += c;
+ 	    		courses.append(c);
  	    		if(i != user.prefs.courseList.size()-1) {
- 	    			courses += ",";
+ 	    			courses.append(",");
  	    		} 
-
  	    	}
- 	    	profile.addProperty("Courses", courses);
+ 	    	profile.addProperty("Courses", courses.toString());
+
+			JsonArray extraCurriculum = new JsonArray();
+			for (Map<String, LocalTime> ex: user.prefs.extraCurriculum){
+			    JsonObject obj = new JsonObject();
+				obj.addProperty("startTime", ex.get("startTime").toString());
+				obj.addProperty("endTime", ex.get("endTime").toString());
+				extraCurriculum.add(obj);
+			}
+ 	    	profile.add("extraCurriculum", extraCurriculum);
 		 }
 		 return profile;
 
