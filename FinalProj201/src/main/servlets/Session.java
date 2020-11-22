@@ -1,6 +1,8 @@
 package main.servlets;
 
 import com.google.gson.JsonObject;
+
+import main.JDBCCredential;
 import main.User;
 
 import javax.servlet.annotation.WebServlet;
@@ -14,6 +16,7 @@ import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.HashMap;
@@ -54,7 +57,8 @@ public class Session extends HttpServlet {
         }
         else{
             try {
-                Connection dbcon = dataSource.getConnection();
+            	Connection dbcon = DriverManager.getConnection(JDBCCredential.url, 
+            			JDBCCredential.username, JDBCCredential.password);
 
                 String query = "select *\n" +
                         "from Users\n" +
