@@ -13,6 +13,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.time.LocalTime;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -31,12 +32,12 @@ public class SaveSchedule extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// try {
-        //     Class.forName("com.mysql.jdbc.Driver");
-        // }
-        // catch(ClassNotFoundException e) {
+		try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+        }
+        catch(ClassNotFoundException e) {
 
-        // }
+        }
 		// TODO Auto-generated method stub
 		JsonArray schedule = new JsonArray();
 		User user = (User) request.getSession().getAttribute("user");
@@ -50,16 +51,15 @@ public class SaveSchedule extends HttpServlet {
 		    String query = "select courseId, department, courseNumber, title, " +
 					"startTime, endTime, section, instructor, units, daysOfWeek, spots\n" +
 					"from Takes t natural join Course c\n" +
-					"where s.userId = ?;";
+					"where t.userId = ?;";
 		    
 			PreparedStatement statement = dbcon.prepareStatement(query);
 			statement.setInt(1, user.id);
 			ResultSet rs = statement.executeQuery();
-			
 			while(rs.next()) {
 				
 				JsonObject course = new JsonObject();
-				course.addProperty("courseId", rs.getInt("courseId"));
+				course.addProperty("sectionId", rs.getInt("courseId"));
 				course.addProperty("department", rs.getString("department"));
 				course.addProperty("courseNumber", rs.getInt("courseNumber"));
 				course.addProperty("title", rs.getString("title"));
@@ -70,6 +70,7 @@ public class SaveSchedule extends HttpServlet {
 				course.addProperty("instructor", rs.getString("instructor"));
 				course.addProperty("units", rs.getInt("units"));
 				course.addProperty("spots", rs.getString("spots"));
+				course.addProperty("sectionType", rs.getString("section"));
 				
 				schedule.add(course);
 			}
@@ -78,6 +79,7 @@ public class SaveSchedule extends HttpServlet {
 			out.println(schedule.toString());
 			
 		} catch (SQLException sqlE) {
+			System.out.println(sqlE);
 			System.out.println("SQL Exception");
 		}
 		
@@ -88,12 +90,12 @@ public class SaveSchedule extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// try {
-        //     Class.forName("com.mysql.jdbc.Driver");
-        // }
-        // catch(ClassNotFoundException e) {
+		try {
+            Class.forName("com.mysql.jdbc.Driver");
+        }
+        catch(ClassNotFoundException e) {
 
-        // }
+        }
 		// TODO Auto-generated method stub
 		
 		User user = (User) request.getSession().getAttribute("user");

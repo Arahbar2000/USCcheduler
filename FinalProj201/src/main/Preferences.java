@@ -14,7 +14,7 @@ public class Preferences {
 	public List<String> courseList = new ArrayList<>();
 
 	//User will make preferences, push with their ID and all these preferences
-	Preferences(LocalTime startTime, LocalTime endTime, int desiredUnits ){
+	public Preferences(LocalTime startTime, LocalTime endTime, int desiredUnits ){
 		this.startTime = startTime;
 		this.endTime = endTime;
 		this.desiredUnits = desiredUnits;

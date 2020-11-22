@@ -118,7 +118,7 @@ const SignUpButton = (props) => {
 
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Please Sign in</Modal.Title>
+          <Modal.Title>Sign Up Form</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form onSubmit={submitForm}>

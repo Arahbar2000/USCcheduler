@@ -24,15 +24,22 @@ public class CreateSchedule {
 		pref = user.prefs;
 
 	}
+	
+	//Guest Constructor
+	public CreateSchedule(List<Course> courses, Preferences prefs_) {
+		this.user = null;
+		all_courses = courses;
+		pref = prefs_;
+	}
 
 	// fetch courses
 	private List<Course> getUserCourses(User user) {
-		try {
-            Class.forName("com.mysql.jdbc.Driver");
-        }
-        catch(ClassNotFoundException e) {
+		// try {
+        //     Class.forName("com.mysql.cj.jdbc.Driver");
+        // }
+        // catch(ClassNotFoundException e) {
 
-        }
+        // }
 		List<Course> courses = new ArrayList<>();
 		try (Connection dbcon = DriverManager.getConnection(
 				JDBCCredential.url, JDBCCredential.username, JDBCCredential.password)){
@@ -86,14 +93,14 @@ public class CreateSchedule {
 	}
 
 	// assume courses_str ='CSCI201,CSCI270‘
-	public static List<Course> getStringCourses(String courses_str){
+	static public List<Course> getStringCourses(String courses_str){
 		List<Course> courses = new ArrayList<>();
-		try {
-            Class.forName("com.mysql.jdbc.Driver");
-        }
-        catch(ClassNotFoundException e) {
+		// try {
+        //     Class.forName("com.mysql.jdbc.Driver");
+        // }
+        // catch(ClassNotFoundException e) {
 
-        }
+        // }
 		try (Connection dbcon = DriverManager.getConnection(
 				JDBCCredential.url, JDBCCredential.username, JDBCCredential.password)){
 
@@ -158,11 +165,16 @@ public class CreateSchedule {
 		if(pref == null)
 			return true;
 
-		if(c.startTime.isBefore(pref.startTime))
+		if(pref.startTime == null && pref.endTime == null) return true;
+		System.out.println(pref.startTime);
+		if (pref.startTime != null) {
+			if(c.startTime.isBefore(pref.startTime))
 			return false;
-
-		if(c.endTime.isAfter(pref.endTime))
+		}
+		if (pref.endTime != null) {
+			if(c.endTime.isAfter(pref.endTime))
 			return false;
+		}
 
 		for(Map<String, LocalTime> other: pref.extraCurriculum) {
 			// c is in interval of [s, e]
@@ -214,14 +226,15 @@ public class CreateSchedule {
 	//		also includes TBA sections
 	public ArrayList<Schedule> getSchedules(int n) {
 		
-		
+		System.out.println("GETTING SCHEDULES");
+		// PROBLEM LINE ****
 		all_courses.removeIf(c -> (!meetsPreferences(c) && multipleSections(c)));
+		System.out.println("HELLO SCHEDULE");
 		// now every interchangeable courses are removed
 
 		ArrayList<Schedule> schedules = new ArrayList<Schedule>();
 		int i = 0;
 		while(i++ < n || schedules.isEmpty()) {
-
 			boolean add = true;
 			Schedule sched = makeSchedule();
 			for(Schedule s: schedules) {
@@ -234,14 +247,14 @@ public class CreateSchedule {
 			}
 		}
 		
-		/*for(Schedule s: schedules) {
+		for(Schedule s: schedules) {
 			
 			for(Course c: s.decidedClasses) {
 				System.out.println(c.toString());
 			}
 			System.out.println();
 			
-		}*/
+		}
 		return schedules;
 	}
 

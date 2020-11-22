@@ -125,12 +125,6 @@ const AuthDashboard = (props) => {
       setChanged(!changedPreferences);
   }
 
-  const clearExtracurriculars = event => {
-    event.preventDefault();
-    localStorage.removeItem("extracurriculars");
-    setChanged(!changedPreferences);
-  }
-
   const addTimes = event => {
     event.preventDefault();
     const start = event.target.elements.start.value;
@@ -174,11 +168,7 @@ const AuthDashboard = (props) => {
       })
       .then(response => response.json())
       .then(schedules => {
-        // response.forEach(schedule => {
-        //   schedule.forEach(section => {
-        //     console.log(section);
-        //   })
-        // })
+        localStorage.setItem("schedules", JSON.stringify(schedules));
         const allEvents = generateSchedules(schedules);
         localStorage.setItem("events", JSON.stringify(allEvents));
         props.history.push('/')
@@ -202,19 +192,23 @@ const AuthDashboard = (props) => {
 
   const clearCourses = () => {
     const url = new URL(API_URL + 'courses');
+    url.search = new URLSearchParams({clear: 1});
     fetch(url, {
-      method: 'CLEAR',
+      method: 'DELETE',
       credentials: 'include'
-    }).then(response => {
-      alert("Success!");
+    }).then(response => response.json())
+    .then(response => {
       if (Object.keys(response).length === 0 && response.constructor === Object) {
         console.log("error");
         alert("Error");
       }
       else {
         console.log(response)
-        localStorage.removeItem("courses");
-        setChanged(!changedPreferences);
+        alert("Success!");
+        getUser()
+        .then(() => {
+          setChanged(!changedPreferences);
+        })
       }
     })
     .catch(error => {
