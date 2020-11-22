@@ -9,7 +9,7 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Overlay from 'react-bootstrap/Overlay';
 
 const Schedule = () => {
-    let schedules = getSchedules2();
+    const [ schedules, setSchedules ] = useState([])
     const [scheduleIndex, setIndex] = useState(0)
     const handleRightClick = () => {
         if(scheduleIndex < schedules.length - 1) {
@@ -31,6 +31,16 @@ const Schedule = () => {
     const handleSelectFavoriteSchedule = () => {
         
     }
+
+    useEffect(() => {
+        const events = JSON.parse(localStorage.getItem("events"));
+        if (events != null) {
+            setSchedules(events);
+        }
+        else {
+            setSchedules([]);
+        }
+    }, [])
     
 
     return (

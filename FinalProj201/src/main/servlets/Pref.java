@@ -1,9 +1,13 @@
 package main.servlets;
 
 import com.google.gson.JsonObject;
+
+import main.JDBCCredential;
 import main.User;
+import main.JDBCCredential;
 
 import javax.annotation.Resource;
+import java.sql.DriverManager;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -13,6 +17,7 @@ import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
@@ -35,6 +40,12 @@ public class Pref extends HttpServlet {
         }
         resp.setContentType("application/json"); // Response mime type
         PrintWriter out = resp.getWriter();
+        // try {
+        //     Class.forName("com.mysql.jdbc.Driver");
+        // }
+        // catch(ClassNotFoundException e) {
+
+        // }
 
         JsonObject respJson = new JsonObject();
         User user = (User) req.getSession().getAttribute("user");
@@ -48,11 +59,14 @@ public class Pref extends HttpServlet {
             // Null if not provided
             // eg. 08:00
             String startTime = req.getParameter("startTime");
+            System.out.println(startTime);
             String endTime = req.getParameter("endTime");
+            System.out.println(endTime);
             // eg. [08:00 09:00], [10:00,11:00]
             String extraCurriculum = req.getParameter("extraCurriculum");
             String desiredUnits = req.getParameter("desiredUnits");
-            try (Connection dbcon = dataSource.getConnection()) {
+            try (Connection dbcon = DriverManager.getConnection(JDBCCredential.url, 
+            		JDBCCredential.username, JDBCCredential.password);) {
                 String update = req.getParameter("update");
                 PreparedStatement stmt = null;
                 if (update == null) {

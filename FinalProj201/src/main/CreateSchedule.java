@@ -16,19 +16,27 @@ public class CreateSchedule {
 	// user's classes in table `Schedule`
 	public List<Course> all_courses = new ArrayList<>();
 	Preferences pref;
+	public List<String> req = new ArrayList<>();
 
 	public CreateSchedule(User user) {
 		this.user = user;
 		all_courses = getUserCourses(this.user);
 		pref = user.prefs;
+
 	}
 
 	// fetch courses
 	private static List<Course> getUserCourses(User user) {
+		try {
+            Class.forName("com.mysql.jdbc.Driver");
+        }
+        catch(ClassNotFoundException e) {
+
+        }
 		List<Course> courses = new ArrayList<>();
 		try (Connection dbcon = DriverManager.getConnection(
 				JDBCCredential.url, JDBCCredential.username, JDBCCredential.password)){
-		    String query = "select userId, courseId, department, courseNumber, title, " +
+				String query = "select userId, courseId, department, courseNumber, title, " +
 					"startTime, endTime, section, instructor, units, daysOfWeek, spots\n" +
 					"from Schedule s natural join Course c\n" +
 					"where s.userId = ?\n" +
@@ -38,15 +46,18 @@ public class CreateSchedule {
 			// Declare our statement
 			PreparedStatement statement = dbcon.prepareStatement(query);
 
+			System.out.println(user.id);
 			statement.setInt(1, user.id);
 
 			// Perform the query
 			ResultSet rs = statement.executeQuery();
 
+			System.out.println("TRYING TO FIND COURSES");
+
 			while (rs.next()) {
 				LocalTime startLocalTime = LocalTime.parse(rs.getString("startTime"));
 				LocalTime endLocalTime = LocalTime.parse(rs.getString("endTime"));
-
+				System.out.println("GETTING A COURSE");
                 Course c = new Course(
                 		rs.getInt("courseId"),
                 		rs.getString("department"),
@@ -62,6 +73,7 @@ public class CreateSchedule {
 						);
 
                 courses.add(c);
+                this.req.add(c.department+ "" + c.courseNumber);
 			}
 			rs.close();
 			statement.close();
@@ -74,8 +86,14 @@ public class CreateSchedule {
 	}
 
 	// assume courses_str ='CSCI201,CSCI270‘
-	public static List<Course> getStringCourses(String courses_str){
+	public List<Course> getStringCourses(String courses_str){
 		List<Course> courses = new ArrayList<>();
+		try {
+            Class.forName("com.mysql.jdbc.Driver");
+        }
+        catch(ClassNotFoundException e) {
+
+        }
 		try (Connection dbcon = DriverManager.getConnection(
 				JDBCCredential.url, JDBCCredential.username, JDBCCredential.password)){
 
@@ -173,9 +191,6 @@ public class CreateSchedule {
 
 	private boolean validSchedule(Schedule s) {
 
-		if(pref == null)
-			return true;
-
 		String delim = "";
 		ArrayList<String> coInSchedule = new ArrayList<String>();
 
@@ -185,7 +200,7 @@ public class CreateSchedule {
 		}
 
 
-		for(String name: pref.courseList) {
+		for(String name: req) {
 			if(!coInSchedule.contains(name))
 				return false;
 		}
@@ -198,7 +213,8 @@ public class CreateSchedule {
     // 		each schedule contains valid courses combination (eg. lec + dis + qz)
 	//		also includes TBA sections
 	public ArrayList<Schedule> getSchedules(int n) {
-
+		
+		
 		all_courses.removeIf(c -> (!meetsPreferences(c) && multipleSections(c)));
 		// now every interchangeable courses are removed
 
@@ -217,6 +233,15 @@ public class CreateSchedule {
 				schedules.add(sched);
 			}
 		}
+		
+		/*for(Schedule s: schedules) {
+			
+			for(Course c: s.decidedClasses) {
+				System.out.println(c.toString());
+			}
+			System.out.println();
+			
+		}*/
 		return schedules;
 	}
 
@@ -258,9 +283,11 @@ public class CreateSchedule {
 	private boolean sameTime(Course c, Course other) {
 
 		if(sameDay(c, other)) {
-
-			if(c.startTime.equals(other.startTime))
+			
+		
+			if(c.startTime.equals(other.startTime) || c.endTime.equals(other.endTime))
 				return true;
+
 
 			return c.startTime.isBefore(other.endTime) && other.startTime.isBefore(c.endTime);
 

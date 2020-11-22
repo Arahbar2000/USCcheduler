@@ -1,7 +1,9 @@
 package main.servlets;
 
 import com.google.gson.JsonObject;
+
 import main.JDBCCredential;
+
 import java.sql.Statement;
 import javax.annotation.Resource;
 import javax.servlet.ServletException;
@@ -10,18 +12,17 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
-
+import java.sql.DriverManager;
+import main.JDBCCredential;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.DriverManager;
-
-import main.JDBCCredential;
 
 @WebServlet(name = "UsersServlet", urlPatterns = "/api/users")
 public class Users extends HttpServlet{
@@ -37,17 +38,18 @@ public class Users extends HttpServlet{
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("application/json"); // Response mime type
-        PrintWriter out = resp.getWriter();
-		try {
-			Class.forName("com.mysql.cj.jdbc.Driver");
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		PrintWriter out = resp.getWriter();
+		// try {
+        //     Class.forName("com.mysql.jdbc.Driver");
+        // }
+        // catch(ClassNotFoundException e) {
+
+        // }
+
         String email = req.getParameter("email");
         String password = req.getParameter("password");
         String fname = req.getParameter("fname");
-		String lname = req.getParameter("lname");
+        String lname = req.getParameter("lname");
 
         JsonObject responseJsonObject = new JsonObject();
 
@@ -57,9 +59,8 @@ public class Users extends HttpServlet{
             resp.setStatus(500);
         }
         else{
-            try {
-				Connection dbcon = DriverManager.getConnection(
-				JDBCCredential.url, JDBCCredential.username, JDBCCredential.password);
+            try (Connection dbcon = DriverManager.getConnection(JDBCCredential.url, 
+            		JDBCCredential.username, JDBCCredential.password)){
                 String query = "Insert into Users(lastName, firstName, email, password)" +
                         "values (?, ?, ?, ?)";
                 PreparedStatement stmt = dbcon.prepareStatement(query);
@@ -91,6 +92,12 @@ public class Users extends HttpServlet{
 
 		String email = req.getParameter("email");
 		String password = req.getParameter("password");
+		// try {
+        //     Class.forName("com.mysql.jdbc.Driver");
+        // }
+        // catch(ClassNotFoundException e) {
+
+        // }
 		
 		
 		
@@ -102,7 +109,8 @@ public class Users extends HttpServlet{
 		JsonObject responseJsonObject = new JsonObject();
 
 		try {
-			Connection dbcon = dataSource.getConnection();
+			Connection dbcon = DriverManager.getConnection(JDBCCredential.url, 
+					JDBCCredential.username, JDBCCredential.password);
 			
 			String query =  "select *\n" + "from Users\n" + "where email = ?" + "and password = ?";
 
@@ -154,12 +162,18 @@ public class Users extends HttpServlet{
 	protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 		resp.setContentType("application/json"); // Response mime type
 		PrintWriter out = resp.getWriter();
+		// try {
+        //     Class.forName("com.mysql.jdbc.Driver");
+        // }
+        // catch(ClassNotFoundException e) {
+
+        // }
 
 		String email = req.getParameter("email");
 		String password = req.getParameter("password");
 
 		try {
-			Connection dbcon = dataSource.getConnection();
+			Connection dbcon = DriverManager.getConnection(JDBCCredential.url, JDBCCredential.username, JDBCCredential.password);
 
 			String query = "select *\n" + "from Users\n" + "where email = ?" + "and password = ?";
 

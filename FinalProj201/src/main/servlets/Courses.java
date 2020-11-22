@@ -7,18 +7,24 @@ import com.google.gson.JsonObject;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 
+import main.User;
+import main.JDBCCredential;
+
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.ServletException;
 import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
+import java.sql.SQLException;
+import java.sql.DriverManager;
 
 @WebServlet(name = "CourseServlet", urlPatterns = "/api/courses")
 public class Courses extends HttpServlet {
@@ -31,6 +37,13 @@ public class Courses extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         response.setContentType("application/json"); // Response mime type
+        // Don't delete this comment
+        // try {
+        //     Class.forName("com.mysql.jdbc.Driver");
+        // }
+        // catch(ClassNotFoundException e) {
+
+        // }
 
         // write to response
         PrintWriter out = response.getWriter();
@@ -38,19 +51,24 @@ public class Courses extends HttpServlet {
         // assume there would always be department and courseNumber
         String department = request.getParameter("department");
         int courseNumber = Integer.parseInt(request.getParameter("courseNumber"));
-        // like 'TTh'
-//        String days = request.getParameter("days");
-//        String startTime = request.getParameter("startTime");
-//        String endTime = request.getParameter("endTime");
 
         JsonObject respJson = new JsonObject();
+        User user = (User) request.getSession().getAttribute("user");
         try {
-            Connection dbcon = dataSource.getConnection();
+            // Connection dbcon = dataSource.getConnection();
+            Connection dbcon = DriverManager.getConnection(JDBCCredential.url, JDBCCredential.username, JDBCCredential.password);
 
-            String query = "select *\n" +
-                    "from Course\n" +
-                    "where department = ?" +
-                    "and courseNumber = ?";
+            // try {
+            //     Class.forName("com.mysql.jdbc.Driver");
+            // }
+            // catch(ClassNotFoundException e) {
+    
+            // }
+
+            String query = "SELECT *\n" +
+                    "FROM Course\n" +
+                    "WHERE department = ?" +
+                    "AND courseNumber = ?";
 
             // Declare our statement
             PreparedStatement statement = dbcon.prepareStatement(query);
@@ -61,34 +79,43 @@ public class Courses extends HttpServlet {
             // Perform the query
             ResultSet rs = statement.executeQuery();
 
-            while (rs.next()) {
-                // login success
-                JsonObject course = new JsonObject();
-                course.addProperty("department", rs.getString("department"));
-                course.addProperty("courseNumber", rs.getString("courseNumber"));
-                course.addProperty("title", rs.getString("title"));
-                course.addProperty("startTime", rs.getString("startTime"));
-                course.addProperty("endTime", rs.getString("endTime"));
-                course.addProperty("instructor", rs.getString("instructor"));
-                course.addProperty("units", rs.getString("units"));
-                course.addProperty("daysOfWeek", rs.getString("daysOfWeek"));
-                course.addProperty("spots", rs.getString("spots"));
+            if(rs.next()){
 
-                String section = rs.getString("section");
-                if (respJson.has(section)){
-                    JsonArray courses_list = (JsonArray) respJson.get(section);
-                    courses_list.add(course);
+                query = "SELECT * FROM Schedule WHERE userId = ? AND department = ? AND courseNumber = ?";
+                statement = dbcon.prepareStatement(query);
+
+                statement.setInt(1, user.id);
+                statement.setString(2, department);
+                statement.setInt(3, courseNumber);
+
+                // Perform the query
+                rs = statement.executeQuery();
+
+                if(!rs.next()){//has not already been added to schedule
+                    query = "INSERT INTO Schedule (userId, department, courseNumber)\n" +
+                                "VALUES (?, ?, ?)\n";
+                    
+                    statement = dbcon.prepareStatement(query);
+
+                    statement.setInt(1, user.id);
+                    statement.setString(2, department);
+                    statement.setInt(3, courseNumber);
+
+                    // Perform the query
+                    statement.executeUpdate();
+
+                    //status OK
+                    respJson.addProperty("message", "inserted");
+                    response.setStatus(200);
                 }
-                else{
-                    JsonArray courses_list = new JsonArray();
-                    courses_list.add(course);
-                    respJson.add(section, courses_list);
-                }
+                else response.setStatus(500);//course has already been added
+
             }
+            else response.setStatus(500);//course does not exist
+
             rs.close();
             statement.close();
             dbcon.close();
-            response.setStatus(200);
         }
         catch (Exception e) {
             System.out.println("error");
@@ -104,33 +131,135 @@ public class Courses extends HttpServlet {
         out.println(respJson.toString());
         out.close();
     }
-    
-    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-		resp.setContentType("application/json"); // Response mime type
-		PrintWriter out = resp.getWriter();
-
-		
-		//assumed get this data from request
-        String department = req.getParameter("department");
-        int courseNumber = Integer.parseInt(req.getParameter("courseNumber"));
-        
-
-		try {
-			Connection dbcon = dataSource.getConnection();
 
 
-			String updateQuery = "SET SQL_SAFE_UPDATES = 0;" + "DELETE FROM COURSES WHERE department = '" + department + "' and courseNumber = '"
-					+ courseNumber + "'";
-			
-			Statement st =  dbcon.createStatement();
-			st.execute(updateQuery);
 
-			
+    protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setContentType("application/json"); // Response mime type
+        PrintWriter out = response.getWriter();
+        // Don't delete this comment
+        // try {
+        //     Class.forName("com.mysql.jdbc.Driver");
+        // }
+        // catch(ClassNotFoundException e) {
 
-		} catch (Exception e) {
-			System.out.println("error");
-			e.printStackTrace();
-		}
-	}
+        // }
 
+        JsonObject respJson = new JsonObject();
+        User user = (User) request.getSession().getAttribute("user");
+        if (user == null) {//not logged in
+            respJson.addProperty("status", "error");
+            respJson.addProperty("message", "user if not logged in");
+            response.setStatus(500);
+        }
+        else{//user is logged in
+            try (/*Connection dbcon = dataSource.getConnection()*/Connection dbcon = DriverManager.getConnection(JDBCCredential.url, JDBCCredential.username, JDBCCredential.password);) {
+                String department = request.getParameter("department");
+                int courseNumber = Integer.parseInt(request.getParameter("courseNumber"));
+
+                String query = "SELECT * FROM Schedule WHERE userId = ? AND department = ? AND courseNumber = ?"; 
+
+                // Declare our statement
+                PreparedStatement statement = dbcon.prepareStatement(query);
+                
+                statement.setInt(1, user.id);
+                statement.setString(2, department);
+                statement.setInt(3, courseNumber);
+
+                // Perform the query
+                ResultSet rs = statement.executeQuery();
+
+                Boolean success = false;
+                if(!rs.next()) {
+                    success = false;
+                    response.setStatus(500); //no record of user matches that to be removed
+                } 
+                else{
+                    query =
+                        "DELETE FROM Schedule WHERE userId = ? AND department = ? AND courseNumber = ?";
+                    
+                    statement = dbcon.prepareStatement(query);
+                    statement.setInt(1, user.id);
+                    statement.setString(2, department);
+                    statement.setInt(3, courseNumber);
+                    statement.executeUpdate();
+                    respJson.addProperty("message", "deleted");
+                    user.updatePref();
+                    success = true;
+                }
+                if (success) {
+                    respJson.addProperty("status", "success");
+                }
+                statement.close();
+                response.setStatus(200);
+            } catch (SQLException throwables){
+                throwables.printStackTrace();
+                respJson.addProperty("status", "error");
+                respJson.addProperty("message", "SQL database error");
+                response.setStatus(500);
+            }
+        }
+        out.println(respJson.toString());
+        out.close();
+    }
+
+    protected void doClear(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setContentType("application/json"); // Response mime type
+        System.out.println("CLEARING COURSES");
+        PrintWriter out = response.getWriter();
+        // Don't delete this comment
+        // try {
+        //     Class.forName("com.mysql.jdbc.Driver");
+        // }
+        // catch(ClassNotFoundException e) {
+
+        // }
+
+        JsonObject respJson = new JsonObject();
+        User user = (User) request.getSession().getAttribute("user");
+        if (user == null) {//not logged in
+            respJson.addProperty("status", "error");
+            respJson.addProperty("message", "user if not logged in");
+            response.setStatus(500);
+        }
+        else{//user is logged in
+            try (/*Connection dbcon = dataSource.getConnection()*/Connection dbcon = DriverManager.getConnection(JDBCCredential.url, JDBCCredential.username, JDBCCredential.password);) {
+                String query = "SELECT * FROM Schedule WHERE userId = ?"; 
+
+                // Declare our statement
+                PreparedStatement statement = dbcon.prepareStatement(query);
+                
+                statement.setInt(1, user.id);
+
+                // Perform the query
+                ResultSet rs = statement.executeQuery();
+
+                Boolean success = false;
+                if(!rs.next()) response.setStatus(500); //no records for user exist in Schedule table
+                else{
+                    query =
+                        "DELETE FROM Schedule WHERE userId = ?";
+                    
+                    statement = dbcon.prepareStatement(query);
+                    statement.setInt(1, user.id);
+                    statement.executeUpdate();
+                    respJson.addProperty("message", "deleted");
+                    user.updatePref();
+                    success = true;
+                }
+                if (success) {
+                    respJson.addProperty("status", "success");
+                }
+                statement.close();
+                response.setStatus(200);
+            } catch (SQLException throwables){
+                throwables.printStackTrace();
+                respJson.addProperty("status", "error");
+                respJson.addProperty("message", "SQL database error");
+                response.setStatus(500);
+            }
+        }
+        out.println(respJson.toString());
+        out.close();
+    }
 }

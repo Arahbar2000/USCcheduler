@@ -22,12 +22,32 @@ const UserProvider = (props) => {
     const getUser = async () => {
         // gets the user information from the server database
         // must be logged on in order to communicate with database
-        await fetch(API_URL + "users", {
+        await fetch(API_URL + "profile", {
             method: "GET",
+            credentials: 'include'
         }).then(response => response.json())
         .then(data => {
             // calls setUser, setCourses, and setPreferences
             // waiting on response format from backend
+            console.log(data);
+            const courses = data.Courses.split(',');
+            courses.map(course => {
+                const department = course.match('[^0-9]+');
+                const courseNumber = parseInt(course.match('[0-9]+'))
+                return {
+                    department: course.match('[^0-9]+'),
+                    courseNumber: parseInt(course.match('[0-9]+'))
+                }
+            })
+            const newCourses = []
+            courses.forEach(course => {
+                if (course) {
+                    const department = course.match('[^0-9]+')[0],
+                    courseNumber = parseInt(course.match('[0-9]+'))
+                    newCourses.push({department, courseNumber});
+                }
+            })
+            localStorage.setItem("courses", JSON.stringify(newCourses))
         })
         .catch(error => {
             console.log(error)
