@@ -67,7 +67,9 @@ const GuestDashboard = (props) => {
       }
       else {
         for(let i = 0; i < coursesData.length; i++) {
-          if(coursesData.department == department && coursesData.courseNumber == courseNumber) {
+          console.log(coursesData.department);
+          console.log(coursesData)
+          if(coursesData[i].department == department && coursesData[i].courseNumber == courseNumber) {
             added = true;
             alert("Course has already been added!");
             break;
@@ -118,9 +120,9 @@ const GuestDashboard = (props) => {
 
   const removeCourse = (event) => {
     event.preventDefault();
-    const courseName = event.target.elements.remove.value.toUpperCase();
-    const department = courseName.slice(0, 4);
-    const courseNumber = parseInt(courseName.slice(4, courseName.length));
+    const courseName = event.target.elements.remove.value.toUpperCase().split(" ");
+    const department = courseName[0];
+    const courseNumber = parseInt(courseName[1]);
     // given a course, removes course from list of courses
     let coursesData = JSON.parse(localStorage.getItem("courses"))
     if (coursesData == null) {
@@ -184,6 +186,7 @@ const GuestDashboard = (props) => {
     })
     .then(response => response.json())
     .then(schedules => {
+      console.log(schedules)
         localStorage.setItem("schedules", JSON.stringify(schedules));
         const allEvents = generateSchedules(schedules);
         localStorage.setItem("events", JSON.stringify(allEvents));
