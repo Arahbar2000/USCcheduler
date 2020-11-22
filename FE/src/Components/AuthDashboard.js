@@ -52,6 +52,8 @@ const AuthDashboard = (props) => {
     const courseName = event.target.elements.add.value.toUpperCase().split(" ");
     const department = courseName[0];
     const courseNumber = parseInt(courseName[1]);
+    console.log(department)
+    console.log(courseNumber)
     verifyCourse(department, courseNumber, true)
     .then(() => {
       alert("Valid Course!");
@@ -67,7 +69,7 @@ const AuthDashboard = (props) => {
 
   const verifyCourse = (department, courseNumber, add) => {
     const url = new URL(API_URL + "courses")
-    url.search = new URLSearchParams({department, courseNumber})
+    url.search = new URLSearchParams({department, courseNumber, clear: 0})
     return new Promise((resolve, reject) => {
       fetch(url, {
         method: add ? "GET": "DELETE",
@@ -156,7 +158,7 @@ const AuthDashboard = (props) => {
     
     const startTime = localStorage.getItem("startTime");
     const endTime = localStorage.getItem("endTime");
-    prefURL.search = new URLSearchParams({startTime, endTime, extracurriculum})
+    prefURL.search = new URLSearchParams({startTime, endTime, extraCurriculum: extracurriculum})
     fetch(prefURL, {
       method: 'POST',
       credentials: 'include'
