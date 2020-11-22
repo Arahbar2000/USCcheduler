@@ -58,6 +58,12 @@ public class Courses extends HttpServlet {
             // Connection dbcon = dataSource.getConnection();
             Connection dbcon = DriverManager.getConnection(JDBCCredential.url, JDBCCredential.username, JDBCCredential.password);
 
+            // try {
+            //     Class.forName("com.mysql.jdbc.Driver");
+            // }
+            // catch(ClassNotFoundException e) {
+    
+            // }
 
             String query = "SELECT *\n" +
                     "FROM Course\n" +
