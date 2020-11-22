@@ -21,14 +21,21 @@ public class CreateSchedule {
 		this.user = user;
 		all_courses = getUserCourses(this.user);
 		pref = user.prefs;
+
 	}
 
 	// fetch courses
 	private static List<Course> getUserCourses(User user) {
+		try {
+            Class.forName("com.mysql.jdbc.Driver");
+        }
+        catch(ClassNotFoundException e) {
+
+        }
 		List<Course> courses = new ArrayList<>();
 		try (Connection dbcon = DriverManager.getConnection(
 				JDBCCredential.url, JDBCCredential.username, JDBCCredential.password)){
-		    String query = "select userId, courseId, department, courseNumber, title, " +
+				String query = "select userId, courseId, department, courseNumber, title, " +
 					"startTime, endTime, section, instructor, units, daysOfWeek, spots\n" +
 					"from Schedule s natural join Course c\n" +
 					"where s.userId = ?\n" +
@@ -38,15 +45,18 @@ public class CreateSchedule {
 			// Declare our statement
 			PreparedStatement statement = dbcon.prepareStatement(query);
 
+			System.out.println(user.id);
 			statement.setInt(1, user.id);
 
 			// Perform the query
 			ResultSet rs = statement.executeQuery();
 
+			System.out.println("TRYING TO FIND COURSES");
+
 			while (rs.next()) {
 				LocalTime startLocalTime = LocalTime.parse(rs.getString("startTime"));
 				LocalTime endLocalTime = LocalTime.parse(rs.getString("endTime"));
-
+				System.out.println("GETTING A COURSE");
                 Course c = new Course(
                 		rs.getInt("courseId"),
                 		rs.getString("department"),
@@ -76,6 +86,12 @@ public class CreateSchedule {
 	// assume courses_str ='CSCI201,CSCI270‘
 	public static List<Course> getStringCourses(String courses_str){
 		List<Course> courses = new ArrayList<>();
+		try {
+            Class.forName("com.mysql.jdbc.Driver");
+        }
+        catch(ClassNotFoundException e) {
+
+        }
 		try (Connection dbcon = DriverManager.getConnection(
 				JDBCCredential.url, JDBCCredential.username, JDBCCredential.password)){
 
