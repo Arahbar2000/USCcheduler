@@ -7,7 +7,8 @@ import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import ListGroup from "react-bootstrap/ListGroup"
 import { API_URL } from '../env'
-const GuestDashboard = () => {
+import { generateSchedules } from '../Helpers/getSchedules';
+const GuestDashboard = (props) => {
   // displays current chosen courses
   // allows user to add new courses
   // saves course preferences in localStorage so that preferences don't get deleted later on
@@ -151,7 +152,6 @@ const GuestDashboard = () => {
   }
 
   const generateEvents = () => {
-    const url = new URL(API_URL + 'guest')
     const extracurriculars = JSON.parse(localStorage.getItem("extracurriculars"))
     let extracurriculum = "";
     if (extracurriculars != null) {
@@ -164,8 +164,34 @@ const GuestDashboard = () => {
     else {
       extracurriculum = null;
     }
+    console.log(extracurriculum)
+    let courses = "";
+    const coursesData = JSON.parse(localStorage.getItem("courses"));
+    if(coursesData != null) {
+      coursesData.forEach(course => {
+        courses += course.department + course.courseNumber.toString() + ',';
+      })
+      courses = courses.slice(0, -1);
+    }
+    console.log(courses);
     const startTime = localStorage.getItem("startTime");
     const endTime = localStorage.getItem("endTime");
+    const url = new URL(API_URL + 'guest');
+    url.search = new URLSearchParams({ courses, extraCurriculum: extracurriculum, startTime, endTime });
+    fetch(url, {
+      method: 'GET',
+      credentials: 'include'
+    })
+    .then(response => response.json())
+    .then(schedules => {
+        localStorage.setItem("schedules", JSON.stringify(schedules));
+        const allEvents = generateSchedules(schedules);
+        localStorage.setItem("events", JSON.stringify(allEvents));
+        props.history.push('/');
+    })
+    .catch(error => {
+      console.log(error);
+    })
   }
 
   const addExtracurricular = (event) => {

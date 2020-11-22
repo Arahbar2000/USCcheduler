@@ -92,12 +92,12 @@ public class Users extends HttpServlet{
 
 		String email = req.getParameter("email");
 		String password = req.getParameter("password");
-		// try {
-        //     Class.forName("com.mysql.jdbc.Driver");
-        // }
-        // catch(ClassNotFoundException e) {
+		try {
+            Class.forName("com.mysql.jdbc.Driver");
+        }
+        catch(ClassNotFoundException e) {
 
-        // }
+        }
 		
 		
 		
@@ -162,12 +162,12 @@ public class Users extends HttpServlet{
 	protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 		resp.setContentType("application/json"); // Response mime type
 		PrintWriter out = resp.getWriter();
-		// try {
-        //     Class.forName("com.mysql.jdbc.Driver");
-        // }
-        // catch(ClassNotFoundException e) {
+		try {
+            Class.forName("com.mysql.jdbc.Driver");
+        }
+        catch(ClassNotFoundException e) {
 
-        // }
+        }
 
 		String email = req.getParameter("email");
 		String password = req.getParameter("password");

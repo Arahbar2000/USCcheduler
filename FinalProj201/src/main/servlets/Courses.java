@@ -139,12 +139,12 @@ public class Courses extends HttpServlet {
         response.setContentType("application/json"); // Response mime type
         PrintWriter out = response.getWriter();
         // Don't delete this comment
-        // try {
-        //     Class.forName("com.mysql.cj.jdbc.Driver");
-        // }
-        // catch(ClassNotFoundException e) {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+        }
+        catch(ClassNotFoundException e) {
 
-        // }
+        }
 
         JsonObject respJson = new JsonObject();
         User user = (User) request.getSession().getAttribute("user");

@@ -32,12 +32,12 @@ public class SaveSchedule extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// try {
-        //     Class.forName("com.mysql.cj.jdbc.Driver");
-        // }
-        // catch(ClassNotFoundException e) {
+		try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+        }
+        catch(ClassNotFoundException e) {
 
-        // }
+        }
 		// TODO Auto-generated method stub
 		JsonArray schedule = new JsonArray();
 		User user = (User) request.getSession().getAttribute("user");
