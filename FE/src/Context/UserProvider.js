@@ -30,6 +30,24 @@ const UserProvider = (props) => {
             // calls setUser, setCourses, and setPreferences
             // waiting on response format from backend
             console.log(data);
+            const courses = data.Courses.split(',');
+            courses.map(course => {
+                const department = course.match('[^0-9]+');
+                const courseNumber = parseInt(course.match('[0-9]+'))
+                return {
+                    department: course.match('[^0-9]+'),
+                    courseNumber: parseInt(course.match('[0-9]+'))
+                }
+            })
+            const newCourses = []
+            courses.forEach(course => {
+                if (course) {
+                    const department = course.match('[^0-9]+')[0],
+                    courseNumber = parseInt(course.match('[0-9]+'))
+                    newCourses.push({department, courseNumber});
+                }
+            })
+            localStorage.setItem("courses", JSON.stringify(newCourses))
         })
         .catch(error => {
             console.log(error)

@@ -9,6 +9,7 @@ import ListGroup from "react-bootstrap/ListGroup"
 import { API_URL } from '../env'
 import { generateSchedules } from '../Helpers/getSchedules'
 import { isPropsEqual } from "@fullcalendar/react";
+import { useUser } from '../Context/UserProvider'
 
 const AuthDashboard = (props) => {
     // displays current chosen courses
@@ -18,7 +19,8 @@ const AuthDashboard = (props) => {
   const [extracurriculars, setExtracurriculars] = useState([]);
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
-  const [changedPreferences, setChanged] = useState(false)
+  const [changedPreferences, setChanged] = useState(false);
+  const { getUser } = useUser();
 
   useEffect(() => {
     let courseData = JSON.parse(localStorage.getItem("courses"));
@@ -40,7 +42,7 @@ const AuthDashboard = (props) => {
     if (endTimeData != null) {
       setEndTime(endTimeData);
     }
-    else setEndTime(null)
+    else setEndTime(null);
   }, [changedPreferences])
 
   const addCourse = (event) => {
@@ -53,16 +55,10 @@ const AuthDashboard = (props) => {
     verifyCourse(department, courseNumber, true)
     .then(() => {
       alert("Valid Course!");
-      // add course to storage
-      let coursesData = JSON.parse(localStorage.getItem("courses"));
-      if (coursesData == null) {
-        coursesData = [{department, courseNumber}]
-      }
-      else {
-        coursesData.push({department, courseNumber})
-      }
-      localStorage.setItem("courses", JSON.stringify(coursesData))
-      setChanged(!changedPreferences)
+      getUser()
+      .then(() => {
+        setChanged(!changedPreferences)
+      })
     })
     .catch(() => {
       alert("Invalid course.");
@@ -103,24 +99,10 @@ const AuthDashboard = (props) => {
     verifyCourse(department, courseNumber, false)
     .then(() => {
       alert("Valid Course!");
-      let coursesData = JSON.parse(localStorage.getItem("courses"))
-      if ( coursesData == null ) {
-        alert("You currently do not have any courses");
-      }
-      let notFound = true;
-      for(let i = 0; i < courses.length; i++) {
-        if (coursesData[i].department == department 
-          && coursesData[i].courseNumber == courseNumber) {
-          notFound = false;
-          coursesData.splice(i, 1);
-          localStorage.setItem("courses", JSON.stringify(coursesData));
-          setChanged(!changedPreferences);
-          break;
-        }
-      }
-      if (notFound) {
-        alert("Course does not exist");
-      }
+      getUser()
+      .then(() => {
+        setChanged(!changedPreferences)
+      })
     }).catch(error => {
       alert("Course does not exist")
     })
@@ -131,8 +113,6 @@ const AuthDashboard = (props) => {
       const start = event.target.elements.start.value;
       const end = event.target.elements.end.value;
       const extracurricular = [start + " " + end];
-      console.log(start);
-      console.log(end);
       let extracurricularData = JSON.parse(localStorage.getItem("extracurriculars"));
       if (extracurricularData == null) {
         extracurricularData = [ extracurricular ]
