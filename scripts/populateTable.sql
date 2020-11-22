@@ -1,5 +1,5 @@
 use cs201;
-LOAD DATA LOCAL INFILE '~/Projects/Backend/scripts/courses.csv'
+LOAD DATA LOCAL INFILE 'courses.csv'
 INTO TABLE Course
 FIELDS TERMINATED BY '|'
 LINES TERMINATED BY '\n';
@@ -16,5 +16,8 @@ VALUES (1, 'CSCI', 201);
 INSERT INTO Schedule(userId, department, courseNumber)
 VALUES (1, 'CSCI', 270);
 
--- # INSERT INTO Preferences(userId, courseName, startTime, endTime, extraCurriculum, desiredUnits)
--- # VALUES (1,'CSCI270,CSCI201','12:00','20:00','[14:00 15:00],[08:00 09:00]', 18);
+INSERT INTO Preferences(userId, startTime, endTime, extraCurriculum, desiredUnits)
+VALUES (1,'12:00','20:00','[14:00 15:00],[08:00 09:00]', 18);
+
+INSERT INTO Preferences(userId, startTime, endTime, extraCurriculum, desiredUnits)
+VALUES (2,'16:00','20:00','[14:00 15:00],[08:00 09:00]', 20);

@@ -35,13 +35,13 @@ public class Session extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        // try {
-        //     Class.forName("com.mysql.jdbc.Driver");
-        // }
-        // catch(ClassNotFoundException e) {
-
-        // }
-
+         try {
+             Class.forName("com.mysql.jdbc.Driver");
+         }
+         catch(ClassNotFoundException e) {
+//
+         }
+//
         response.setContentType("application/json"); // Response mime type
 
         // write to response

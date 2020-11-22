@@ -63,49 +63,22 @@ public class Pref extends HttpServlet {
             		JDBCCredential.username, JDBCCredential.password);) {
                 String update = req.getParameter("update");
                 PreparedStatement stmt = null;
-                if (update == null) {
-                    resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
-                    return;
-                }
-                // insert db
-                else if (update.equals("0")) {
-                    String query =
-                            "INSERT INTO Preferences(userId, startTime, endTime, extraCurriculum, desiredUnits)\n" +
-                                    "VALUES (?,?,?,?,?);\n";
-                    stmt = dbcon.prepareStatement(query);
+                String query =
+                        "INSERT INTO Preferences(userId, startTime, endTime, extraCurriculum, desiredUnits)\n" +
+                        "VALUES (?, ?, ?, ?, ?)\n" +
+                        "on duplicate key update userId = VALUES(userId), startTime = VALUES(startTime), endTime = VALUES(endTime),\n" +
+                        "                        extraCurriculum = VALUES(extraCurriculum), desiredUnits = VALUES(desiredUnits);\n";
 
-                    stmt.setInt(1, user.id);
-                    // use setObject to insert NULL if object == null
-                    stmt.setObject(2, startTime);
-                    stmt.setObject(3, endTime);
-                    stmt.setObject(4, extraCurriculum);
-                    stmt.setObject(5, desiredUnits);
-                    respJson.addProperty("message", "inserted");
-                }
-                // update db
-                else if (update.equals("1")) {
-                    String query =
-                            "UPDATE Preferences\n" +
-                                    "   SET startTime=?, endTime=?, extraCurriculum = ?, desiredUnits=?\n" +
-                                    "WHERE userId = ?";
-                    stmt = dbcon.prepareStatement(query);
+                stmt = dbcon.prepareStatement(query);
 
-                    // use setObject to insert NULL if object == null
-                    stmt.setObject(1, startTime);
-                    stmt.setObject(2, endTime);
-                    stmt.setObject(3, extraCurriculum);
-                    stmt.setObject(4, desiredUnits);
-
-                    stmt.setInt(5, user.id);
-                    respJson.addProperty("message", "updated");
-                }
-                // update = 0/1
-                else{
-                    resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
-                    return;
-                }
+                stmt.setInt(1, user.id);
+                // use setObject to insert NULL if object == null
+                stmt.setObject(2, startTime);
+                stmt.setObject(3, endTime);
+                stmt.setObject(4, extraCurriculum);
+                stmt.setObject(5, desiredUnits);
                 stmt.executeUpdate();
-
+                respJson.addProperty("message", "modified");
                 respJson.addProperty("status", "success");
                 stmt.close();
                 resp.setStatus(200);
