@@ -174,11 +174,7 @@ const AuthDashboard = (props) => {
       })
       .then(response => response.json())
       .then(schedules => {
-        // response.forEach(schedule => {
-        //   schedule.forEach(section => {
-        //     console.log(section);
-        //   })
-        // })
+        localStorage.setItem("schedules", JSON.stringify(schedules));
         const allEvents = generateSchedules(schedules);
         localStorage.setItem("events", JSON.stringify(allEvents));
         props.history.push('/')

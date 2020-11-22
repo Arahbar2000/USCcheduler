@@ -6,6 +6,7 @@ import Container from "react-bootstrap/Container";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import ListGroup from "react-bootstrap/ListGroup"
+import { API_URL } from '../env'
 const GuestDashboard = () => {
   // displays current chosen courses
   // allows user to add new courses
@@ -25,14 +26,26 @@ const GuestDashboard = () => {
     if (courseData != null) {
       setCourses(courseData)
     }
+    else {
+      setCourses([]);
+    }
     if (extracurricularData != null) {
       setExtracurriculars(extracurricularData);
+    }
+    else {
+      setExtracurriculars([]);
     }
     if (startTimeData != null) {
       setStartTime(startTimeData);
     }
+    else {
+      setStartTime(null);
+    }
     if (endTimeData != null) {
       setEndTime(endTimeData);
+    }
+    else {
+      setEndTime(null);
     }
   }, [changedPreferences])
 
@@ -40,22 +53,34 @@ const GuestDashboard = () => {
     event.preventDefault();
     // given a course, communicates with the server to check if course is valid
     // if valid, display course on dashboard add to courses, and save to localStorage
-    const courseName = event.target.elements.add.value.toUpperCase();
-    const department = courseName.slice(0, 4);
-    const courseNumber = parseInt(courseName.slice(4, courseName.length));
+    const courseName = event.target.elements.add.value.toUpperCase().split(" ");
+    const department = courseName[0];
+    const courseNumber = parseInt(courseName[1]);
     verifyCourse(department, courseNumber, true)
     .then(() => {
-      alert("Valid Course!");
       // add course to storage
+      let added = false;
       let coursesData = JSON.parse(localStorage.getItem("courses"));
       if (coursesData == null) {
         coursesData = [{department, courseNumber}]
       }
       else {
-        coursesData.push({department, courseNumber})
+        for(let i = 0; i < coursesData.length; i++) {
+          if(coursesData.department == department && coursesData.courseNumber == courseNumber) {
+            added = true;
+            alert("Course has already been added!");
+            break;
+          }
+        }
+        if (!added) {
+          coursesData.push({department, courseNumber})
+        }
       }
-      localStorage.setItem("courses", JSON.stringify(coursesData))
-      setChanged(!changedPreferences)
+      if (!added) {
+        alert("Valid Course!");
+        localStorage.setItem("courses", JSON.stringify(coursesData))
+        setChanged(!changedPreferences)
+      }
     })
     .catch(() => {
       alert("Invalid course.");
@@ -64,15 +89,23 @@ const GuestDashboard = () => {
 
   const verifyCourse = (department, courseNumber, add) => {
     const url = new URL("http://localhost:8080/CS201/api/courses")
-    url.search = new URLSearchParams({department, courseNumber})
+    if (add) {
+      url.search = new URLSearchParams({department, courseNumber})
+    }
+    else {
+      url.search = new URLSearchParams({department, courseNumber, clear: 0})
+    }
     return new Promise((resolve, reject) => {
       fetch(url, {
-        method: add ? "GET": "DELETE",
-        credentials: 'include'
+        method: add ? "GET": "DELETE"
       }).then(response => response.json())
       .then((response) => {
-          console.log(response)
+        if (response.status == true) {
           return resolve();
+        }
+        else {
+          return reject();
+        }
       })
       .catch(error => {
         // testing purposes, later change to false
@@ -114,10 +147,25 @@ const GuestDashboard = () => {
     localStorage.removeItem("extracurriculars");
     localStorage.removeItem("startTime");
     localStorage.removeItem("endTime");
+    setChanged(!changedPreferences);
   }
 
-  const generateEvents = event => {
-
+  const generateEvents = () => {
+    const url = new URL(API_URL + 'guest')
+    const extracurriculars = JSON.parse(localStorage.getItem("extracurriculars"))
+    let extracurriculum = "";
+    if (extracurriculars != null) {
+      extracurriculars.forEach(extracurricular => {
+        const strFormat = JSON.stringify(extracurricular) + ",";
+        extracurriculum += strFormat;
+      })
+      extracurriculum = extracurriculum.slice(0, -1)
+    }
+    else {
+      extracurriculum = null;
+    }
+    const startTime = localStorage.getItem("startTime");
+    const endTime = localStorage.getItem("endTime");
   }
 
   const addExtracurricular = (event) => {
@@ -139,13 +187,6 @@ const GuestDashboard = () => {
       setChanged(!changedPreferences);
   }
 
-  const clearExtracurriculars = event => {
-    event.preventDefault();
-    localStorage.removeItem("extracurriculars");
-    
-    setChanged(!changedPreferences);
-  }
-
   const addTimes = event => {
     event.preventDefault();
     const start = event.target.elements.start.value;
@@ -156,19 +197,29 @@ const GuestDashboard = () => {
     if( end != "") {
       localStorage.setItem("endTime", end);
     }
+    setChanged(!changedPreferences);
+  }
+
+  const clearCourses = () => {
+    localStorage.removeItem("courses");
+    setChanged(!changedPreferences);
   }
 
   return (
     <div>
       <Button variant="primary" onClick={clearPreferences}>Clear Preferences</Button>
-      <Container fluid>
+      <Button variant="primary" onClick={clearCourses}>Clear courses</Button>
+      <br/>
+      <br/>
+      <Container>
         <Row>
           <Col>
           <Form onSubmit={addCourse}>
           {" "}
           <Form.Group controlId="add">
           <Form.Label>Add a class:</Form.Label>
-          <Form.Control type="text" placeholder="Enter a class e.g. CSCI201" />
+          <Form.Control type="text" placeholder="Enter a class e.g. CSCI 201" />
+          <Form.Text>Make sure there is a space between department and course number</Form.Text>
         </Form.Group>
         <Button variant="primary" type="submit">
           Add
@@ -180,7 +231,8 @@ const GuestDashboard = () => {
         {" "}
         <Form.Group controlId="remove">
           <Form.Label>Remove a class:</Form.Label>
-          <Form.Control type="text" placeholder="Enter a class e.g. CSCI201" />
+          <Form.Control type="text" placeholder="Enter a class e.g. CSCI 201" />
+          <Form.Text>Make sure there is a space between department and course number</Form.Text>
         </Form.Group>
         <Button variant="primary" type="submit">
           Remove
@@ -243,7 +295,7 @@ const GuestDashboard = () => {
       </Form>
       <br/>
       <Container fluid>
-        <Button style={{background: 'red'}}variant="primary" onClick={generateEvents} block>
+        <Button style={{background: 'red'}} variant="primary" onClick={generateEvents} block>
             GENERATE EVENTS
         </Button>
       </Container>
@@ -256,7 +308,7 @@ const GuestDashboard = () => {
           <div>
           <ListGroup>
               {courses.map((course) => (
-                  <ListGroup.Item>{course.department + course.courseNumber.toString()}</ListGroup.Item>
+                  <ListGroup.Item key={course.department + course.courseNumber.toString()}>{course.department + course.courseNumber.toString()}</ListGroup.Item>
               ))}
             </ListGroup>
           </div>
@@ -272,9 +324,14 @@ const GuestDashboard = () => {
             </ListGroup>
           </div>
           </Col>
+          <Col>
+              <ListGroup>
+                {startTime ?  <ListGroup.Item>Start Time: {startTime}</ListGroup.Item> : null}
+                {endTime ? <ListGroup.Item>End Time: {endTime}</ListGroup.Item> : null}
+              </ListGroup>
+          </Col>
         </Row>
       </Container>
-      
     </div>
   );
 };

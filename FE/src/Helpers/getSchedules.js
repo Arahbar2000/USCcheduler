@@ -89,7 +89,7 @@ const schedulesMock = [
 
 const colors = ['blue', 'green', 'purple', 'red', 'orange', 'brown']
 // helper function for getSchedules
-export const generateSchedules = (schedules) => {
+export const generateSchedules = (schedules, flag=true) => {
     // parses schedules in order to convert schedules into lists of events that are able to serve as input to calendar component
     const eventSchedules = []
     schedules.forEach(schedule => {
@@ -100,9 +100,15 @@ export const generateSchedules = (schedules) => {
             for(let i = 0; i < section.daysOfWeek.length; i++) {
                 const id = section.sectionId;
                 const start = new Date(DATE_CONVERTER[section.daysOfWeek[i]])
-                start.setHours(section.startTime.hour, section.startTime.minute, 0);
                 const end = new Date(DATE_CONVERTER[section.daysOfWeek[i]])
-                end.setHours(section.endTime.hour, section.endTime.minute, 0);
+                if (flag) {
+                    start.setHours(section.startTime.hour, section.startTime.minute, 0);
+                    end.setHours(section.endTime.hour, section.endTime.minute, 0);
+                }
+                else {
+                    start.setHours(parseInt(section.startTime.split(":")), parseInt(section.startTime.split(":")))
+                    end.setHours(parseInt(section.endTime.split(":")), parseInt(section.endTime.split(":")))
+                }
                 const title = section.department + section.courseNumber.toString() + '-' + section.sectionType + '-' + section.sectionId;
                 events.push({
                     id,
