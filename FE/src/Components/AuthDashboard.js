@@ -14,7 +14,6 @@ const AuthDashboard = (props) => {
     // displays current chosen courses
   // allows user to add new courses
   // saves course preferences in localStorage so that preferences don't get deleted later on
-
   const [courses, setCourses] = useState([]);
   const [extracurriculars, setExtracurriculars] = useState([]);
   const [startTime, setStartTime] = useState("");
@@ -79,8 +78,13 @@ const AuthDashboard = (props) => {
         credentials: 'include'
       }).then(response => response.json())
       .then(response => {
-          console.log(response)
-          return resolve();
+        console.log(response)
+          if (Object.keys(response).length === 0 && response.constructor === Object) {
+            return reject();
+          }
+          else {
+            return resolve();
+          }
       })
       .catch(error => {
         // testing purposes, later change to false
@@ -216,9 +220,33 @@ const AuthDashboard = (props) => {
     setChanged(!changedPreferences);
   }
 
+  const clearCourses = () => {
+    const url = new URL(API_URL + 'courses');
+    fetch(url, {
+      method: 'CLEAR',
+      credentials: 'include'
+    }).then(response => {
+      alert("Success!");
+      if (Object.keys(response).length === 0 && response.constructor === Object) {
+        console.log("error");
+        alert("Error");
+      }
+      else {
+        console.log(response)
+        localStorage.removeItem("courses");
+        setChanged(!changedPreferences);
+      }
+    })
+    .catch(error => {
+      console.log(error);
+      alert("Error");
+    })
+  }
+
   return (
     <div>
       <Button variant="primary" onClick={clearPreferences}>Clear Preferences</Button>
+      <Button variant="primary" onClick={clearCourses}>Clear courses</Button>
       <br/>
       <br/>
       <Container>
