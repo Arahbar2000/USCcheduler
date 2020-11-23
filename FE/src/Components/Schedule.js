@@ -88,6 +88,12 @@ const Schedule = () => {
         } 
     }
 
+    const handleClearSchedule = () => {
+        localStorage.removeItem("schedules");
+        localStorage.removeItem("events");
+        setSchedules([]);
+    }
+
     useEffect(() => {
         const events = JSON.parse(localStorage.getItem("events"));
         if (events != null) {
@@ -129,10 +135,14 @@ const Schedule = () => {
                     getSaved: {
                         text: 'Get saved schedule',
                         click: handleGetSavedSchedule
+                    },
+                    clear: {
+                        text: 'Clear Schedules',
+                        click: handleClearSchedule
                     }
                 }}
                 headerToolbar = {{
-                    left: 'select',
+                    left: 'select clear',
                     right: 'getSaved',
                     title: 'title',
                     center: 'left right'

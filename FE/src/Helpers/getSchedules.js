@@ -106,8 +106,8 @@ export const generateSchedules = (schedules, flag=true) => {
                     end.setHours(section.endTime.hour, section.endTime.minute, 0);
                 }
                 else {
-                    start.setHours(parseInt(section.startTime.split(":")), parseInt(section.startTime.split(":")))
-                    end.setHours(parseInt(section.endTime.split(":")), parseInt(section.endTime.split(":")))
+                    start.setHours(parseInt(section.startTime.split(":")[0]), parseInt(section.startTime.split(":")[1]))
+                    end.setHours(parseInt(section.endTime.split(":")[0]), parseInt(section.endTime.split(":")[1]))
                 }
                 const title = section.department + section.courseNumber.toString() + '-' + section.sectionType + '-' + section.sectionId;
                 events.push({
