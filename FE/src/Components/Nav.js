@@ -1,14 +1,12 @@
 import React, { useState, useRef } from "react";
 import { useAuth } from "../Context/AuthProvider";
 import { Link, Route } from "react-router-dom";
-import Navbar from "react-bootstrap/Navbar";
-import NavDropdown from "react-bootstrap/NavDropdown";
+import {NavLink } from 'react-router-dom';
+import { Navbar, Nav as Nv } from "react-bootstrap";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
-import GuestDashboard from "./GuestDashboard";
 import Swal from 'sweetalert2';
-import { API_URL } from "../env";
 
 const SignInButton = (props) => {
   const [show, setShow] = useState(false);
@@ -178,8 +176,13 @@ const Nav = (props) => {
   // otherwise, navbar shows signUp and signIn buttons
   return (
     <Navbar>
-      <Navbar.Brand href="/">Home</Navbar.Brand>
-      <Link to="/dashboard">Dashboard</Link>
+      <Nv activeKey={window.location.pathname}>
+        {/*<Navbar.Brand href="/">Home</Navbar.Brand>*/}
+        <Nv.Link href="/">Home</Nv.Link>
+        <Nv.Link href="/dashboard">Dashboard</Nv.Link>
+      </Nv>
+      {/*<NavLink to="/dashboard" activeStyle={{ fontsize: '20', color: 'red' }}>Dashboard</NavLink>*/}
+
       <Navbar.Toggle />
       <Navbar.Collapse className="justify-content-end">
         
