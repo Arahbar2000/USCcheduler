@@ -234,7 +234,7 @@ public class CreateSchedule {
 
 		ArrayList<Schedule> schedules = new ArrayList<Schedule>();
 		int i = 0;
-		while(i++ < n || schedules.isEmpty()) {
+		while(i++ < n) {
 			boolean add = true;
 			Schedule sched = makeSchedule();
 			for(Schedule s: schedules) {
