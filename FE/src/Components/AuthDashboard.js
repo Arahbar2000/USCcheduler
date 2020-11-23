@@ -223,6 +223,7 @@ const AuthDashboard = (props) => {
     localStorage.removeItem("startTime");
     localStorage.removeItem("endTime");
     setChanged(!changedPreferences);
+    alert("Success!");
   }
 
   const clearCourses = () => {
