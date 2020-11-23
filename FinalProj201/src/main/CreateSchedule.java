@@ -321,10 +321,13 @@ public class CreateSchedule {
 	}
 
 	private boolean verifyLecture(Course co, Schedule s) {
+		
+		if(co.sectionType.equals("Lec-Lab") || co.sectionType.equals("Lec-Dis"))
+            return true;
 
 		for(Course c: s.decidedClasses) {
 			if(c.department.equals(co.department) && c.courseNumber == co.courseNumber
-					&& (c.sectionType.equals("Lec") || c.sectionType.equals("Lec-Lab") || c.sectionType.equals("Lec-Dis")))
+					&& c.sectionType.equals("Lec"))
 				return true;
 		}
 
