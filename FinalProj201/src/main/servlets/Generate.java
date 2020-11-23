@@ -49,7 +49,7 @@ public class Generate extends HttpServlet {
 		CreateSchedule mySch = new CreateSchedule(user);
 		System.out.println("CREATING SCHEDULE OBJECT");
 
-		ArrayList<Schedule> genSchedulesList = mySch.getSchedules(15);
+		ArrayList<Schedule> genSchedulesList = mySch.getSchedules(25);
 		System.out.println("SUCESSFULLY OBTAINED SCHEDULES");
 		Gson gson = new Gson();
 		System.out.println(genSchedulesList.size());
