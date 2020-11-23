@@ -149,9 +149,9 @@ public class CreateSchedule {
 					);
 					courses.add(c);
 				}
-				rs.close();
+				//rs.close();
 			}
-			statement.close();
+			//statement.close();
 		}
 		catch (Exception e) {
 			System.out.println("error");
@@ -236,7 +236,7 @@ public class CreateSchedule {
 
 		ArrayList<Schedule> schedules = new ArrayList<Schedule>();
 		int i = 0;
-		while(i++ < n || schedules.isEmpty()) {
+		while(i++ < n) {
 			boolean add = true;
 			Schedule sched = makeSchedule();
 			for(Schedule s: schedules) {
@@ -323,6 +323,9 @@ public class CreateSchedule {
 	}
 
 	private boolean verifyLecture(Course co, Schedule s) {
+		
+		if(co.sectionType.equals("Lec-Lab") || co.sectionType.equals("Lec-Dis"))
+            return true;
 
 		for(Course c: s.decidedClasses) {
 			if(c.department.equals(co.department) && c.courseNumber == co.courseNumber

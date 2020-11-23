@@ -69,8 +69,12 @@ public class Profile extends HttpServlet {
 
      	if(user.prefs != null) {
 			 System.out.println("GETTING USER PREF COURSES");
- 	    	profile.addProperty("StartTime", user.prefs.startTime.toString());
-			profile.addProperty("Endtime", user.prefs.endTime.toString());
+			 if(user.prefs.startTime != null) {
+				profile.addProperty("StartTime", user.prefs.startTime.toString());
+			 }
+			 if(user.prefs.startTime != null) {
+				 profile.addProperty("EndTime", user.prefs.endTime.toString());
+			 }
 			courses = new StringBuilder();
 
  	    	for(int i = 0; i < user.prefs.courseList.size(); i++) {
