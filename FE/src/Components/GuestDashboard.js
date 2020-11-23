@@ -288,6 +288,8 @@ const GuestDashboard = (props) => {
       <Button variant="info" onClick={clearCourses}>Clear courses</Button>
       <br/>
       <br/>
+      <p>Courses with TBA times are not considered</p>
+      <p>If a schedule can't meet preferences, it will ignore preferences</p>
       <Container>
         <Row>
           <Col>
