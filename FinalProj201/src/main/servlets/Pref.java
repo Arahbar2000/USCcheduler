@@ -32,12 +32,12 @@ public class Pref extends HttpServlet {
     // user input preferences
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        // try {
-        //     Class.forName("com.mysql.cj.jdbc.Driver");
-        // } catch (ClassNotFoundException e) {
-        //     // TODO Auto-generated catch block
-        //     e.printStackTrace();
-        // }
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
         resp.setContentType("application/json"); // Response mime type
         PrintWriter out = resp.getWriter();
 

@@ -38,12 +38,12 @@ public class Courses extends HttpServlet {
 
         response.setContentType("application/json"); // Response mime type
         // Don't delete this comment
-        // try {
-        //     Class.forName("com.mysql.cj.jdbc.Driver");
-        // }
-        // catch(ClassNotFoundException e) {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+        }
+        catch(ClassNotFoundException e) {
 
-        // }
+        }
 
         // write to response
         PrintWriter out = response.getWriter();
@@ -51,6 +51,8 @@ public class Courses extends HttpServlet {
         // assume there would always be department and courseNumber
         String department = request.getParameter("department");
         int courseNumber = Integer.parseInt(request.getParameter("courseNumber"));
+        System.out.println(department);
+        System.out.println(courseNumber);
 
         JsonObject respJson = new JsonObject();
         User user = (User) request.getSession().getAttribute("user");
@@ -74,6 +76,7 @@ public class Courses extends HttpServlet {
             ResultSet rs = statement.executeQuery();
 
             if(rs.next()){
+                System.out.println("FOUND COURSES");
 
                 if (user != null) {
                     query = "SELECT * FROM Schedule WHERE userId = ? AND department = ? AND courseNumber = ?;";
@@ -98,6 +101,7 @@ public class Courses extends HttpServlet {
 
                         // Perform the query
                         statement.executeUpdate();
+                        user.updatePref();
 
                         //status OK
                         respJson.addProperty("message", "inserted");

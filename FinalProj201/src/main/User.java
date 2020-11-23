@@ -43,6 +43,12 @@ public class User {
 
 	public void updatePref(){
 		Preferences pref = null;
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+		}
+		catch(ClassNotFoundException e) {
+//
+		}
 		try (Connection dbcon = DriverManager.getConnection(
 				JDBCCredential.url, JDBCCredential.username, JDBCCredential.password)){
 			String query = "select * " +
@@ -71,10 +77,14 @@ public class User {
 				);
 
 				String extraCurriculumStr = rs.getString("extraCurriculum");
+				System.out.println("EXTRACURRICULUM");
+				System.out.println(extraCurriculumStr.getClass());
 				List<Map<String, LocalTime>> extraCurriculum = new ArrayList<>();
-				if (extraCurriculumStr != null){
+				if (!extraCurriculumStr.equals("null")){
 					// [{"startTime":08:00, "endTime":10:00}, ... ]
 					for (String times: Arrays.asList(extraCurriculumStr.split(",\\s*"))){
+						System.out.println("TIMES");
+						System.out.println(times);
 						int splitPos = times.indexOf(' ');
 						Map<String, LocalTime> m = new HashMap<>();
 						m.put("startTime", LocalTime.parse(

@@ -41,12 +41,12 @@ public class Users extends HttpServlet{
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("application/json"); // Response mime type
 		PrintWriter out = resp.getWriter();
-		// try {
-        //     Class.forName("com.mysql.jdbc.Driver");
-        // }
-        // catch(ClassNotFoundException e) {
+		try {
+            Class.forName("com.mysql.jdbc.Driver");
+        }
+        catch(ClassNotFoundException e) {
 
-        // }
+        }
 
         String email = req.getParameter("email");
         String password = req.getParameter("password");
@@ -112,8 +112,6 @@ public class Users extends HttpServlet{
         catch(ClassNotFoundException e) {
 
         }
-		
-		
 		
 
 		BufferedReader br = new BufferedReader(new InputStreamReader(req.getInputStream()));
