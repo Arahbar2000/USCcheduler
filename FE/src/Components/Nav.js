@@ -138,7 +138,7 @@ const SignUpButton = (props) => {
                 ref={emailInput}
               />
               <Form.Text className="text-muted">
-                Login in with usc email
+                Enter usc email
               </Form.Text>
             </Form.Group>
 
@@ -153,7 +153,7 @@ const SignUpButton = (props) => {
             </Form.Group>
 
             <Button variant="primary" type="submit">
-              Sign me in!
+              Sign up!
             </Button>
           </Form>
         </Modal.Body>
