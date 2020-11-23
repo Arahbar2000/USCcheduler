@@ -182,6 +182,7 @@ const GuestDashboard = (props) => {
     localStorage.removeItem("startTime");
     localStorage.removeItem("endTime");
     setChanged(!changedPreferences);
+    alert("Success!");
   }
 
   const generateEvents = () => {
@@ -279,6 +280,7 @@ const GuestDashboard = (props) => {
   const clearCourses = () => {
     localStorage.removeItem("courses");
     setChanged(!changedPreferences);
+    alert("Success!");
   }
 
   return (
