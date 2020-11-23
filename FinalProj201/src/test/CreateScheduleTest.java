@@ -46,6 +46,14 @@ class CreateScheduleTest{
                                 && c.courseNumber == 201
                                 && c.sectionType.equals("Lec")
                         ));
+        courses = CreateSchedule.getStringCourses("EE109");
+        System.out.println(courses);
+        assertTrue(
+                courses.stream()
+                        .anyMatch(c -> c.department.equals("EE")
+                                && c.courseNumber == 109
+                                && c.sectionType.equals("Lec")
+                        ));
     }
 
     @Test
