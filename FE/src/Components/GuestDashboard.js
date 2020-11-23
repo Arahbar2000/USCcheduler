@@ -331,12 +331,14 @@ const GuestDashboard = (props) => {
                 <Form.Group controlId="start">
                 <Form.Label>Extracurricular start time:</Form.Label>
                 <Form.Control type="time" placeholder="00:00"/>
+                <Form.Text>Enter military time format e.g. 08:20</Form.Text>
                 </Form.Group>
                 </Col>
                 <Col>
                 <Form.Group controlId="end">
                 <Form.Label>Extracurricular end time:</Form.Label>
                 <Form.Control type="time" placeholder="00:00"/>
+                <Form.Text>Enter military time format e.g 08:20</Form.Text>
                 </Form.Group>
                 </Col>
               </Row>
@@ -357,12 +359,14 @@ const GuestDashboard = (props) => {
             <Form.Group controlId="start">
             <Form.Label>Earliest start time:</Form.Label>
             <Form.Control type="time" placeholder="00:00"/>
+            <Form.Text>Enter military time format e.g. 08:20</Form.Text>
           </Form.Group>
             </Col>
             <Col>
             <Form.Group controlId="end">
             <Form.Label>Latest end time:</Form.Label>
             <Form.Control type="time" placeholder="00:00"/>
+            <Form.Text>Enter military time format, e.g: 08:20</Form.Text>
           </Form.Group>
             </Col>
           </Row>
