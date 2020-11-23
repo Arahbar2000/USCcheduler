@@ -141,6 +141,7 @@ const AuthDashboard = (props) => {
   }
 
   const generateEvents = () => {
+    console.log("GENERATING EVENTS")
     const prefURL = new URL(API_URL + "pref")
     const generateURL = new URL(API_URL + "generate");
     const extracurriculars = JSON.parse(localStorage.getItem("extracurriculars"))

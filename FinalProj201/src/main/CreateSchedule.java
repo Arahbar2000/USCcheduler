@@ -324,7 +324,7 @@ public class CreateSchedule {
 
 		for(Course c: s.decidedClasses) {
 			if(c.department.equals(co.department) && c.courseNumber == co.courseNumber
-					&& c.sectionType.equals("Lec"))
+					&& (c.sectionType.equals("Lec") || c.sectionType.equals("Lec-Lab") || c.sectionType.equals("Lec-Dis")))
 				return true;
 		}
 
