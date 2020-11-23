@@ -30,7 +30,7 @@ create table Course
 	daysOfWeek varchar(50) not null comment 'use string like "MW"',
     spots varchar(50) not null comment 'use string like "3/25"',
 	constraint Course_pk
-		primary key (courseId)
+		primary key (courseId, department, courseNumber)
 );
 
 
