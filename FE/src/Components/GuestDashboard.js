@@ -75,11 +75,14 @@ const GuestDashboard = (props) => {
     const courseNumber = parseInt(courseName[1]);
     verifyCourse(department, courseNumber, true)
     .then(() => {
+      console.log('hello')
       // add course to storage
       let added = false;
       let coursesData = JSON.parse(localStorage.getItem("courses"));
       if (coursesData == null) {
+        console.log('reject')
         coursesData = [{department, courseNumber}]
+        console.log('reject')
       }
       else {
         for(let i = 0; i < coursesData.length; i++) {
@@ -87,10 +90,11 @@ const GuestDashboard = (props) => {
           console.log(coursesData)
           if(coursesData[i].department == department && coursesData[i].courseNumber == courseNumber) {
             added = true;
-            Swal({
-              icon: 'warning',
-              message:"Course has already been added!",
-            });
+            // Swal({
+            //   icon: 'warning',
+            //   message:"Course has already been added!",
+            // });
+            alert("Course has already been added!");
             break;
           }
         }
@@ -99,15 +103,17 @@ const GuestDashboard = (props) => {
         }
       }
       if (!added) {
-          Swal({
-            icon: 'success',
-            message: 'added!'
-          })
+          // Swal({
+          //   icon: 'success',
+          //   message: 'added!'
+          // })
+          alert("Success");
         localStorage.setItem("courses", JSON.stringify(coursesData))
         setChanged(!changedPreferences)
       }
     })
     .catch(() => {
+      console.log('invalid')
       alert("Invalid course.");
     });
   };
@@ -164,6 +170,9 @@ const GuestDashboard = (props) => {
       }
       if (notFound) {
         alert("Course does not exist");
+      }
+      else {
+        alert("Success!");
       }
     }
   };
