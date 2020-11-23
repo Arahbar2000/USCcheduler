@@ -221,8 +221,9 @@ const AuthDashboard = (props) => {
 
   return (
     <div>
-      <Button variant="primary" onClick={clearPreferences}>Clear Preferences</Button>
-      <Button variant="primary" onClick={clearCourses}>Clear courses</Button>
+      <Button variant="info" onClick={clearPreferences}>Clear Preferences</Button>
+        &nbsp;&nbsp;
+      <Button variant="info" onClick={clearCourses}>Clear courses</Button>
       <br/>
       <br/>
       <Container>
@@ -308,11 +309,18 @@ const AuthDashboard = (props) => {
         </Container>
       </Form>
       <br/>
-      <Container fluid>
-        <Button style={{background: 'red'}} variant="primary" onClick={generateEvents} block>
-            GENERATE EVENTS
-        </Button>
-      </Container>
+      <div>
+        <p className="text-center">
+          <Button variant="outline-danger" onClick={generateEvents} >GENERATE EVENTS</Button>
+        </p>
+      </div>
+      {/*<Container fluid>*/}
+      {/*    <Row className="justify-content-center">*/}
+      {/*      <Button style={{background: 'red'}} variant="primary" onClick={generateEvents} block>*/}
+      {/*        GENERATE EVENTS*/}
+      {/*      </Button>*/}
+      {/*    </Row>*/}
+      {/*</Container>*/}
       <br/>
 
       <Container fluid>

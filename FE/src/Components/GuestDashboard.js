@@ -5,6 +5,7 @@ import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
+import Grid from 'react-bootstrap';
 import ListGroup from "react-bootstrap/ListGroup"
 import { API_URL } from '../env'
 import { generateSchedules } from '../Helpers/getSchedules';
@@ -236,8 +237,9 @@ const GuestDashboard = (props) => {
 
   return (
     <div>
-      <Button variant="primary" onClick={clearPreferences}>Clear Preferences</Button>
-      <Button variant="primary" onClick={clearCourses}>Clear courses</Button>
+      <Button variant="info" onClick={clearPreferences}>Clear Preferences</Button>
+        &nbsp;&nbsp;
+      <Button variant="info" onClick={clearCourses}>Clear courses</Button>
       <br/>
       <br/>
       <Container>
@@ -323,11 +325,24 @@ const GuestDashboard = (props) => {
         </Container>
       </Form>
       <br/>
-      <Container fluid>
-        <Button style={{background: 'red'}} variant="primary" onClick={generateEvents} block>
-            GENERATE EVENTS
-        </Button>
-      </Container>
+      <div>
+          <p className="text-center">
+            <Button variant="outline-danger" onClick={generateEvents} >GENERATE EVENTS</Button>
+          </p>
+      </div>
+      {/*<Container fluid>*/}
+        {/*<Row>*/}
+        {/*  <Col xs={12} sm={6} md={4} lg={6}>*/}
+        {/*  <div*/}
+        {/*      style={{ display: "flex", justifyContent: "center" }}*/}
+        {/*  >*/}
+        {/*    <Button style={{background: 'red'}} variant="primary" onClick={generateEvents} className="text-center" block>*/}
+        {/*      GENERATE EVENTS*/}
+        {/*    </Button>*/}
+          {/*</div>*/}
+          {/*</Col>*/}
+        {/*</Row>*/}
+      {/*</Container>*/}
       <br/>
 
       <Container fluid>
