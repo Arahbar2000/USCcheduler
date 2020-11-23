@@ -5,7 +5,7 @@ import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
-import Grid from 'react-bootstrap';
+import Swal from 'sweetalert2';
 import ListGroup from "react-bootstrap/ListGroup"
 import { API_URL } from '../env'
 import { generateSchedules } from '../Helpers/getSchedules';
@@ -72,7 +72,10 @@ const GuestDashboard = (props) => {
           console.log(coursesData)
           if(coursesData[i].department == department && coursesData[i].courseNumber == courseNumber) {
             added = true;
-            alert("Course has already been added!");
+            Swal({
+              icon: 'warning',
+              message:"Course has already been added!",
+            });
             break;
           }
         }
@@ -81,7 +84,10 @@ const GuestDashboard = (props) => {
         }
       }
       if (!added) {
-        alert("Valid Course!");
+          Swal({
+            icon: 'success',
+            message: 'added!'
+          })
         localStorage.setItem("courses", JSON.stringify(coursesData))
         setChanged(!changedPreferences)
       }
