@@ -104,9 +104,9 @@ public class CreateSchedule {
 		try (Connection dbcon = DriverManager.getConnection(
 				JDBCCredential.url, JDBCCredential.username, JDBCCredential.password)){
 
-			String query = "select userId, courseId, department, courseNumber, title, startTime," +
+			String query = "select courseId, department, courseNumber, title, startTime," +
 					" endTime, section, instructor, units, daysOfWeek, spots\n" +
-					"from Schedule s natural join Course c\n" +
+					"from Course c\n" +
 					"where department=? and courseNumber=?\n" +
 					"and startTime != 'TBA'\n" +
 					"and endTime != 'TBA';";
@@ -147,9 +147,9 @@ public class CreateSchedule {
 					);
 					courses.add(c);
 				}
-				rs.close();
+				//rs.close();
 			}
-			statement.close();
+			//statement.close();
 		}
 		catch (Exception e) {
 			System.out.println("error");
