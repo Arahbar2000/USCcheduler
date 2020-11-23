@@ -261,6 +261,7 @@ const AuthDashboard = (props) => {
       <br/>
       <p>Courses with TBA times are not considered</p>
       <p>If a schedule can't meet preferences, it will ignore preferences</p>
+      <p>Extracurriculars are assumed to be for everyday</p>
       <Container>
         <Row>
           <Col>
