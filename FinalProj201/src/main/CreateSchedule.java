@@ -34,12 +34,12 @@ public class CreateSchedule {
 
 	// fetch courses
 	private List<Course> getUserCourses(User user) {
-		// try {
-        //     Class.forName("com.mysql.cj.jdbc.Driver");
-        // }
-        // catch(ClassNotFoundException e) {
+		try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+        }
+        catch(ClassNotFoundException e) {
 
-        // }
+        }
 		List<Course> courses = new ArrayList<>();
 		try (Connection dbcon = DriverManager.getConnection(
 				JDBCCredential.url, JDBCCredential.username, JDBCCredential.password)){
@@ -95,12 +95,12 @@ public class CreateSchedule {
 	// assume courses_str ='CSCI201,CSCI270‘
 	static public List<Course> getStringCourses(String courses_str){
 		List<Course> courses = new ArrayList<>();
-		// try {
-        //     Class.forName("com.mysql.jdbc.Driver");
-        // }
-        // catch(ClassNotFoundException e) {
+		try {
+            Class.forName("com.mysql.jdbc.Driver");
+        }
+        catch(ClassNotFoundException e) {
 
-        // }
+        }
 		try (Connection dbcon = DriverManager.getConnection(
 				JDBCCredential.url, JDBCCredential.username, JDBCCredential.password)){
 
