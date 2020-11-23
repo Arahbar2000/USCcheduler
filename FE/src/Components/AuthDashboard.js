@@ -8,7 +8,7 @@ import Row from "react-bootstrap/Row";
 import ListGroup from "react-bootstrap/ListGroup"
 import { API_URL } from '../env'
 import { generateSchedules } from '../Helpers/getSchedules'
-import { isPropsEqual } from "@fullcalendar/react";
+import { isPropsEqual, isInteractionValid } from "@fullcalendar/react";
 import { useUser } from '../Context/UserProvider'
 
 const AuthDashboard = (props) => {
@@ -21,6 +21,22 @@ const AuthDashboard = (props) => {
   const [endTime, setEndTime] = useState("");
   const [changedPreferences, setChanged] = useState(false);
   const { getUser } = useUser();
+
+  const checkTime = (time) => {
+    try {
+      const split = time.split(":");
+      const hours = parseInt(split[0]);
+      const minutes = parseInt(split[1]);
+      if (split[0].length != 2 || split[1].length != 2) return false;
+      console.log(split[0].length)
+      if (hours < 0 || hours >= 24) return false;
+      if (minutes < 0 || minutes >= 60) return false;
+      return true;
+    }
+    catch(error) {
+      return false;
+    }
+  }
 
   useEffect(() => {
     let courseData = JSON.parse(localStorage.getItem("courses"));
@@ -114,6 +130,14 @@ const AuthDashboard = (props) => {
       event.preventDefault();
       const start = event.target.elements.start.value;
       const end = event.target.elements.end.value;
+      if (start == "" || end== "") {
+        alert("Both start time and end time must be present for an extracurricular!");
+        return;
+      }
+      if(!checkTime(start) || !checkTime(end)) {
+        alert("Invalid time format. Must be in military time");
+        return;
+      }
       const extracurricular = [start + " " + end];
       let extracurricularData = JSON.parse(localStorage.getItem("extracurriculars"));
       if (extracurricularData == null) {
@@ -132,9 +156,17 @@ const AuthDashboard = (props) => {
     const start = event.target.elements.start.value;
     const end = event.target.elements.end.value;
     if (start != "") {
+      if(!checkTime(start)) {
+        alert("Invalid time format. Must be in military time");
+        return;
+      }
       localStorage.setItem("startTime", start);
     }
-    if( end != "") {
+    if (end != "") {
+      if(!checkTime(end)) {
+        alert("Invalid time format. Must be in military time");
+        return;
+      }
       localStorage.setItem("endTime", end);
     }
     setChanged(!changedPreferences);

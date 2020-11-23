@@ -51,6 +51,21 @@ const GuestDashboard = (props) => {
     }
   }, [changedPreferences])
 
+  const checkTime = (time) => {
+    try {
+      const split = time.split(":");
+      const hours = parseInt(split[0]);
+      const minutes = parseInt(split[1]);
+      if (split[0].length != 2 || split[1].length != 2) return false;
+      if (hours < 0 || hours >= 24) return false;
+      if (minutes < 0 || minutes >= 60) return false;
+      return true;
+    }
+    catch(error) {
+      return false;
+    }
+  }
+
   const addCourse = (event) => {
     event.preventDefault();
     // given a course, communicates with the server to check if course is valid
@@ -202,6 +217,14 @@ const GuestDashboard = (props) => {
       event.preventDefault();
       const start = event.target.elements.start.value;
       const end = event.target.elements.end.value;
+      if (start == "" || end== "") {
+        alert("Both start time and end time must be present for an extracurricular!");
+        return;
+      }
+      if (!checkTime(start) || !checkTime(end)) {
+        alert("Invalid time format. Must be in military time");
+        return;
+      }
       const extracurricular = [start + " " + end];
       console.log(start);
       console.log(end);
@@ -222,9 +245,17 @@ const GuestDashboard = (props) => {
     const start = event.target.elements.start.value;
     const end = event.target.elements.end.value;
     if (start != "") {
+      if(!checkTime(start)) {
+        alert("Invalid time format. Must be in military time");
+        return;
+      }
       localStorage.setItem("startTime", start);
     }
-    if( end != "") {
+    if (end != "") {
+      if(!checkTime(end)) {
+        alert("Invalid time format. Must be in military time");
+        return;
+      }
       localStorage.setItem("endTime", end);
     }
     setChanged(!changedPreferences);
