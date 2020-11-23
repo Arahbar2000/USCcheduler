@@ -48,6 +48,7 @@ const Schedule = () => {
                 localStorage.setItem("events", JSON.stringify(events))
                 localStorage.setItem("schedules", JSON.stringify([response]))
                 setSchedules(events)
+                setIndex(0)
             })
             .catch(error => {
                 console.log(error)
