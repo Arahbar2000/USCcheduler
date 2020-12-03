@@ -10,3 +10,4 @@ scaledFablix/*
 */.project
 */node_modules/*
 **/*.iml
+*/npm/*
