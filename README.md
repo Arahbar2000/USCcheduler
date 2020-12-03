@@ -25,8 +25,9 @@ Note that if you deploy the project through IDE and you experience the CORS issu
 
 ```shell script
 cd FE
-npm i
-npm run start
+mvn clean package
+cp ./target/*.war <tomcat_home>/webapps/;
+<tomcat_home>/bin/catalina.sh start;
 ```
 
 then react would be started on port 3000.
