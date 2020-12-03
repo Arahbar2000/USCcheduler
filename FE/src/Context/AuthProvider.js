@@ -36,7 +36,7 @@ const AuthProvider = (props) => {
         }
         // cleanup auth
         // return () => setAuth(false);
-    }, []);
+    }, [ auth ]);
 
     const signUp = ({ fname, lname, email, password }) => {
         // sends form data to signup endpoint of server

@@ -1,12 +1,7 @@
 import { useState, useEffect } from 'react';
-import ReactDOM from 'react-dom';
 import FullCalendar from '@fullcalendar/react';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import { generateSchedules } from '../Helpers/getSchedules';
-import Button from 'react-bootstrap/Button';
-import Popover from'react-bootstrap/Popover'
-import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
-import Overlay from 'react-bootstrap/Overlay';
 import { API_URL } from '../env';
 import { useAuth } from '../Context/AuthProvider'
 
@@ -69,7 +64,7 @@ const Schedule = () => {
                 schedules[scheduleIndex].forEach(section => {
                     id += section.sectionId.toString() + ',';
                 })
-                if (id.charAt(id.length - 1) == ',') {
+                if (id.charAt(id.length - 1) === ',') {
                     id = id.slice(0, id.length-1);
                 }
                 const url = new URL(API_URL + 'saveschedule');
@@ -112,7 +107,6 @@ const Schedule = () => {
                 schedulerLicenseKey={'CC-Attribution-NonCommercial-NoDerivatives'}
                 plugins={[ timeGridPlugin ]}
                 initialView={'timeGridWeek'}
-                headerToolbar={false}
                 initialDate={'2020-12-07'}
                 hiddenDays={[0, 6]}
                 dayHeaderFormat={{weekday: 'long'}}

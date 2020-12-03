@@ -1,7 +1,5 @@
 import React, { useState, useRef } from "react";
 import { useAuth } from "../Context/AuthProvider";
-import { Link, Route } from "react-router-dom";
-import {NavLink } from 'react-router-dom';
 import { Navbar, Nav as Nv } from "react-bootstrap";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
@@ -178,8 +176,8 @@ const Nav = (props) => {
     <Navbar>
       <Nv activeKey={window.location.pathname}>
         {/*<Navbar.Brand href="/">Home</Navbar.Brand>*/}
-        <Nv.Link href="/">Home</Nv.Link>
-        <Nv.Link href="/dashboard">Dashboard</Nv.Link>
+        <Nv.Link href="/home">Home</Nv.Link>
+        <Nv.Link href="/home/dashboard">Dashboard</Nv.Link>
       </Nv>
       {/*<NavLink to="/dashboard" activeStyle={{ fontsize: '20', color: 'red' }}>Dashboard</NavLink>*/}
 

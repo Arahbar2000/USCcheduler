@@ -1,5 +1,5 @@
 import React from 'react'
-import {BrowserRouter, Switch, Route} from 'react-router-dom';
+import { Switch, Route} from 'react-router-dom';
 import Schedule from './Schedule'
 import GuestDashboard from './GuestDashboard'
 

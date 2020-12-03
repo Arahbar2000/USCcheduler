@@ -5,9 +5,10 @@ import App from './Components/App';
 import reportWebVitals from './reportWebVitals';
 import { AuthProvider } from './Context/AuthProvider'
 
+console.log(process.env.REACT_APP_ROUTER_BASE)
 ReactDOM.render(
   <React.StrictMode>
-    <BrowserRouter>
+    <BrowserRouter basename={process.env.REACT_APP_ROUTER_BASE || '/home'}>
       <AuthProvider>
         <App />
       </AuthProvider>

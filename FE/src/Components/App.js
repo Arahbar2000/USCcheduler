@@ -1,7 +1,7 @@
 import AuthApp from './AuthApp';
 import GuestApp from './GuestApp';
 import Nav from './Nav'
-import React, {useState, useEffect} from 'react'
+import React from 'react'
 import { UserProvider } from '../Context/UserProvider'
 import { useAuth } from '../Context/AuthProvider'
 import Container from 'react-bootstrap/Container'

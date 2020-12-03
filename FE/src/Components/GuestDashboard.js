@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from "react";
 import Form from "react-bootstrap/Form";
-import FormControl from "react-bootstrap/FormControl";
 import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
-import Swal from 'sweetalert2';
 import ListGroup from "react-bootstrap/ListGroup"
 import { API_URL } from '../env'
 import { generateSchedules } from '../Helpers/getSchedules';
@@ -31,19 +29,19 @@ const GuestDashboard = (props) => {
     else {
       setCourses([]);
     }
-    if (extracurricularData != null) {
+    if (extracurricularData !== null) {
       setExtracurriculars(extracurricularData);
     }
     else {
       setExtracurriculars([]);
     }
-    if (startTimeData != null) {
+    if (startTimeData !==null) {
       setStartTime(startTimeData);
     }
     else {
       setStartTime(null);
     }
-    if (endTimeData != null) {
+    if (endTimeData !== null) {
       setEndTime(endTimeData);
     }
     else {
@@ -56,7 +54,7 @@ const GuestDashboard = (props) => {
       const split = time.split(":");
       const hours = parseInt(split[0]);
       const minutes = parseInt(split[1]);
-      if (split[0].length != 2 || split[1].length != 2) return false;
+      if (split[0].length !== 2 || split[1].length !== 2) return false;
       if (hours < 0 || hours >= 24) return false;
       if (minutes < 0 || minutes >= 60) return false;
       return true;
@@ -79,7 +77,7 @@ const GuestDashboard = (props) => {
       // add course to storage
       let added = false;
       let coursesData = JSON.parse(localStorage.getItem("courses"));
-      if (coursesData == null) {
+      if (coursesData === null) {
         console.log('reject')
         coursesData = [{department, courseNumber}]
         console.log('reject')
@@ -88,7 +86,7 @@ const GuestDashboard = (props) => {
         for(let i = 0; i < coursesData.length; i++) {
           console.log(coursesData.department);
           console.log(coursesData)
-          if(coursesData[i].department == department && coursesData[i].courseNumber == courseNumber) {
+          if(coursesData[i].department === department && coursesData[i].courseNumber === courseNumber) {
             added = true;
             // Swal({
             //   icon: 'warning',
@@ -131,7 +129,7 @@ const GuestDashboard = (props) => {
         method: add ? "GET": "DELETE"
       }).then(response => response.json())
       .then((response) => {
-        if (response.status == true) {
+        if (response.status === true) {
           return resolve();
         }
         else {
@@ -153,14 +151,14 @@ const GuestDashboard = (props) => {
     const courseNumber = parseInt(courseName[1]);
     // given a course, removes course from list of courses
     let coursesData = JSON.parse(localStorage.getItem("courses"))
-    if (coursesData == null) {
+    if (coursesData === null) {
       alert("You currently do not have any courses");
     }
     else {
       let notFound = true;
       for(let i = 0; i < courses.length; i++) {
-        if (coursesData[i].department == department 
-          && coursesData[i].courseNumber == courseNumber) {
+        if (coursesData[i].department === department 
+          && coursesData[i].courseNumber === courseNumber) {
           notFound = false;
           coursesData.splice(i, 1);
           localStorage.setItem("courses", JSON.stringify(coursesData));
@@ -188,7 +186,7 @@ const GuestDashboard = (props) => {
   const generateEvents = () => {
     const extracurriculars = JSON.parse(localStorage.getItem("extracurriculars"))
     let extracurriculum = "";
-    if (extracurriculars != null) {
+    if (extracurriculars !== null) {
       extracurriculars.forEach(extracurricular => {
         const strFormat = JSON.stringify(extracurricular) + ",";
         extracurriculum += strFormat;
@@ -201,7 +199,7 @@ const GuestDashboard = (props) => {
     console.log(extracurriculum)
     let courses = "";
     const coursesData = JSON.parse(localStorage.getItem("courses"));
-    if(coursesData != null) {
+    if(coursesData !== null) {
       coursesData.forEach(course => {
         courses += course.department + course.courseNumber.toString() + ',';
       })
@@ -233,7 +231,7 @@ const GuestDashboard = (props) => {
       event.preventDefault();
       const start = event.target.elements.start.value;
       const end = event.target.elements.end.value;
-      if (start == "" || end== "") {
+      if (start === "" || end === "") {
         alert("Both start time and end time must be present for an extracurricular!");
         return;
       }
@@ -245,7 +243,7 @@ const GuestDashboard = (props) => {
       console.log(start);
       console.log(end);
       let extracurricularData = JSON.parse(localStorage.getItem("extracurriculars"));
-      if (extracurricularData == null) {
+      if (extracurricularData === null) {
         extracurricularData = [ extracurricular ]
       }
       else {
@@ -260,14 +258,14 @@ const GuestDashboard = (props) => {
     event.preventDefault();
     const start = event.target.elements.start.value;
     const end = event.target.elements.end.value;
-    if (start != "") {
+    if (start !== "") {
       if(!checkTime(start)) {
         alert("Invalid time format. Must be in military time");
         return;
       }
       localStorage.setItem("startTime", start);
     }
-    if (end != "") {
+    if (end !== "") {
       if(!checkTime(end)) {
         alert("Invalid time format. Must be in military time");
         return;

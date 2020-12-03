@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import Form from "react-bootstrap/Form";
-import FormControl from "react-bootstrap/FormControl";
 import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
 import Col from "react-bootstrap/Col";
@@ -8,7 +7,6 @@ import Row from "react-bootstrap/Row";
 import ListGroup from "react-bootstrap/ListGroup"
 import { API_URL } from '../env'
 import { generateSchedules } from '../Helpers/getSchedules'
-import { isPropsEqual, isInteractionValid } from "@fullcalendar/react";
 import { useUser } from '../Context/UserProvider'
 
 const AuthDashboard = (props) => {
@@ -27,7 +25,7 @@ const AuthDashboard = (props) => {
       const split = time.split(":");
       const hours = parseInt(split[0]);
       const minutes = parseInt(split[1]);
-      if (split[0].length != 2 || split[1].length != 2) return false;
+      if (split[0].length !== 2 || split[1].length !== 2) return false;
       console.log(split[0].length)
       if (hours < 0 || hours >= 24) return false;
       if (minutes < 0 || minutes >= 60) return false;
@@ -130,7 +128,7 @@ const AuthDashboard = (props) => {
       event.preventDefault();
       const start = event.target.elements.start.value;
       const end = event.target.elements.end.value;
-      if (start == "" || end== "") {
+      if (start === "" || end === "") {
         alert("Both start time and end time must be present for an extracurricular!");
         return;
       }
@@ -140,7 +138,7 @@ const AuthDashboard = (props) => {
       }
       const extracurricular = [start + " " + end];
       let extracurricularData = JSON.parse(localStorage.getItem("extracurriculars"));
-      if (extracurricularData == null) {
+      if (extracurricularData === null) {
         extracurricularData = [ extracurricular ]
       }
       else {
@@ -155,14 +153,14 @@ const AuthDashboard = (props) => {
     event.preventDefault();
     const start = event.target.elements.start.value;
     const end = event.target.elements.end.value;
-    if (start != "") {
+    if (start !== "") {
       if(!checkTime(start)) {
         alert("Invalid time format. Must be in military time");
         return;
       }
       localStorage.setItem("startTime", start);
     }
-    if (end != "") {
+    if (end !== "") {
       if(!checkTime(end)) {
         alert("Invalid time format. Must be in military time");
         return;
@@ -178,7 +176,7 @@ const AuthDashboard = (props) => {
     const generateURL = new URL(API_URL + "generate");
     const extracurriculars = JSON.parse(localStorage.getItem("extracurriculars"))
     let extracurriculum = "";
-    if (extracurriculars != null) {
+    if (extracurriculars !== null) {
       extracurriculars.forEach(extracurricular => {
         const strFormat = JSON.stringify(extracurricular) + ",";
         extracurriculum += strFormat;
