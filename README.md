@@ -30,7 +30,7 @@ cp ./target/*.war <tomcat_home>/webapps/;
 <tomcat_home>/bin/catalina.sh start;
 ```
 
-then react would be started on port 3000.
+then react would be served on `http://localhost:8080/home`
 
 # SQL
 
