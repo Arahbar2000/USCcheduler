@@ -9,7 +9,7 @@ const AuthApp = () => {
     return (
         <Switch>
             <Route exact path='/' component={Schedule} />
-            <Route path='/home/dashboard' component={AuthDashboard} />
+            <Route path='/dashboard' component={AuthDashboard} />
         </Switch>
     );
 }
