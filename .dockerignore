@@ -1,0 +1,13 @@
+/.metadata/
+scaledFablix/*
+*.iml
+*.idea
+*/target/*
+**/context.xml
+**/.vscode
+*/.settings/*
+*/.classpath
+*/.project
+*/node_modules/*
+**/*.iml
+*/npm/*

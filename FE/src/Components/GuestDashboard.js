@@ -220,7 +220,7 @@ const GuestDashboard = (props) => {
         localStorage.setItem("schedules", JSON.stringify(schedules));
         const allEvents = generateSchedules(schedules);
         localStorage.setItem("events", JSON.stringify(allEvents));
-        props.history.push('/');
+        props.history.push('/schedule');
     })
     .catch(error => {
       console.log(error);
