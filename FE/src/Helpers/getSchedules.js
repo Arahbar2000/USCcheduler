@@ -7,7 +7,7 @@ const DATE_CONVERTER = {
 }
 
 
-const colors = ['blue', 'green', 'purple', 'red', 'orange', 'brown']
+const colors = ['blue', 'green', 'purple', 'orange', 'brown']
 // helper function for getSchedules
 export const generateSchedules = (schedules, flag=true) => {
     // parses schedules in order to convert schedules into lists of events that are able to serve as input to calendar component
@@ -15,6 +15,7 @@ export const generateSchedules = (schedules, flag=true) => {
     schedules.forEach(schedule => {
         const events = [];
         let colorIndex = 0;
+        const courseColors = {}
         schedule.forEach(section => {
             console.log("processing schedules")
             for(let i = 0; i < section.daysOfWeek.length; i++) {
@@ -29,16 +30,16 @@ export const generateSchedules = (schedules, flag=true) => {
                     start.setHours(parseInt(section.startTime.split(":")[0]), parseInt(section.startTime.split(":")[1]))
                     end.setHours(parseInt(section.endTime.split(":")[0]), parseInt(section.endTime.split(":")[1]))
                 }
-                const title = section.department + section.courseNumber.toString() + '-' + section.sectionType + '-' + section.sectionId;
-                events.push({
-                    id,
-                    title,
-                    start: start,
-                    end: end,
-                    color: colors[colorIndex % colors.length]
-                })
+                const courseName = section.department + section.courseNumber.toString();
+                let color = null;
+                if (courseName in courseColors) color = courseColors[courseName];
+                else {
+                    color = colors[colorIndex++ % colors.length];
+                    courseColors[courseName] = color;
+                }
+                const title = courseName+ '-' + section.sectionType + '-' + section.sectionId;
+                events.push({ id, title, start, end, color })
             }
-            colorIndex++;
         })
         eventSchedules.push(events)
     })
