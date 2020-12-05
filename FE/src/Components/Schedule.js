@@ -137,10 +137,10 @@ const Schedule = () => {
                     }
                 }}
                 headerToolbar = {{
-                    left: 'select clear',
-                    right: 'getSaved',
+                    left: 'clear',
                     title: 'title',
-                    center: 'left right'
+                    center: 'left right',
+                    right: ''
                 }}
             />
         </div>

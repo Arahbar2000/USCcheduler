@@ -112,7 +112,7 @@
 
                         <configuration>
                             <environmentVariables>
-                                <PUBLIC_URL>http://host.docker.internal:8080/${project.artifactId}</PUBLIC_URL>
+                                <PUBLIC_URL>http://web:8080/${project.artifactId}</PUBLIC_URL>
                                 <REACT_APP_ROUTER_BASE>/${project.artifactId}</REACT_APP_ROUTER_BASE>
                             </environmentVariables>
                         </configuration>

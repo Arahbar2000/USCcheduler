@@ -1,6 +1,9 @@
 import React /*, { useState, useRef } */ from "react";
 // import { useAuth } from "../Context/AuthProvider";
 import { Navbar, Nav as Nv } from "react-bootstrap";
+import { LinkContainer } from 'react-router-bootstrap';
+import logo from '../misc/img.png';
+import '../css/Nav.css'
 // import Form from "react-bootstrap/Form";
 // import Button from "react-bootstrap/Button";
 // import Modal from "react-bootstrap/Modal";
@@ -174,10 +177,17 @@ const Nav = (props) => {
   // otherwise, navbar shows signUp and signIn buttons
   return (
     <Navbar>
+      <LinkContainer to='/'>
+        <Navbar.Brand><img src={logo} /></Navbar.Brand>
+      </LinkContainer>
       <Nv activeKey={window.location.pathname}>
         {/*<Navbar.Brand href="/">Home</Navbar.Brand>*/}
-        <Nv.Link href="/schedule">Schedule</Nv.Link>
-        <Nv.Link href="/dashboard">Dashboard</Nv.Link>
+        <LinkContainer to='/schedule'>
+          <Nv.Link>Schedule</Nv.Link>
+        </LinkContainer>
+        <LinkContainer to='/dashboard'>
+          <Nv.Link>Dashboard</Nv.Link>
+        </LinkContainer>
       </Nv>
       {/*<NavLink to="/dashboard" activeStyle={{ fontsize: '20', color: 'red' }}>Dashboard</NavLink>*/}
 

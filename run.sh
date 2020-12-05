@@ -5,4 +5,4 @@
 
 docker image rm scheduler
 docker build -t scheduler .
-docker run --rm -p 8080:8080 --network app --name web scheduler
+docker run --rm -d -p 8080:8080 --network app --name web scheduler

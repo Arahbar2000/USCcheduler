@@ -7,6 +7,7 @@ import Row from "react-bootstrap/Row";
 import ListGroup from "react-bootstrap/ListGroup"
 import { API_URL } from '../env'
 import { generateSchedules } from '../Helpers/getSchedules';
+import CourseItem from './CourseItem'
 const GuestDashboard = (props) => {
   // displays current chosen courses
   // allows user to add new courses
@@ -88,10 +89,6 @@ const GuestDashboard = (props) => {
           console.log(coursesData)
           if(coursesData[i].department === department && coursesData[i].courseNumber === courseNumber) {
             added = true;
-            // Swal({
-            //   icon: 'warning',
-            //   message:"Course has already been added!",
-            // });
             alert("Course has already been added!");
             break;
           }
@@ -174,6 +171,13 @@ const GuestDashboard = (props) => {
       }
     }
   };
+
+  const removeCourse2 = index => {
+    let coursesData = JSON.parse(localStorage.getItem("courses"));
+    coursesData.splice(index, 1);
+    localStorage.setItem("courses", JSON.stringify(coursesData));
+    setChanged(!changedPreferences);
+  }
 
   const clearPreferences = event => {
     localStorage.removeItem("extracurriculars");
@@ -283,14 +287,10 @@ const GuestDashboard = (props) => {
 
   return (
     <div>
-      <Button variant="info" onClick={clearPreferences}>Clear Preferences</Button>
-        &nbsp;&nbsp;
       <Button variant="info" onClick={clearCourses}>Clear courses</Button>
       <br/>
       <br/>
       <p>Courses with TBA times are not considered</p>
-      <p>If a schedule can't meet preferences, it will ignore preferences</p>
-      <p>Extracurriculars are assumed to be for everyday</p>
       <Container>
         <Row>
           <Col>
@@ -307,128 +307,25 @@ const GuestDashboard = (props) => {
       </Form>
           </Col>
           <Col>
-          <Form onSubmit={removeCourse}>
-        {" "}
-        <Form.Group controlId="remove">
-          <Form.Label>Remove a class:</Form.Label>
-          <Form.Control type="text" placeholder="Enter a class e.g. CSCI 201" />
-          <Form.Text>Make sure there is a space between department and course number</Form.Text>
-        </Form.Group>
-        <Button variant="primary" type="submit">
-          Remove
-        </Button>
-      </Form>
+          <h4 style={{margin: 'auto', display: 'block', textAlign: 'center'}}>Current Courses </h4>
+          <div>
+          <ListGroup>
+              {courses.map((course, index) => (
+                  <CourseItem key={index} course={course} index={index} removeCourse={removeCourse2} />
+              ))}
+            </ListGroup>
+          </div>
           </Col>
         </Row>
         <br/>
         </Container>
-          <Form onSubmit={addExtracurricular}>
-            <Container fluid>
-              <Row>
-                <Col>
-                <Form.Group controlId="start">
-                <Form.Label>Extracurricular start time:</Form.Label>
-                <Form.Control type="time" placeholder="00:00"/>
-                <Form.Text>Enter military time format e.g. 08:20</Form.Text>
-                </Form.Group>
-                </Col>
-                <Col>
-                <Form.Group controlId="end">
-                <Form.Label>Extracurricular end time:</Form.Label>
-                <Form.Control type="time" placeholder="00:00"/>
-                <Form.Text>Enter military time format e.g 08:20</Form.Text>
-                </Form.Group>
-                </Col>
-              </Row>
-              <Row>
-                <Col>
-                <Button variant="primary" type="submit">
-                  Submit
-                </Button>
-                </Col>
-              </Row>
-            </Container>
-      </Form>
-      <br/>
-      <Form onSubmit={addTimes}>
-        <Container>
-          <Row>
-            <Col>
-            <Form.Group controlId="start">
-            <Form.Label>Earliest start time:</Form.Label>
-            <Form.Control type="time" placeholder="00:00"/>
-            <Form.Text>Enter military time format e.g. 08:20</Form.Text>
-          </Form.Group>
-            </Col>
-            <Col>
-            <Form.Group controlId="end">
-            <Form.Label>Latest end time:</Form.Label>
-            <Form.Control type="time" placeholder="00:00"/>
-            <Form.Text>Enter military time format, e.g: 08:20</Form.Text>
-          </Form.Group>
-            </Col>
-          </Row>
-          <Row>
-            <Col>
-            <Button variant="primary" type="submit">
-            Submit
-          </Button>
-            </Col>
-          </Row>
-        </Container>
-      </Form>
       <br/>
       <div>
           <p className="text-center">
             <Button variant="outline-danger" onClick={generateEvents} >GENERATE EVENTS</Button>
           </p>
       </div>
-      {/*<Container fluid>*/}
-        {/*<Row>*/}
-        {/*  <Col xs={12} sm={6} md={4} lg={6}>*/}
-        {/*  <div*/}
-        {/*      style={{ display: "flex", justifyContent: "center" }}*/}
-        {/*  >*/}
-        {/*    <Button style={{background: 'red'}} variant="primary" onClick={generateEvents} className="text-center" block>*/}
-        {/*      GENERATE EVENTS*/}
-        {/*    </Button>*/}
-          {/*</div>*/}
-          {/*</Col>*/}
-        {/*</Row>*/}
-      {/*</Container>*/}
       <br/>
-
-      <Container fluid>
-        <Row>
-          <Col>
-          <h4>Current Courses </h4>
-          <div>
-          <ListGroup>
-              {courses.map((course) => (
-                  <ListGroup.Item key={course.department + course.courseNumber.toString()}>{course.department + course.courseNumber.toString()}</ListGroup.Item>
-              ))}
-            </ListGroup>
-          </div>
-          </Col>
-          <Col>
-          <div>
-            <h4>Extracurriculars </h4>
-          <ListGroup>
-              {extracurriculars.map(extracurricular => {
-                const times = extracurricular[0].split(' ');
-              return <ListGroup.Item>Start: {times[0]} <br/> End: {times[1]}</ListGroup.Item>
-              })}
-            </ListGroup>
-          </div>
-          </Col>
-          <Col>
-              <ListGroup>
-                {startTime ?  <ListGroup.Item>Start Time: {startTime}</ListGroup.Item> : null}
-                {endTime ? <ListGroup.Item>End Time: {endTime}</ListGroup.Item> : null}
-              </ListGroup>
-          </Col>
-        </Row>
-      </Container>
     </div>
   );
 };

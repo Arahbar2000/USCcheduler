@@ -1,0 +1,26 @@
+.list-group-item {
+    display: inline-block !important;
+    width: 50%;
+}
+
+#delete {
+    padding-top: .75rem;
+    padding-bottom: .75rem;
+    border: 1px solid rgba(0,0,0,.125);
+    background: red;
+    opacity: 0;
+    color: white;
+    text-align: center;
+    display: inline-block;
+    width: 0;
+    transition: width 1s;
+}
+
+.courseItem:hover #delete {
+    opacity: 0.9;
+    width: 50%;
+}
+
+.courseItem:hover #delete:hover {
+    opacity: 1;
+}
