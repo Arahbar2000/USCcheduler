@@ -27,8 +27,8 @@ const UserProvider = (props) => {
             const newCourses = []
             courses.forEach(course => {
                 if (course) {
-                    const department = course.match('[^0-9]+')[0],
-                    courseNumber = parseInt(course.match('[0-9]+'))
+                    const department = course.match('[^0-9]+')[0];
+                    const courseNumber = parseInt(course.match('[0-9]+'));
                     newCourses.push({department, courseNumber});
                 }
             })
