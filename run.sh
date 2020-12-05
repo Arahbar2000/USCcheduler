@@ -3,6 +3,7 @@
 # cp ../FE/target/*.war ./
 # cp ../FinalProj201/target/*.war ./
 
-docker image rm scheduler
-docker build -t scheduler .
-docker run --rm -d -p 8080:8080 --network app --name web scheduler
+docker stop web;
+docker image rm scheduler;
+docker build -t scheduler . &&
+docker run --rm -d -p 8080:8080 --network app --name web scheduler;
