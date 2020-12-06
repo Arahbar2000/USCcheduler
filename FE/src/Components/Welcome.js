@@ -1,6 +1,6 @@
 import Button from 'react-bootstrap/Button';
 import '../css/Welcome.css'
-import logo from '../misc/img.png'
+import logo from '../misc/Scheduler_Logo.png';
 
 const Welcome = (props) => {
     const onClick = () => {

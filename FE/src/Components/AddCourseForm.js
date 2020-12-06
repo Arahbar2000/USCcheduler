@@ -9,6 +9,7 @@ const AddCourseForm = props => {
     const [ query, setQuery ] = useState("");
     const [ options, setOptions ] = useState([]);
     const [ selectedCourses, setSelectedCourses ] = useState([]);
+    const [ loading, setLoading ] = useState(false);
     const attemptQuery = useRef(
         debounce((query, token) => {
             queryCourses(query, token);
@@ -20,6 +21,7 @@ const AddCourseForm = props => {
             setOptions([]);
             return;
         }
+        setLoading(true);
         const department = query.match('[^0-9]+')[0].toUpperCase();
         const courseNumber = parseInt(query.match('[0-9]+'));
         console.log(department);
@@ -38,9 +40,13 @@ const AddCourseForm = props => {
                 }
             });
             setOptions(courseOptions);
+            setLoading(false);
         })
         .catch(error => {
-            axios.isCancel(error) || setOptions([]);
+            if (!axios.isCancel(error)) {
+                setOptions([]);
+                setLoading(false);
+            }
         })
     }
 
@@ -61,6 +67,7 @@ const AddCourseForm = props => {
     }
 
     const createSchedules = () => {
+        props.update();
         const extracurriculum = null;
         let courses = "";
         if (selectedCourses) {
@@ -69,7 +76,6 @@ const AddCourseForm = props => {
         })
         courses = courses.slice(0, -1);
         }
-        console.log(courses);
         const startTime = localStorage.getItem("startTime");
         const endTime = localStorage.getItem("endTime");
         const url = new URL(API_URL + 'guest');
@@ -80,15 +86,12 @@ const AddCourseForm = props => {
         })
         .then(response => response.json())
         .then(schedules => {
-            console.log(schedules)
             localStorage.setItem("schedules", JSON.stringify(schedules));
             const allEvents = generateSchedules(schedules);
             localStorage.setItem("events", JSON.stringify(allEvents));
-            console.log('changing to schedules');
-            props.history.push('/schedule');
+            props.update();
         })
         .catch(error => {
-            props.history.push('/schedule')
             console.log(error);
         })
     }
@@ -99,16 +102,25 @@ const AddCourseForm = props => {
             flex: 1,
             width: '50%',
             float: 'left'
+        }),
+        menu: (provided, state) => ({
+            ...provided,
+            zIndex: 10
         })
     }
 
 
     return (
-        <div>
-            <Select styles={styles} onChange={handleChange} onInputChange={handleInputChange} options={options} isMulti />
-          <p className="text-center">
-            <Button style={{float: 'left'}} variant="outline-danger" onClick={createSchedules} >GENERATE SCHEDULES</Button>
-          </p>
+        <div style={{paddingBottom: '10px'}}>
+            <Select 
+                isLoading={loading} 
+                styles={styles} 
+                onChange={handleChange} 
+                onInputChange={handleInputChange} 
+                options={options} 
+                isMulti 
+            />
+            <Button variant="outline-danger" onClick={createSchedules} >GENERATE SCHEDULES</Button>
         </div>
     );
 }

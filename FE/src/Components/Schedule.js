@@ -4,11 +4,13 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import { generateSchedules } from '../Helpers/getSchedules';
 import { API_URL } from '../env';
 import { useAuth } from '../Context/AuthProvider'
+import AddCourseForm from './AddCourseForm';
 
-const Schedule = () => {
+const Schedule = (props) => {
     const [ schedules, setSchedules ] = useState([])
     const [scheduleIndex, setIndex] = useState(0)
     const { auth } = useAuth();
+    const [ update, setUpdate ] = useState(false);
     const handleRightClick = () => {
         if(scheduleIndex < schedules.length - 1) {
             setIndex(scheduleIndex + 1)
@@ -99,10 +101,22 @@ const Schedule = () => {
             setSchedules([]);
         }
     }, [])
+
+    const updateSchedule = () => {
+        const events = JSON.parse(localStorage.getItem("events"));
+        if (events != null) {
+            setSchedules(events);
+        }
+        else {
+            setSchedules([]);
+        }
+        setIndex(0)
+    }
     
 
     return (
         <div>
+            <AddCourseForm update={updateSchedule} {...props} />
             <FullCalendar
                 schedulerLicenseKey={'CC-Attribution-NonCommercial-NoDerivatives'}
                 plugins={[ timeGridPlugin ]}
