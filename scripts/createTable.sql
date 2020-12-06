@@ -20,7 +20,7 @@ create table Course
 (
 	courseId int not null auto_increment,
 	department VARCHAR(50) not null,
-	courseNumber int not null,
+	courseNumber varchar(20) not null,
     title varchar(100) not null,
 	startTime varchar(50) not null,
 	endTime varchar(50) not null,

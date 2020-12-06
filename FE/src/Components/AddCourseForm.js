@@ -24,10 +24,10 @@ const AddCourseForm = props => {
             return;
         }
         setLoading(true);
-        const department = query.match('[^0-9]+')[0].toUpperCase();
-        const courseNumber = parseInt(query.match('[0-9]+'));
-        console.log(department);
-        console.log(courseNumber);
+        let department = query.match('[^0-9]+')
+        let courseNumber = query.match('[0-9]+[^0-9]*')
+        if (department != null) department = department[0].toUpperCase();
+        if (courseNumber != null) courseNumber = courseNumber[0].toUpperCase();
         const url = new URL(API_URL + 'query');
         url.search = new URLSearchParams({ department, courseNumber });
         axios.get(url, {

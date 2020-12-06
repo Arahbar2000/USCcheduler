@@ -30,6 +30,9 @@ public class CreateSchedule {
 		this.user = null;
 		all_courses = courses;
 		pref = prefs_;
+		for(Course c : courses) {
+			this.req.add(c.department + c.courseNumber);
+		}
 	}
 
 	// fetch courses
@@ -68,7 +71,7 @@ public class CreateSchedule {
                 Course c = new Course(
                 		rs.getInt("courseId"),
                 		rs.getString("department"),
-						rs.getInt("courseNumber"),
+						rs.getString("courseNumber"),
 						rs.getString("title"),
 						rs.getString("daysOfWeek"),
                         startLocalTime,
@@ -112,7 +115,7 @@ public class CreateSchedule {
 					"and endTime != 'TBA';";
 
 			PreparedStatement statement = dbcon.prepareStatement(query);
-			Pattern pat = Pattern.compile("\\d+|\\D+");
+			Pattern pat = Pattern.compile("\\d+\\D*|\\D+");
 
 			for (String course: courses_str.split(",\\s*")){
 				Matcher match = pat.matcher(course);
@@ -123,7 +126,7 @@ public class CreateSchedule {
 				System.out.println(department + courseNumber);
 
 				statement.setString(1, department);
-				statement.setInt(2, Integer.parseInt(courseNumber));
+				statement.setString(2, courseNumber);
 
 				System.out.println(statement);
 
@@ -137,7 +140,7 @@ public class CreateSchedule {
 					Course c = new Course(
 							rs.getInt("courseId"),
 							rs.getString("department"),
-							rs.getInt("courseNumber"),
+							rs.getString("courseNumber"),
 							rs.getString("title"),
 							rs.getString("daysOfWeek"),
 							startLocalTime,
@@ -328,7 +331,7 @@ public class CreateSchedule {
             return true;
 
 		for(Course c: s.decidedClasses) {
-			if(c.department.equals(co.department) && c.courseNumber == co.courseNumber
+			if(c.department.equals(co.department) && c.courseNumber.equalsIgnoreCase(co.courseNumber)
 					&& c.sectionType.equals("Lec"))
 				return true;
 		}

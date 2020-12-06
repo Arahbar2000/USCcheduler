@@ -7,7 +7,7 @@ public class Course {
 	
 	public String department;
 	public int sectionId;
-	public int courseNumber;
+	public String courseNumber;
 	public String title;
 	public String daysOfWeek;
 	public LocalTime startTime;
@@ -34,7 +34,7 @@ public class Course {
 				'}';
 	}
 
-	public Course (int sectionId, String department, int courseNumber,
+	public Course (int sectionId, String department, String courseNumber,
 				   String title,
 				   String daysOfWeek,
 				   LocalTime startTime, LocalTime endTime,
@@ -82,7 +82,7 @@ public class Course {
 	
 	public boolean equals(Course other) {
 
-		return this.department.equals(other.department) && this.courseNumber == other.courseNumber &&
+		return this.department.equals(other.department) && this.courseNumber.equals(other.courseNumber) &&
 				this.daysOfWeek.equals(other.daysOfWeek) && this.startTime.equals(other.startTime) &&
 				this.endTime.equals(other.endTime) && this.instructor.equals(other.instructor);
 	}
@@ -90,7 +90,7 @@ public class Course {
 	// same department & courseNumber & sectionType
 	public boolean sameType(Course other) {
 
-		return this.department.equals(other.department) && this.courseNumber == other.courseNumber
+		return this.department.equals(other.department) && this.courseNumber.equals(other.courseNumber)
 				&& this.sectionType.equals(other.sectionType);
 	}
 

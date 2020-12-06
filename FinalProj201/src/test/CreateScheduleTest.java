@@ -27,7 +27,7 @@ class CreateScheduleTest{
         assertEquals(cs.all_courses.size(), 15);
         assertEquals(cs.all_courses.stream().
                 filter(c ->
-                        c.sectionType.equals("Lec") && c.courseNumber == 201
+                        c.sectionType.equals("Lec") && c.courseNumber.equalsIgnoreCase("201")
                 ).count(), 1);
     }
 
@@ -37,13 +37,13 @@ class CreateScheduleTest{
         assertTrue(
                 courses.stream()
                         .anyMatch(c -> c.department.equals("CSCI")
-                                && c.courseNumber == 270
+                                && c.courseNumber.equalsIgnoreCase("270")
                                 && c.sectionType.equals("Lec")
                         ));
         assertTrue(
                 courses.stream()
                         .anyMatch(c -> c.department.equals("CSCI")
-                                && c.courseNumber == 201
+                                && c.courseNumber.equalsIgnoreCase("201")
                                 && c.sectionType.equals("Lec")
                         ));
         courses = CreateSchedule.getStringCourses("EE109");
@@ -51,7 +51,7 @@ class CreateScheduleTest{
         assertTrue(
                 courses.stream()
                         .anyMatch(c -> c.department.equals("EE")
-                                && c.courseNumber == 109
+                                && c.courseNumber.equalsIgnoreCase("109")
                                 && c.sectionType.equals("Lec")
                         ));
     }
@@ -74,7 +74,7 @@ class CreateScheduleTest{
                         schedule -> schedule.decidedClasses
                                 .stream()
                                 .anyMatch(course -> course.sectionType.equals("Lec")
-                                        && (course.department + course.courseNumber).equals(unique_name)
+                                        && (course.department + course.courseNumber).equalsIgnoreCase(unique_name)
                                 )
                         )
                 );

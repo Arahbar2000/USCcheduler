@@ -49,14 +49,14 @@ public class Query extends HttpServlet {
                             " and courseNumber like ?;";
             // Declare our statement
             statement = dbcon.prepareStatement(query);
-            statement.setString(1, department + "%");
-            statement.setString(2, courseNumber.equals("NaN") ? "%" : courseNumber + "%");
+            statement.setString(1, department.equals("null") ? "%" : department + "%");
+            statement.setString(2, courseNumber.equals("null") ? "%" : courseNumber + "%");
             // Perform the query
             rs = statement.executeQuery();
             while(rs.next()) {
                 JsonObject course = new JsonObject();
                 course.addProperty("department", rs.getString("department"));
-                course.addProperty("courseNumber", rs.getInt("courseNumber"));
+                course.addProperty("courseNumber", rs.getString("courseNumber"));
                 courses.add(course);
             }
             response.setStatus(200);
