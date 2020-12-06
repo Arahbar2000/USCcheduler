@@ -1,7 +1,6 @@
 package main.filters;
 
 import javax.servlet.*;
-import javax.servlet.Filter;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 

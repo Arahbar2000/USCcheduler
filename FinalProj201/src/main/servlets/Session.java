@@ -1,17 +1,12 @@
 package main.servlets;
 
 import com.google.gson.JsonObject;
-
 import main.JDBCCredential;
 import main.User;
 
+import javax.annotation.Resource;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpSession;
-import java.sql.DriverManager;
-import main.JDBCCredential;
-
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -22,8 +17,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.HashMap;
-import java.util.Map;
 
 @WebServlet(name = "SessionServlet", urlPatterns = "/api/session")
 public class Session extends HttpServlet {

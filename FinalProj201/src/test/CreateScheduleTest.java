@@ -7,16 +7,19 @@ import main.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class CreateScheduleTest{
     User user = null;
     CreateSchedule cs = null;
 
-    @BeforeEach
+//    @BeforeEach
     void prepareData(){
         user = new User(1, "jiashu", "xu", "jiashuxu@usc.edu", "1");
         cs = new CreateSchedule(user);
@@ -34,6 +37,7 @@ class CreateScheduleTest{
     @Test
     void TestGetStringCourses(){
         List<Course> courses = CreateSchedule.getStringCourses("CSCI270, CSCI201");
+        System.out.println(courses);
         assertTrue(
                 courses.stream()
                         .anyMatch(c -> c.department.equals("CSCI")

@@ -86,7 +86,9 @@ const AddCourseForm = props => {
         credentials: 'include'
         })
         .then(response => response.json())
-        .then(schedules => {
+        .then(
+            response=> {
+                let schedules = response.schedule;
             localStorage.setItem("schedules", JSON.stringify(schedules));
             const allEvents = generateSchedules(schedules);
             localStorage.setItem("events", JSON.stringify(allEvents));

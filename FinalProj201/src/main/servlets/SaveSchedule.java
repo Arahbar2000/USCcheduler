@@ -1,25 +1,18 @@
 package main.servlets;
 
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import com.google.gson.JsonObject;
 import com.google.gson.JsonArray;
-import com.google.gson.JsonParser;
-import main.*;
-import java.util.ArrayList;
+import com.google.gson.JsonObject;
+import main.JDBCCredential;
+import main.User;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.time.LocalTime;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.DriverManager;
+import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.*;
 
 /**
  * Servlet implementation class SaveSchedule

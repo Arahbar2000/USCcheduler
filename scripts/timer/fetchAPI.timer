@@ -1,0 +1,9 @@
+[Unit]
+Description=call fetchAPI service
+
+[Timer]
+OnBootSec=15min
+OnUnitActiveSec=60s
+
+[Install]
+WantedBy=timer.target

@@ -6,7 +6,10 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.time.LocalTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -22,7 +25,6 @@ public class CreateSchedule {
 		this.user = user;
 		all_courses = getUserCourses(this.user);
 		pref = user.prefs;
-
 	}
 	
 	//Guest Constructor
@@ -107,9 +109,9 @@ public class CreateSchedule {
 			String query = "select courseId, department, courseNumber, title, startTime," +
 					" endTime, section, instructor, units, daysOfWeek, spots\n" +
 					"from Course c\n" +
-					"where department=? and courseNumber=?\n" +
-					"and startTime != 'TBA'\n" +
-					"and endTime != 'TBA';";
+					"where department=? and courseNumber=?\n";
+//					"and startTime != 'TBA'\n" +
+//					"and endTime != 'TBA';";
 
 			PreparedStatement statement = dbcon.prepareStatement(query);
 			Pattern pat = Pattern.compile("\\d+|\\D+");
@@ -131,8 +133,11 @@ public class CreateSchedule {
 				ResultSet rs = statement.executeQuery();
 
 				while (rs.next()) {
-					LocalTime startLocalTime = LocalTime.parse(rs.getString("startTime"));
-					LocalTime endLocalTime = LocalTime.parse(rs.getString("endTime"));
+					String startTime = rs.getString("startTime");
+					String endTime = rs.getString("endTime");
+					LocalTime startLocalTime = startTime.equals("TBA") ? null : LocalTime.parse(startTime);
+					LocalTime endLocalTime = endTime.equals("TBA") ? null : LocalTime.parse(endTime);
+//					LocalTime endLocalTime = LocalTime.parse(rs.getString("endTime"));
 
 					Course c = new Course(
 							rs.getInt("courseId"),

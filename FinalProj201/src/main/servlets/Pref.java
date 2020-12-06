@@ -1,13 +1,10 @@
 package main.servlets;
 
 import com.google.gson.JsonObject;
-
 import main.JDBCCredential;
 import main.User;
-import main.JDBCCredential;
 
 import javax.annotation.Resource;
-import java.sql.DriverManager;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;

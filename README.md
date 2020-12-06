@@ -46,3 +46,19 @@ bash run.sh
 This might take a while because we are building a docker image, compiling the backend and then compiling the front end into war files, which are then run on a tomcat server
 
 The application can now be found at http://localhost:8080/home
+
+# Setting the timer
+
+You can set up a `systemd` timer so that the OS would schedule retrieving USC courses and re-populate tables every 30 minutes. The timer is in 
+`scripts/timer`, to setup timer you need sudo permission
+
+first change the `WorkingDirectory` of `fetchAPI.service` to the directory of `scripts`, then
+
+```shell
+cd scripts/timer
+sudo cp * /etc/systemd/system
+systemctl daemon-reload
+# auto-start after boot
+systemctl enable fetchAPI.timer
+systemctl start fetchAPI.timer
+```

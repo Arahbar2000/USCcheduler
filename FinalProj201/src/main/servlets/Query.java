@@ -1,30 +1,19 @@
 package main.servlets;
 
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import main.JDBCCredential;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
-
-import main.User;
-import main.JDBCCredential;
-
-
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.ServletException;
-import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.HashMap;
-import java.util.Map;
-import java.sql.SQLException;
-import java.sql.DriverManager;
 
 @WebServlet(name = "QueryServlet", urlPatterns="/api/query")
 public class Query extends HttpServlet {
@@ -42,7 +31,7 @@ public class Query extends HttpServlet {
         Connection dbcon = null;
         PreparedStatement statement = null;
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
+//            Class.forName("com.mysql.cj.jdbc.Driver");
             // Connection dbcon = dataSource.getConnection();
             dbcon = DriverManager.getConnection(JDBCCredential.url, JDBCCredential.username, JDBCCredential.password);
             String query = "select distinct department, courseNumber from Course where department like ?" + 

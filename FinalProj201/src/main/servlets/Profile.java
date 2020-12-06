@@ -1,26 +1,20 @@
 package main.servlets;
 
- import com.google.gson.JsonArray;
- import com.google.gson.JsonObject;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import main.CreateSchedule;
+import main.User;
 
- import java.time.LocalTime;
- import java.util.List;
- import java.util.HashSet;
- import main.JDBCCredential;
- import main.*;
- import main.User;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.PrintWriter;
- import java.util.Map;
-
- import main.User;
+import java.time.LocalTime;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 /**
  * Servlet implementation class Profile
  */

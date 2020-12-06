@@ -1,30 +1,19 @@
 package main.servlets;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-
-import main.User;
 import main.JDBCCredential;
-
+import main.User;
 
 import javax.annotation.Resource;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.ServletException;
 import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.util.HashMap;
-import java.util.Map;
-import java.sql.SQLException;
-import java.sql.DriverManager;
+import java.sql.*;
 
 @WebServlet(name = "CourseServlet", urlPatterns = "/api/courses")
 public class Courses extends HttpServlet {

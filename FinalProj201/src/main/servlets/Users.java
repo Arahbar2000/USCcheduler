@@ -1,30 +1,20 @@
 package main.servlets;
 
 import com.google.gson.JsonObject;
-
 import main.JDBCCredential;
+import main.User;
 
-import java.sql.Statement;
 import javax.annotation.Resource;
-import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
-import java.sql.DriverManager;
-import main.JDBCCredential;
-import main.User;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 
 @WebServlet(name = "UsersServlet", urlPatterns = "/api/users")
 public class Users extends HttpServlet{
