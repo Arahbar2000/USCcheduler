@@ -101,22 +101,10 @@ const Schedule = (props) => {
             setSchedules([]);
         }
     }, [])
-
-    const updateSchedule = () => {
-        const events = JSON.parse(localStorage.getItem("events"));
-        if (events != null) {
-            setSchedules(events);
-        }
-        else {
-            setSchedules([]);
-        }
-        setIndex(0)
-    }
     
 
     return (
         <div>
-            <AddCourseForm update={updateSchedule} {...props} />
             <FullCalendar
                 schedulerLicenseKey={'CC-Attribution-NonCommercial-NoDerivatives'}
                 plugins={[ timeGridPlugin ]}
@@ -148,13 +136,17 @@ const Schedule = (props) => {
                     clear: {
                         text: 'Clear Schedules',
                         click: handleClearSchedule
+                    },
+                    search: {
+                        text: 'Modify Courses',
+                        click: () => props.show(true)
                     }
                 }}
                 headerToolbar = {{
                     left: 'clear',
                     title: 'title',
                     center: 'left right',
-                    right: ''
+                    right: 'search'
                 }}
             />
         </div>

@@ -16,6 +16,8 @@ const AddCourseForm = props => {
         }, 500)
     ).current;
 
+    console.log(loading);
+
     const queryCourses = (query, cancelToken) => {
         if (!query) {
             setOptions([]);
@@ -67,7 +69,6 @@ const AddCourseForm = props => {
     }
 
     const createSchedules = () => {
-        props.update();
         const extracurriculum = null;
         let courses = "";
         if (selectedCourses) {
@@ -89,7 +90,7 @@ const AddCourseForm = props => {
             localStorage.setItem("schedules", JSON.stringify(schedules));
             const allEvents = generateSchedules(schedules);
             localStorage.setItem("events", JSON.stringify(allEvents));
-            props.update();
+            props.show(false);
         })
         .catch(error => {
             console.log(error);
@@ -99,28 +100,32 @@ const AddCourseForm = props => {
     const styles = {
         container: (provided, state) => ({
             ...provided,
-            flex: 1,
-            width: '50%',
-            float: 'left'
+            width: '75%',
+            margin: 'auto',
         }),
         menu: (provided, state) => ({
             ...provided,
-            zIndex: 10
+            zIndex: 10,
+            marginTop: 0
         })
     }
 
 
     return (
-        <div style={{paddingBottom: '10px'}}>
+        <div style={{margin: 'auto'}}>
             <Select 
                 isLoading={loading} 
                 styles={styles} 
                 onChange={handleChange} 
                 onInputChange={handleInputChange} 
                 options={options} 
-                isMulti 
+                isMulti
+                placeholder='Enter course name e.g. csci201'
+                // menuIsOpen={options.length ? true : false}
             />
-            <Button variant="outline-danger" onClick={createSchedules} >GENERATE SCHEDULES</Button>
+            <div>
+                <Button block style={{width: '25%', margin: '22px auto'}} variant="outline-danger" onClick={createSchedules} >GENERATE SCHEDULES</Button>
+            </div>
         </div>
     );
 }

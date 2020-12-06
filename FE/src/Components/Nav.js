@@ -20,17 +20,17 @@ const Nav = (props) => {
   return (
     <Navbar>
       <LinkContainer to='/'>
-        <Navbar.Brand onClick={handleSelect.bind(null, 0)}><img src={logo} /></Navbar.Brand>
+        <Navbar.Brand onClick={() => props.show(true)}><img id='navLogo' src={logo} /></Navbar.Brand>
       </LinkContainer>
-      <Nv onSelect={handleSelect} activeKey={activeKey}>
-        {/*<Navbar.Brand href="/">Home</Navbar.Brand>*/}
+      {/* <Nv onSelect={handleSelect} activeKey={activeKey}>
+        <Navbar.Brand href="/">Home</Navbar.Brand>
         <LinkContainer to='/schedule'>
           <Nv.Link eventKey={1}>Schedule</Nv.Link>
         </LinkContainer>
         <LinkContainer to='/dashboard'>
           <Nv.Link eventKey={2}>Dashboard</Nv.Link>
         </LinkContainer>
-      </Nv>
+      </Nv> */}
 
       <Navbar.Toggle />
       <Navbar.Collapse className="justify-content-end">
