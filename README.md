@@ -12,35 +12,16 @@ npm run build
 ```
 
 # SQL
-first cd into scripts directory
+first cd into db directory
 
 to get courses.csv, first run python file `python writeData.py --year 20211 output courses.csv` or use `courses.csv`
 
-To build image, run container, and popualate database:
-
-```shell script
-
-bash build.sh
-
-```
-
-To populate table based on already running container
-
-first run python file `python writeData.py --year 20211 output
-courses.csv` or use `courses.csv` then
-
-```shell script
-
-bash init.sh
-
-```
-
-Note that you only have to run build.sh once, after that the container will always be running and you can simply call init.sh to repopulateDatabase based on courses.csv
 
 # RUNNING THE APPLICATION
 cd into root directory of repo
 ```shell script
-bash run.sh
+docker-compose build
+docker-compose up
 ```
 
 This might take a while because we are building a docker image, compiling the backend and then compiling the front end into war files, which are then run on a tomcat server

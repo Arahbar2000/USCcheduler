@@ -1,0 +1,22 @@
+version: "3.8"
+services:
+    web:
+        build: .
+        container_name: web
+        ports:
+            - "8080:8080"
+        networks: 
+            - app
+    db:
+        image: mysql:latest
+        container_name: db
+        volumes:
+            - ./db/data/:/docker-entrypoint-initdb.d/
+            - ./db/:/etc/mysql/
+        environment: 
+            MYSQL_ROOT_PASSWORD: 'root'
+        networks:
+            - app
+networks:
+    app:
+        external: false
