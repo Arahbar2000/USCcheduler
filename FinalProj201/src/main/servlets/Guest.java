@@ -96,7 +96,7 @@ public class Guest extends HttpServlet {
 			}
 		}
 		pref.setExtraCurriculum(extraCurriculum);
-		System.out.println("HELLO");
+		System.out.println(courseString);
 		List<Course> courses = CreateSchedule.getStringCourses(courseString);//splits string of courses into a list of course objects
 		CreateSchedule mySch = new CreateSchedule(courses, pref); //uses Guest Constructor which doesnt require a user parameter
 		ArrayList<Schedule> genSchedulesList = mySch.getSchedules(15);
