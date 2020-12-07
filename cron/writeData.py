@@ -22,7 +22,7 @@ departments = ["AHIS", "ALI", "AMST", "ANTH", "ARAB", "ASTR", "BISC", "CHEM", "C
 
 
 def writeData(department, year, filename):
-    f = open(filename, "a")
+    f = open(filename, "w")
     session = requests.Session()
     for dept in department:
         try:
@@ -72,7 +72,7 @@ def writeData(department, year, filename):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--output", default="courses.csv")
+    parser.add_argument("--output", default="/app/courses.csv")
     parser.add_argument("--year", default=20211)
     arg = parser.parse_args()
 

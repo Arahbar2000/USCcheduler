@@ -1,5 +1,5 @@
 use cs201;
-LOAD DATA INFILE '/docker-entrypoint-initdb.d/courses.csv' IGNORE
+LOAD DATA LOCAL INFILE '/app/courses.csv'
 INTO TABLE Course
 FIELDS TERMINATED BY '|'
 LINES TERMINATED BY '\n';

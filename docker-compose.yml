@@ -8,15 +8,24 @@ services:
         networks: 
             - app
     db:
-        image: mysql:latest
+        build: ./db
         container_name: db
         volumes:
-            - ./db/data/:/docker-entrypoint-initdb.d/
             - ./db/:/etc/mysql/
+            - data:/var/lib/mysql
         environment: 
             MYSQL_ROOT_PASSWORD: 'root'
         networks:
             - app
+    cron:
+        build: ./cron
+        container_name: cron
+        depends_on: 
+            - db
+        networks:
+            - app
+
 networks:
     app:
-        external: false
+volumes:
+    data:
