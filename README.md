@@ -11,12 +11,6 @@ npm i
 npm run build
 ```
 
-# SQL
-first cd into db directory
-
-to get courses.csv, first run python file `python writeData.py --year 20211 output courses.csv` or use `courses.csv`
-
-
 # RUNNING THE APPLICATION
 cd into root directory of repo
 ```shell script
