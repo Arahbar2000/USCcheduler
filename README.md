@@ -20,4 +20,4 @@ docker-compose up
 
 This might take a while because we are building a docker image, compiling the backend and then compiling the front end into war files, which are then run on a tomcat server
 
-The application can now be found at http://localhost:8080/home
+The application can now be found at http://localhost/home
