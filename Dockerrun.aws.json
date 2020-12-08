@@ -1,0 +1,41 @@
+{
+    "AWSEBDockerrunVersion": 2,
+    "containerDefinitions": [
+      {
+        "name": "web",
+        "image": "arahbar/web",
+        "essential": true,
+        "memory": 130,
+        "portMappings" : [
+            {
+                "hostPort": 80,
+                "containerPort": 8080
+            }
+        ],
+        "links": [
+            "db"
+        ]
+      },
+      {
+        "name": "db",
+        "image": "arahbar/db",
+        "essential": true,
+        "memory": 350,
+        "environment": [
+            {
+                "name": "MYSQL_ROOT_PASSWORD",
+                "value": "root"
+            }
+        ]
+      },
+      {
+          "name": "cron",
+          "image": "arahbar/cron",
+          "essential": true,
+          "memory": 20,
+          "links": [
+              "db"
+          ]
+      }
+    ]
+  }

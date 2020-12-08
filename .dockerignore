@@ -10,4 +10,7 @@ scaledFablix/*
 */.project
 */node_modules/*
 **/*.iml
-*/npm/*
+*/npm/*# Elastic Beanstalk Files
+.elasticbeanstalk/*
+.git
+.gitignore

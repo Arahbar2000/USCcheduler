@@ -1,0 +1,1 @@
+docker rm elasticbeanstalk_db_1 elasticbeanstalk_web_1 elasticbeanstalk_cron_1

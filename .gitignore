@@ -11,3 +11,11 @@ scaledFablix/*
 */node_modules/*
 **/*.iml
 */npm/*
+
+
+
+
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml
