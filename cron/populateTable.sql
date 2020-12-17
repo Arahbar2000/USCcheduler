@@ -1,5 +1,0 @@
-use cs201;
-LOAD DATA LOCAL INFILE '/app/courses.csv'
-INTO TABLE Course
-FIELDS TERMINATED BY '|'
-LINES TERMINATED BY '\n';

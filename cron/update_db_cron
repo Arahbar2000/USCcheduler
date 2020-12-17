@@ -1,2 +1,0 @@
-*/30 * * * * /app/repopulate.sh >> /var/log/cron.log 2>&1
-# updates database every 30 minutes
