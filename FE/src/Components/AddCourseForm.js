@@ -14,9 +14,7 @@ const AddCourseForm = props => {
         debounce((query, token) => {
             queryCourses(query, token);
         }, 500)
-    ).current;
-
-    console.log(loading);
+    ).current
 
     const queryCourses = (query, cancelToken) => {
         if (!query) {
@@ -124,7 +122,7 @@ const AddCourseForm = props => {
                 // menuIsOpen={options.length ? true : false}
             />
             <div>
-                <Button block style={{width: '25%', margin: '22px auto'}} variant="outline-danger" onClick={createSchedules} >GENERATE SCHEDULES</Button>
+                <Button block style={{width: '30%', margin: '22px auto', minWidth: '30%'}} variant="outline-danger" onClick={createSchedules} >GENERATE SCHEDULES</Button>
             </div>
         </div>
     );

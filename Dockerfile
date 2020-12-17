@@ -20,12 +20,17 @@ RUN mvn clean package -f /app/backend/pom.xml \
 
 FROM tomcat:9.0
 
+
 COPY --from=warBuilder /app/backend/target/*.war \
     /usr/local/tomcat/webapps/
 COPY --from=warBuilder /app/frontend/target/*.war \
     /usr/local/tomcat/webapps/
 COPY *.jar /usr/local/tomcat/lib/
+COPY context.xml /usr/local/tomcat/conf/Catalina/localhost/context.xml.default
+COPY wait-for-it.sh /app/
+RUN chmod 0744 /app/wait-for-it.sh
 
 EXPOSE 8080
 
-CMD ["catalina.sh", "run"]
+# CMD ["catalina.sh", "run"]
+CMD /app/wait-for-it.sh db:3306 -s -t 60 -- catalina.sh run

@@ -143,10 +143,12 @@ const Schedule = (props) => {
                     }
                 }}
                 headerToolbar = {{
-                    left: 'clear',
+                    left: 'left',
                     title: 'title',
-                    center: 'left right',
-                    right: 'search'
+                    right: 'right'
+                }}
+                dayHeaderFormat={{
+                    weekday: 'short'
                 }}
             />
         </div>

@@ -5,7 +5,7 @@
         "name": "web",
         "image": "arahbar/web",
         "essential": true,
-        "memory": 130,
+        "memory": 350,
         "portMappings" : [
             {
                 "hostPort": 80,
@@ -20,7 +20,7 @@
         "name": "db",
         "image": "arahbar/db",
         "essential": true,
-        "memory": 350,
+        "memory": 500,
         "environment": [
             {
                 "name": "MYSQL_ROOT_PASSWORD",
@@ -32,7 +32,7 @@
           "name": "cron",
           "image": "arahbar/cron",
           "essential": true,
-          "memory": 20,
+          "memory": 100,
           "links": [
               "db"
           ]

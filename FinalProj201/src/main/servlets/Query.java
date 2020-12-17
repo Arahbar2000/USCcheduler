@@ -10,12 +10,12 @@ import javax.servlet.http.HttpServlet;
 import main.User;
 import main.JDBCCredential;
 
-
+import javax.sql.DataSource;
+import javax.naming.InitialContext;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.ServletException;
-import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
@@ -24,14 +24,13 @@ import java.sql.ResultSet;
 import java.util.HashMap;
 import java.util.Map;
 import java.sql.SQLException;
-import java.sql.DriverManager;
 
 @WebServlet(name = "QueryServlet", urlPatterns="/api/query")
 public class Query extends HttpServlet {
     private static final long serialVersionUID = 1L;
+    
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        System.out.println("QUERY");
         response.setContentType("application/json"); // Response mime type
         PrintWriter out = response.getWriter();
         String department = request.getParameter("department");
@@ -39,12 +38,13 @@ public class Query extends HttpServlet {
         System.out.println(courseNumber);
         JsonArray courses = new JsonArray();
         ResultSet rs = null;
-        Connection dbcon = null;
         PreparedStatement statement = null;
+        Connection dbcon = null;
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            // Connection dbcon = dataSource.getConnection();
-            dbcon = DriverManager.getConnection(JDBCCredential.url, JDBCCredential.username, JDBCCredential.password);
+            InitialContext ctx = new InitialContext();
+            DataSource ds = (DataSource)ctx.lookup("java:comp/env/jdbc/db");
+            dbcon = ds.getConnection();
+            System.out.println(ds);
             String query = "select distinct department, courseNumber from Course where department like ?" + 
                             " and courseNumber like ?;";
             // Declare our statement
@@ -71,8 +71,9 @@ public class Query extends HttpServlet {
             try {
                 statement.close();
                 rs.close();
-                dbcon.close();
                 out.close();
+                dbcon.close();
+
             }
             catch(Exception e) {
 

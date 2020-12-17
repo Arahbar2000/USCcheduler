@@ -8,7 +8,7 @@ import { AuthProvider } from './Context/AuthProvider'
 console.log(process.env.REACT_APP_ROUTER_BASE)
 ReactDOM.render(
   <React.StrictMode>
-    <BrowserRouter basename={process.env.REACT_APP_ROUTER_BASE || '/home'}>
+    <BrowserRouter basename={process.env.REACT_APP_ROUTER_BASE || '/'}>
       <AuthProvider>
         <App />
       </AuthProvider>

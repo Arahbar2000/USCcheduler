@@ -9,6 +9,9 @@ import java.time.LocalTime;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.annotation.Resource;
+import javax.sql.DataSource;
+import javax.naming.InitialContext;
 
 public class CreateSchedule {
 
@@ -17,6 +20,8 @@ public class CreateSchedule {
 	public List<Course> all_courses = new ArrayList<>();
 	Preferences pref;
 	public List<String> req = new ArrayList<>();
+	@Resource(name="jdbc/db")
+	private DataSource ds;
 
 	public CreateSchedule(User user) {
 		this.user = user;
@@ -37,21 +42,15 @@ public class CreateSchedule {
 
 	// fetch courses
 	private List<Course> getUserCourses(User user) {
-		try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-        }
-        catch(ClassNotFoundException e) {
-
-        }
 		List<Course> courses = new ArrayList<>();
-		try (Connection dbcon = DriverManager.getConnection(
-				JDBCCredential.url, JDBCCredential.username, JDBCCredential.password)){
-				String query = "select userId, courseId, department, courseNumber, title, " +
-					"startTime, endTime, section, instructor, units, daysOfWeek, spots\n" +
-					"from Schedule s natural join Course c\n" +
-					"where s.userId = ?\n" +
-					"and startTime != 'TBA'\n" +
-					"and endTime != 'TBA';";
+		try (Connection dbcon = ds.getConnection()){
+
+			String query = "select userId, courseId, department, courseNumber, title, " +
+				"startTime, endTime, section, instructor, units, daysOfWeek, spots\n" +
+				"from Schedule s natural join Course c\n" +
+				"where s.userId = ?\n" +
+				"and startTime != 'TBA'\n" +
+				"and endTime != 'TBA';";
 
 			// Declare our statement
 			PreparedStatement statement = dbcon.prepareStatement(query);
@@ -98,15 +97,13 @@ public class CreateSchedule {
 	// assume courses_str ='CSCI201,CSCI270‘
 	static public List<Course> getStringCourses(String courses_str){
 		List<Course> courses = new ArrayList<>();
+		ResultSet rs = null;
+		PreparedStatement statement = null;
+		Connection dbcon = null;
 		try {
-            Class.forName("com.mysql.jdbc.Driver");
-        }
-        catch(ClassNotFoundException e) {
-
-        }
-		try (Connection dbcon = DriverManager.getConnection(
-				JDBCCredential.url, JDBCCredential.username, JDBCCredential.password)){
-
+			InitialContext ctx = new InitialContext();
+			DataSource ds = (DataSource)ctx.lookup("java:comp/env/jdbc/db");
+			dbcon = ds.getConnection();
 			String query = "select courseId, department, courseNumber, title, startTime," +
 					" endTime, section, instructor, units, daysOfWeek, spots\n" +
 					"from Course c\n" +
@@ -114,7 +111,7 @@ public class CreateSchedule {
 					"and startTime != 'TBA'\n" +
 					"and endTime != 'TBA';";
 
-			PreparedStatement statement = dbcon.prepareStatement(query);
+			statement = dbcon.prepareStatement(query);
 			Pattern pat = Pattern.compile("\\d+\\D*|\\D+");
 
 			for (String course: courses_str.split(",\\s*")){
@@ -131,7 +128,7 @@ public class CreateSchedule {
 				System.out.println(statement);
 
 				// Perform the query
-				ResultSet rs = statement.executeQuery();
+				rs = statement.executeQuery();
 
 				while (rs.next()) {
 					LocalTime startLocalTime = LocalTime.parse(rs.getString("startTime"));
@@ -152,13 +149,22 @@ public class CreateSchedule {
 					);
 					courses.add(c);
 				}
-				//rs.close();
+				rs.close();
 			}
 			//statement.close();
 		}
 		catch (Exception e) {
 			System.out.println("error");
 			e.printStackTrace();
+		}
+		finally {
+			try {
+				rs.close();
+				statement.close();
+				dbcon.close();
+			} catch(Exception e) {
+
+			}
 		}
 		return courses;
 	}

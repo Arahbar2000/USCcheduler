@@ -5,17 +5,26 @@ import AddCourseForm from './AddCourseForm';
 import Schedule from './Schedule';
 import Nav from './Nav'
 import Container from 'react-bootstrap/Container'
+import Button from 'react-bootstrap/Button'
 
 const Home = (props) => {
     const [ search, setSearch ] = useState(true);
+    const [ clear, setClear ] = useState(false)
 
     const showSearch = flag => {
         setSearch(flag);
     }
 
+    const clearSchedules = () => {
+        localStorage.removeItem("schedules");
+        localStorage.removeItem("events");
+        setClear(!clear)
+    }
+
     return (
         <div>
-            <Nav show={showSearch} />
+            <Nav search={search} clearSchedules={clearSchedules} clear={clear} show={showSearch} />
+            {/* <Button onClick={() => setSearch(!search)}>Change</Button> */}
             <Container>
             {
                 search ? 

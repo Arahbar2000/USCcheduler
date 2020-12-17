@@ -31,8 +31,8 @@ public class Guest extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 
-	@Resource(name = "jdbc/cs201")
-	private DataSource dataSource;
+	@Resource(name = "jdbc/db")
+	private DataSource ds;
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
