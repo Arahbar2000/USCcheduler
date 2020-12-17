@@ -107,9 +107,9 @@ public class CreateSchedule {
 			String query = "select courseId, department, courseNumber, title, startTime," +
 					" endTime, section, instructor, units, daysOfWeek, spots\n" +
 					"from Course c\n" +
-					"where department=? and courseNumber=?\n" +
-					"and startTime != 'TBA'\n" +
-					"and endTime != 'TBA';";
+					"where department=? and courseNumber=?";
+					// "and startTime != 'TBA'\n" +
+					// "and endTime != 'TBA';";
 
 			statement = dbcon.prepareStatement(query);
 			Pattern pat = Pattern.compile("\\d+\\D*|\\D+");

@@ -44,7 +44,6 @@ public class Query extends HttpServlet {
             InitialContext ctx = new InitialContext();
             DataSource ds = (DataSource)ctx.lookup("java:comp/env/jdbc/db");
             dbcon = ds.getConnection();
-            System.out.println(ds);
             String query = "select distinct department, courseNumber from Course where department like ?" + 
                             " and courseNumber like ?;";
             // Declare our statement

@@ -31,7 +31,7 @@ const AddCourseForm = props => {
         axios.get(url, {
             cancelToken
         }).then(response => {
-            const courses = response.data;
+            const courses = response.data
             const courseOptions = courses.map(course => {
                 const name = course.department.toUpperCase() + course.courseNumber.toString();
                 return {
@@ -84,7 +84,9 @@ const AddCourseForm = props => {
         credentials: 'include'
         })
         .then(response => response.json())
-        .then(schedules => {
+        .then(response => {
+            const tba_courses = response.TBA
+            const schedules = response.schedule
             localStorage.setItem("schedules", JSON.stringify(schedules));
             const allEvents = generateSchedules(schedules);
             localStorage.setItem("events", JSON.stringify(allEvents));
