@@ -1,4 +1,4 @@
-The only dependency you need for this is npm to create the build folder for the frontend. The rest are handled in docker.
+You will need npm to build the frontend and docker to create the wars
 
 Please execute these sections in order
 
@@ -11,13 +11,44 @@ npm i
 npm run build
 ```
 
-# RUNNING THE APPLICATION
-cd into root directory of repo
-```shell script
-docker-compose build
-docker-compose up
+# Building the wars
+Build the frontend war file
+```
+bash build.sh f
+```g
+Build the backend war file
+```
+bash build.sh b
+```
+Your war files are now find in the "wars" directory
+
+# LINUX MACHINE DEPLOYMENT
+
+It is assumed that you already have installed tomcat and mysql in your linux machine
+
+Your mysql server should have a user called "scheduler" with a password of "1234"
+
+ssh into the linux machine
+
+To set automatic database refreshes using systemd, set present directory to db/scripts/timer, and then run these commands:
+```
+sudo cp * /etc/systemd/system
+systemctl daemon-reload
+# auto-start after boot
+systemctl enable fetchAPI.timer
+systemctl start fetchAPI.timer
 ```
 
-This might take a while because we are building a docker image, compiling the backend and then compiling the front end into war files, which are then run on a tomcat server
+Place the mysql connector jar file in tomcat/lib directory
+```
+cp *.jar <tomcat>/lib/
+```
 
-The application can now be found at http://localhost/home
+Copy the context.xml to /tomcat/conf/Catalina/localhost/context.xml.default
+```
+cp *.xml <tomcat>/conf/Catalina/localhost/context.xml.default
+```
+
+restart tomcat
+
+go to http://<public ipv4 address of machine>:8080/manager/html to deploy the two wars in tomcat

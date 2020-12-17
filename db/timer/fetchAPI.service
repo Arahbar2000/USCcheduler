@@ -4,4 +4,4 @@ Description=run python script to fetch data from USC API & generate csv
 [Service]
 Type=oneshot
 ExecStart=bash ./updatedb.sh
-WorkingDirectory=/home/USCScheduler/db/scripts
+WorkingDirectory=/home/USCccheduler/db/scripts
