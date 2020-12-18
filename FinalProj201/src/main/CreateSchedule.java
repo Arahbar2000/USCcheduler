@@ -228,6 +228,46 @@ public class CreateSchedule {
 				return false;
 		}
 
+		return containsAllSections(s);
+	}
+	
+	private boolean containsAllSections(Schedule s) {
+		
+		ArrayList<String> checked = new ArrayList<String>();
+		
+		for(Course orig: s.decidedClasses) {
+			
+			String c_name = orig.department + orig.courseNumber;
+			if(!checked.contains(c_name)) {
+				
+				checked.add(c_name);
+				
+				HashSet<String> sections = new HashSet<String>();
+				for(Course c: all_courses) {
+					
+					if(c.department == orig.department && c.courseNumber == orig.courseNumber)
+						sections.add(c.sectionType);
+					
+				}
+				
+				boolean contains = false;
+				for(String section: sections) {
+					
+					for(Course c: s.decidedClasses) {
+						
+						if(c.department == orig.department && c.courseNumber == orig.courseNumber
+								&& c.sectionType.equals(section)) 
+							contains = true;
+							
+					}
+					
+					if(!contains)
+						return false;
+					
+				}
+			}
+		}
+		
 		return true;
 	}
 
