@@ -55,18 +55,14 @@ public class CreateSchedule {
 			// Declare our statement
 			PreparedStatement statement = dbcon.prepareStatement(query);
 
-			System.out.println(user.id);
 			statement.setInt(1, user.id);
 
 			// Perform the query
 			ResultSet rs = statement.executeQuery();
 
-			System.out.println("TRYING TO FIND COURSES");
-
 			while (rs.next()) {
 				LocalTime startLocalTime = LocalTime.parse(rs.getString("startTime"));
 				LocalTime endLocalTime = LocalTime.parse(rs.getString("endTime"));
-				System.out.println("GETTING A COURSE");
                 Course c = new Course(
                 		rs.getInt("courseId"),
                 		rs.getString("department"),
@@ -120,12 +116,9 @@ public class CreateSchedule {
 				String department = match.group();
 				match.find();
 				String courseNumber = match.group();
-				System.out.println(department + courseNumber);
 
 				statement.setString(1, department);
 				statement.setString(2, courseNumber);
-
-				System.out.println(statement);
 
 				// Perform the query
 				rs = statement.executeQuery();
@@ -177,7 +170,6 @@ public class CreateSchedule {
 			return true;
 
 		if(pref.startTime == null && pref.endTime == null) return true;
-		System.out.println(pref.startTime);
 		if (pref.startTime != null) {
 			if(c.startTime.isBefore(pref.startTime))
 			return false;
@@ -277,10 +269,8 @@ public class CreateSchedule {
 	//		also includes TBA sections
 	public ArrayList<Schedule> getSchedules(int n) {
 		
-		System.out.println("GETTING SCHEDULES");
 		// PROBLEM LINE ****
 		all_courses.removeIf(c -> (!meetsPreferences(c) && multipleSections(c)));
-		System.out.println("HELLO SCHEDULE");
 		// now every interchangeable courses are removed
 
 		ArrayList<Schedule> schedules = new ArrayList<Schedule>();
@@ -296,15 +286,6 @@ public class CreateSchedule {
 			if(add && validSchedule(sched)) {
 				schedules.add(sched);
 			}
-		}
-		
-		for(Schedule s: schedules) {
-			
-			for(Course c: s.decidedClasses) {
-				System.out.println(c.toString());
-			}
-			System.out.println();
-			
 		}
 		return schedules;
 	}

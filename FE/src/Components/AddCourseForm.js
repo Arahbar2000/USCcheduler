@@ -1,26 +1,33 @@
-import { useState, useEffect, useRef } from 'react';
-import { debounce } from "lodash";
-import axios from 'axios';
+import { useState, useRef } from 'react';
+import debounce from 'debounce-promise';
 import { API_URL } from '../env'
-import Select from 'react-select';
 import Button from 'react-bootstrap/Button';
 import { generateSchedules } from '../Helpers/getSchedules';
-const AddCourseForm = props => {
-    const [ query, setQuery ] = useState("");
-    const [ options, setOptions ] = useState([]);
-    const [ defaultOptions, setDefaultOptions ] = useState([]);
-    const [ selectedCourses, setSelectedCourses ] = useState([]);
-    const [ loading, setLoading ] = useState(false);
-    const attemptQuery = useRef(
-        debounce((query, token) => {
-            queryCourses(query, token);
-        }, 500)
-    ).current
+import AsyncSelect from 'react-select/async';
+import axios from 'axios';
 
-    useEffect(() => {
-        console.log('getting default options')
-        let department = null;
-        let courseNumber = null;
+const styles = {
+    container: (provided, state) => ({
+        ...provided,
+        width: '75%',
+        margin: 'auto',
+    }),
+    menu: (provided, state) => ({
+        ...provided,
+        zIndex: 10,
+        marginTop: 0
+    })
+}
+
+const queryCourses = async query => {
+    return new Promise(resolve => {
+        if (!query) {
+            return resolve([])
+        }
+        let department = query.match('[^0-9]+')
+        let courseNumber = query.match('[0-9]+[^0-9]*')
+        if (department != null) department = department[0].toUpperCase();
+        if (courseNumber != null) courseNumber = courseNumber[0].toUpperCase();
         const url = new URL(API_URL + 'query');
         url.search = new URLSearchParams({ department, courseNumber });
         axios.get(url).then(response => {
@@ -32,66 +39,30 @@ const AddCourseForm = props => {
                     value: name
                 }
             });
-            setDefaultOptions(courseOptions)
+            return resolve(courseOptions);
         })
         .catch(error => {
-            console.log('error getting default options', error)
-            setDefaultOptions([]);
+            console.log(error);
+            return resolve([]);
         })
-    }, []);
+    })
+}
 
-    const queryCourses = (query, cancelToken) => {
-        if (!query) {
-            setOptions([])
-            return;
-        }
-        setLoading(true);
-        let department = query.match('[^0-9]+')
-        let courseNumber = query.match('[0-9]+[^0-9]*')
-        if (department != null) department = department[0].toUpperCase();
-        if (courseNumber != null) courseNumber = courseNumber[0].toUpperCase();
-        const url = new URL(API_URL + 'query');
-        url.search = new URLSearchParams({ department, courseNumber });
-        axios.get(url, {
-            cancelToken
-        }).then(response => {
-            const courses = response.data
-            const courseOptions = courses.map(course => {
-                const name = course.department.toUpperCase() + course.courseNumber.toString();
-                return {
-                    label: name + ': ' + course.title,
-                    value: name
-                }
-            });
-            setOptions(courseOptions);
-            setLoading(false);
-        })
-        .catch(error => {
-            if (!axios.isCancel(error)) {
-                setOptions([]);
-                setLoading(false);
-            }
-        })
-    }
+const AddCourseForm = props => {
+    const [ selectedCourses, setSelectedCourses ] = useState([]);
 
-    const handleInputChange = input => {
-        setQuery(input);
-        return input;
-    }
-
-    useEffect(() => {
-        const { cancel, token } = axios.CancelToken.source();
-        attemptQuery(query, token);
-        // return () => cancel("Irrelevant request") || attemptQuery.cancel();
-        return () => cancel("Irrelevant request");
-    }, [ attemptQuery, query ]);
+    const loadOptions = useRef(debounce(async (query, callback) => {
+        const courseOptions = await queryCourses(query);
+        callback(courseOptions);
+    }, 500)).current
 
     const handleChange = courses => {
         if (courses != null) {
             courses.map(course => {
                 course.label = course.value
+                return course;
             });
-        } 
+        }
         setSelectedCourses(courses);
     }
 
@@ -109,12 +80,11 @@ const AddCourseForm = props => {
         const url = new URL(API_URL + 'guest');
         url.search = new URLSearchParams({ courses, extraCurriculum: extracurriculum, startTime, endTime });
         fetch(url, {
-        method: 'GET',
-        credentials: 'include'
+            method: 'GET',
+            credentials: 'include'
         })
         .then(response => response.json())
         .then(response => {
-            const tba_courses = response.TBA
             const schedules = response.schedule
             localStorage.setItem("schedules", JSON.stringify(schedules));
             const allEvents = generateSchedules(schedules);
@@ -126,28 +96,19 @@ const AddCourseForm = props => {
         })
     }
 
-    const styles = {
-        container: (provided, state) => ({
-            ...provided,
-            width: '75%',
-            margin: 'auto',
-        }),
-        menu: (provided, state) => ({
-            ...provided,
-            zIndex: 10,
-            marginTop: 0
-        })
-    }
-
 
     return (
         <div style={{margin: 'auto'}}>
-            <Select 
-                isLoading={loading} 
+            <AsyncSelect 
                 styles={styles} 
+<<<<<<< HEAD
                 onChange={handleChange} 
                 onInputChange={handleInputChange} 
                 options={options}
+=======
+                onChange={handleChange}
+                loadOptions={loadOptions}
+>>>>>>> query
                 isMulti
                 placeholder='Enter course name e.g. csci201'
                 defaultOptions={defaultOptions}

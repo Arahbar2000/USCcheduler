@@ -5,6 +5,8 @@ import { generateSchedules } from '../Helpers/getSchedules';
 import { API_URL } from '../env';
 import { useAuth } from '../Context/AuthProvider'
 import AddCourseForm from './AddCourseForm';
+import Button from 'react-bootstrap/Button';
+import '../css/Schedule.css';
 
 const Schedule = (props) => {
     const [ schedules, setSchedules ] = useState([])
@@ -105,52 +107,61 @@ const Schedule = (props) => {
 
     return (
         <div>
-            <FullCalendar
-                schedulerLicenseKey={'CC-Attribution-NonCommercial-NoDerivatives'}
-                plugins={[ timeGridPlugin ]}
-                initialView={'timeGridWeek'}
-                initialDate={'2020-12-07'}
-                hiddenDays={[0, 6]}
-                dayHeaderFormat={{weekday: 'long'}}
-                events={schedules[scheduleIndex]}
-                allDaySlot={false}
-                slotMinTime={'07:00:00'}
-                slotMaxTime={'22:00:00'}
-                customButtons={{
-                    right: {
-                        text: 'Next Schedule',
-                        click: handleRightClick
-                    },
-                    left: {
-                        text: 'Prev Schedule',
-                        click: handleLeftClick
-                    },
-                    select: {
-                        text: 'Save this schedule',
-                        click: handleSelectFavoriteSchedule
-                    },
-                    getSaved: {
-                        text: 'Get saved schedule',
-                        click: handleGetSavedSchedule
-                    },
-                    clear: {
-                        text: 'Clear Schedules',
-                        click: handleClearSchedule
-                    },
-                    search: {
-                        text: 'Modify Courses',
-                        click: () => props.show(true)
-                    }
-                }}
-                headerToolbar = {{
-                    left: 'left',
-                    title: 'title',
-                    right: 'right'
-                }}
-                dayHeaderFormat={{
-                    weekday: 'short'
-                }}
-            />
+            <div style={{margin: 'auto'}}>
+                <Button variant='outline-dark' id="prev" className="buttons" onClick={handleLeftClick}>Prev Schedule</Button>
+                <span id="index">{scheduleIndex+1}<span style={{color: 'red'}}>/</span>{schedules.length}</span>
+                <Button variant='outline-dark' id="next" className="buttons" onClick={handleRightClick}>Next Schedule</Button>
+            </div>
+            <div id="calendar">
+                <FullCalendar
+                    height={500}
+                    schedulerLicenseKey={'CC-Attribution-NonCommercial-NoDerivatives'}
+                    plugins={[ timeGridPlugin ]}
+                    initialView={'timeGridWeek'}
+                    initialDate={'2020-12-07'}
+                    hiddenDays={[0, 6]}
+                    dayHeaderFormat={{weekday: 'long'}}
+                    events={schedules[scheduleIndex]}
+                    allDaySlot={false}
+                    slotMinTime={'07:00:00'}
+                    slotMaxTime={'22:00:00'}
+                    customButtons={{
+                        right: {
+                            text: 'Next Schedule',
+                            click: handleRightClick
+                        },
+                        left: {
+                            text: 'Prev Schedule',
+                            click: handleLeftClick
+                        },
+                        select: {
+                            text: 'Save this schedule',
+                            click: handleSelectFavoriteSchedule
+                        },
+                        getSaved: {
+                            text: 'Get saved schedule',
+                            click: handleGetSavedSchedule
+                        },
+                        clear: {
+                            text: 'Clear Schedules',
+                            click: handleClearSchedule
+                        },
+                        search: {
+                            text: 'Modify Courses',
+                            click: () => props.show(true)
+                        }
+                    }}
+                    // headerToolbar = {{
+                    //     left: 'left',
+                    //     center: '',
+                    //     right: 'right'
+                    // }}
+                    headerToolbar={false}
+                    dayHeaderFormat={{
+                        weekday: 'short'
+                    }}
+                />
+            </div>
         </div>
     );
 }
