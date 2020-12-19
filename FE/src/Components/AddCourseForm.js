@@ -17,28 +17,28 @@ const AddCourseForm = props => {
         }, 500)
     ).current
 
-    // useEffect(() => {
-    //     console.log('getting default options')
-    //     let department = null;
-    //     let courseNumber = null;
-    //     const url = new URL(API_URL + 'query');
-    //     url.search = new URLSearchParams({ department, courseNumber });
-    //     axios.get(url).then(response => {
-    //         const courses = response.data
-    //         const courseOptions = courses.map(course => {
-    //             const name = course.department.toUpperCase() + course.courseNumber.toString();
-    //             return {
-    //                 label: name + ': ' + course.title,
-    //                 value: name
-    //             }
-    //         });
-    //         setDefaultOptions(courseOptions)
-    //     })
-    //     .catch(error => {
-    //         console.log('error getting default options', error)
-    //         setDefaultOptions([]);
-    //     })
-    // }, []);
+    useEffect(() => {
+        console.log('getting default options')
+        let department = null;
+        let courseNumber = null;
+        const url = new URL(API_URL + 'query');
+        url.search = new URLSearchParams({ department, courseNumber });
+        axios.get(url).then(response => {
+            const courses = response.data
+            const courseOptions = courses.map(course => {
+                const name = course.department.toUpperCase() + course.courseNumber.toString();
+                return {
+                    label: name + ': ' + course.title,
+                    value: name
+                }
+            });
+            setDefaultOptions(courseOptions)
+        })
+        .catch(error => {
+            console.log('error getting default options', error)
+            setDefaultOptions([]);
+        })
+    }, []);
 
     const queryCourses = (query, cancelToken) => {
         if (!query) {
@@ -147,9 +147,10 @@ const AddCourseForm = props => {
                 styles={styles} 
                 onChange={handleChange} 
                 onInputChange={handleInputChange} 
-                options={options} 
+                options={options}
                 isMulti
                 placeholder='Enter course name e.g. csci201'
+                defaultOptions={defaultOptions}
             />
             <div>
                 <Button block style={{width: '30%', margin: '22px auto', minWidth: '30%'}} variant="outline-danger" onClick={createSchedules} >GENERATE SCHEDULES</Button>
