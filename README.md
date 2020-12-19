@@ -13,11 +13,11 @@ npm run build
 
 # Building the wars
 Build the frontend war file
-```
+```shell script
 bash build.sh f
-```g
-Build the backend war file
 ```
+Build the backend war file
+```shell script
 bash build.sh b
 ```
 Your war files are now find in the "wars" directory
