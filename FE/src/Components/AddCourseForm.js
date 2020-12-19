@@ -105,7 +105,6 @@ const AddCourseForm = props => {
                 loadOptions={loadOptions}
                 isMulti
                 placeholder='Enter course name e.g. csci201'
-                defaultOptions={defaultOptions}
             />
             <div>
                 <Button block style={{width: '30%', margin: '22px auto', minWidth: '30%'}} variant="outline-danger" onClick={createSchedules} >GENERATE SCHEDULES</Button>
