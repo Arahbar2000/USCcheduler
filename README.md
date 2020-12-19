@@ -51,4 +51,4 @@ cp *.xml <tomcat>/conf/Catalina/localhost/context.xml.default
 
 restart tomcat
 
-go to http://<public ipv4 address of machine>:8080/manager/html to deploy the two wars in tomcat
+go to http://{public ipv4 address of machine}:8080/manager/html to deploy the two wars in tomcat
