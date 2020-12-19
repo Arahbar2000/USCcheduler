@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import '../css/Welcome.css'
-import logo from '../misc/Scheduler_Logo.png';
+import logo from '../misc/Scheduler.png';
 import AddCourseForm from './AddCourseForm';
 import Schedule from './Schedule';
 import Nav from './Nav'
@@ -29,7 +29,7 @@ const Home = (props) => {
             {
                 search ? 
                     <div>
-                        <div style={{width: '30%', margin: '20px auto', maxWidth: '30%', textAlign: 'center'}}>
+                        <div style={{width: '50%', margin: '150px auto 20px auto', maxWidth: '50%', textAlign: 'center'}}>
                             <img id='mainLogo' src={logo} alt='schedule logo'/>
                         </div>
                         <AddCourseForm show={showSearch} {...props} /> 

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Navbar, Nav as Nv } from "react-bootstrap";
 import { LinkContainer } from 'react-router-bootstrap';
-import logo from '../misc/img.png';
+import logo from '../misc/Scheduler.png';
 import '../css/Nav.css'
 import NavDropdown from 'react-bootstrap/NavDropdown'
 
@@ -20,9 +20,11 @@ const Nav = (props) => {
 
   return (
     <Navbar>
+      {!props.search ? 
       <LinkContainer to='/'>
         <Navbar.Brand onClick={() => props.show(true)}><img id='navLogo' src={logo} /></Navbar.Brand>
-      </LinkContainer>
+      </LinkContainer> : null
+      }
       {/* <Nv onSelect={handleSelect} activeKey={activeKey}>
         <Navbar.Brand href="/">Home</Navbar.Brand>
         <LinkContainer to='/schedule'>
@@ -35,7 +37,7 @@ const Nav = (props) => {
 
       <Navbar.Toggle aria-controls="responsive-navbar-nav"/>
       <Navbar.Collapse id="responsive-navbar-nav" className="justify-content-end">
-        <Nv className="mr-auto">
+        <Nv className="ml-auto">
           {!props.search ? 
           <Nv.Link onClick={() => props.show(true)}>Modify Courses</Nv.Link> :
           <Nv.Link onClick={() => props.show(false)}>See Saved Schedules</Nv.Link>}

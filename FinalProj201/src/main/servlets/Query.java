@@ -44,8 +44,8 @@ public class Query extends HttpServlet {
             InitialContext ctx = new InitialContext();
             DataSource ds = (DataSource)ctx.lookup("java:comp/env/jdbc/db");
             dbcon = ds.getConnection();
-            String query = "select distinct department, courseNumber from Course where department like ?" + 
-                            " and courseNumber like ?;";
+            String query = "select distinct department, courseNumber, title from Course where department like ?" + 
+                            " and courseNumber like ? order by department asc;";
             // Declare our statement
             statement = dbcon.prepareStatement(query);
             statement.setString(1, department.equals("null") ? "%" : department + "%");
@@ -56,6 +56,7 @@ public class Query extends HttpServlet {
                 JsonObject course = new JsonObject();
                 course.addProperty("department", rs.getString("department"));
                 course.addProperty("courseNumber", rs.getString("courseNumber"));
+                course.addProperty("title", rs.getString("title"));
                 courses.add(course);
             }
             response.setStatus(200);

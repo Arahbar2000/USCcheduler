@@ -35,7 +35,7 @@ const AddCourseForm = props => {
             const courseOptions = courses.map(course => {
                 const name = course.department.toUpperCase() + course.courseNumber.toString();
                 return {
-                    label: name,
+                    label: name + ': ' + course.title,
                     value: name
                 }
             });

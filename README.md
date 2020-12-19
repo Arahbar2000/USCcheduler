@@ -26,7 +26,7 @@ Your war files are now find in the "wars" directory
 
 It is assumed that you already have installed tomcat and mysql in your linux machine
 
-Your mysql server should have a user called "scheduler" with a password of "1234"
+Make sure to change the url, username, and password in your context.xml to connect to your mysql database
 
 ssh into the linux machine
 
