@@ -8,6 +8,7 @@ import { generateSchedules } from '../Helpers/getSchedules';
 const AddCourseForm = props => {
     const [ query, setQuery ] = useState("");
     const [ options, setOptions ] = useState([]);
+    const [ defaultOptions, setDefaultOptions ] = useState([]);
     const [ selectedCourses, setSelectedCourses ] = useState([]);
     const [ loading, setLoading ] = useState(false);
     const attemptQuery = useRef(
@@ -16,9 +17,32 @@ const AddCourseForm = props => {
         }, 500)
     ).current
 
+    // useEffect(() => {
+    //     console.log('getting default options')
+    //     let department = null;
+    //     let courseNumber = null;
+    //     const url = new URL(API_URL + 'query');
+    //     url.search = new URLSearchParams({ department, courseNumber });
+    //     axios.get(url).then(response => {
+    //         const courses = response.data
+    //         const courseOptions = courses.map(course => {
+    //             const name = course.department.toUpperCase() + course.courseNumber.toString();
+    //             return {
+    //                 label: name + ': ' + course.title,
+    //                 value: name
+    //             }
+    //         });
+    //         setDefaultOptions(courseOptions)
+    //     })
+    //     .catch(error => {
+    //         console.log('error getting default options', error)
+    //         setDefaultOptions([]);
+    //     })
+    // }, []);
+
     const queryCourses = (query, cancelToken) => {
         if (!query) {
-            setOptions([]);
+            setOptions([])
             return;
         }
         setLoading(true);
@@ -63,6 +87,11 @@ const AddCourseForm = props => {
     }, [ attemptQuery, query ]);
 
     const handleChange = courses => {
+        if (courses != null) {
+            courses.map(course => {
+                course.label = course.value
+            });
+        } 
         setSelectedCourses(courses);
     }
 
@@ -121,7 +150,6 @@ const AddCourseForm = props => {
                 options={options} 
                 isMulti
                 placeholder='Enter course name e.g. csci201'
-                // menuIsOpen={options.length ? true : false}
             />
             <div>
                 <Button block style={{width: '30%', margin: '22px auto', minWidth: '30%'}} variant="outline-danger" onClick={createSchedules} >GENERATE SCHEDULES</Button>
