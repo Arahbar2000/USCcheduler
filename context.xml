@@ -11,5 +11,5 @@
       username="username" 
       password="password" 
       driverClassName="com.mysql.cj.jdbc.Driver"
-      url="jdbc:mysql://localhost:3306/scheduler"/>
+      url="jdbc:mysql://localhost:3306/database_name"/>
 </Context>

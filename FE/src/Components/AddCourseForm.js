@@ -32,6 +32,7 @@ const AddCourseForm = props => {
             cancelToken
         }).then(response => {
             const courses = response.data
+            console.log(courses)
             const courseOptions = courses.map(course => {
                 const name = course.department.toUpperCase() + course.courseNumber.toString();
                 return {

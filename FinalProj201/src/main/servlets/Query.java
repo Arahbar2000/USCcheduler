@@ -45,7 +45,7 @@ public class Query extends HttpServlet {
             DataSource ds = (DataSource)ctx.lookup("java:comp/env/jdbc/db");
             dbcon = ds.getConnection();
             String query = "select distinct department, courseNumber, title from Course where department like ?" + 
-                            " and courseNumber like ? order by department asc;";
+                            " and courseNumber like ? order by cast(department as unsigned), department asc;";    
             // Declare our statement
             statement = dbcon.prepareStatement(query);
             statement.setString(1, department.equals("null") ? "%" : department + "%");
