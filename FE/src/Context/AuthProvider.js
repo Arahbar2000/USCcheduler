@@ -6,34 +6,34 @@ const AuthContext = createContext();
 const AuthProvider = (props) => {
     const [auth, setAuth] = useState(false)
 
-    let checkIsLogined = async () => {
-        console.log("checking if logged in");
-        await fetch(API_URL + "session", {
-            method: "POST",
-            credentials: 'include'
-        }).then(response => response.json())
-        .then(data => {
-            console.log(data);
-            if (data.status === "success"){
-                setAuth(true);
-                console.log('is logged in');
-            }
-            else {
-                console.log(data);
-            }
-        })
-        .catch(error => {
-            console.log(error);
-        });
-    }
+    // let checkIsLogined = async () => {
+    //     console.log("checking if logged in");
+    //     await fetch(API_URL + "session", {
+    //         method: "POST",
+    //         credentials: 'include'
+    //     }).then(response => response.json())
+    //     .then(data => {
+    //         console.log(data);
+    //         if (data.status === "success"){
+    //             setAuth(true);
+    //             console.log('is logged in');
+    //         }
+    //         else {
+    //             console.log(data);
+    //         }
+    //     })
+    //     .catch(error => {
+    //         console.log(error);
+    //     });
+    // }
 
     useEffect(() => {
         // this function is called everytime the browser is refreshed
         // checks if the user is already logged in
         // if already logged in, set auth to true
-        if (!auth){
-            checkIsLogined();
-        }
+        // if (!auth){
+        //     checkIsLogined();
+        // }
         // cleanup auth
         // return () => setAuth(false);
     }, [ auth ]);

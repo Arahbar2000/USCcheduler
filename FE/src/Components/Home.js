@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import '../css/Welcome.css'
+import '../css/Welcome.css';
 import logo from '../misc/Scheduler.png';
 import AddCourseForm from './AddCourseForm';
 import Schedule from './Schedule';
