@@ -101,14 +101,8 @@ const AddCourseForm = props => {
         <div style={{margin: 'auto'}}>
             <AsyncSelect 
                 styles={styles} 
-<<<<<<< HEAD
-                onChange={handleChange} 
-                onInputChange={handleInputChange} 
-                options={options}
-=======
                 onChange={handleChange}
                 loadOptions={loadOptions}
->>>>>>> query
                 isMulti
                 placeholder='Enter course name e.g. csci201'
                 defaultOptions={defaultOptions}
