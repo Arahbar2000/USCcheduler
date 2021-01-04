@@ -28,15 +28,18 @@ const Home = (props) => {
             <Container>
             {
                 search ? 
-                    <div>
+                    <div id='home'>
                         <div style={{width: '50%', margin: '150px auto 20px auto', maxWidth: '50%', textAlign: 'center'}}>
                             <img id='mainLogo' src={logo} alt='schedule logo'/>
                         </div>
                         <AddCourseForm show={showSearch} {...props} /> 
                     </div> : 
-                    <Schedule show={showSearch} />
+                    <div>
+                        <Schedule show={showSearch} />
+                    </div>
             }
             </Container>
+            
         </div>
     );
 }

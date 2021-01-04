@@ -12,6 +12,11 @@
 #mainLogo {
     display: block;
     margin: auto;
+    height: 100%;
     width: 100%;
     padding-bottom: 0px;
+}
+
+#home {
+    margin: auto;
 }

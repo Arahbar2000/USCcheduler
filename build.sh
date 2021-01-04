@@ -4,6 +4,7 @@ then
     docker run -v $PWD/FE:/frontend maven:3.6.3-jdk-11 \
     mvn clean package -f /frontend/pom.xml &&
     cp ./FE/target/*.war wars/
+    cp ./FE/target/*.war /usr/local/Cellar/tomcat/9.0.40/libexec/webapps/
 elif [ $in = "b" ]
 then
     docker run -v $PWD/FinalProj201:/backend maven:3.6.3-jdk-11 \

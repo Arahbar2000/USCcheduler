@@ -1,9 +1,10 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import debounce from 'debounce-promise';
 import { API_URL } from '../env'
 import Button from 'react-bootstrap/Button';
 import { generateSchedules } from '../Helpers/getSchedules';
-import AsyncSelect from 'react-select/async';
+import { createFilter } from 'react-select';
+import AsyncSelect from 'react-select/async'
 import axios from 'axios';
 
 const styles = {
@@ -51,10 +52,35 @@ const queryCourses = async query => {
 const AddCourseForm = props => {
     const [ selectedCourses, setSelectedCourses ] = useState([]);
 
+    const [ defaultOptions, setDefaultOptions ] = useState([]);
+
     const loadOptions = useRef(debounce(async (query, callback) => {
         const courseOptions = await queryCourses(query);
         callback(courseOptions);
     }, 500)).current
+
+    useEffect(() => {
+         console.log('getting default options')
+         let department = null;
+         let courseNumber = null;
+         const url = new URL(API_URL + 'query');
+         url.search = new URLSearchParams({ department, courseNumber });
+         axios.get(url).then(response => {
+             const courses = response.data
+             const courseOptions = courses.map(course => {
+                 const name = course.department.toUpperCase() + course.courseNumber.toString();
+                 return {
+                     label: name + ': ' + course.title,
+                     value: name
+                 }
+             });
+             setDefaultOptions(courseOptions)
+         })
+         .catch(error => {
+             console.log('error getting default options', error)
+             setDefaultOptions([]);
+         })
+     }, []);
 
     const handleChange = courses => {
         if (courses != null) {
@@ -105,6 +131,7 @@ const AddCourseForm = props => {
                 loadOptions={loadOptions}
                 isMulti
                 placeholder='Enter course name e.g. csci201'
+
             />
             <div>
                 <Button block style={{width: '30%', margin: '22px auto', minWidth: '30%'}} variant="outline-danger" onClick={createSchedules} >GENERATE SCHEDULES</Button>

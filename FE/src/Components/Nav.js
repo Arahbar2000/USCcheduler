@@ -40,7 +40,7 @@ const Nav = (props) => {
         <Nv className="ml-auto">
           {!props.search ? 
           <Nv.Link onClick={() => props.show(true)}>Modify Courses</Nv.Link> :
-          <Nv.Link onClick={() => props.show(false)}>See Saved Schedules</Nv.Link>}
+          <Nv.Link onClick={() => props.show(false)}>Previous Selections</Nv.Link>}
         </Nv>
       </Navbar.Collapse>
     </Navbar>

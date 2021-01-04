@@ -109,12 +109,11 @@ const Schedule = (props) => {
         <div>
             <div style={{margin: 'auto'}}>
                 <Button variant='outline-dark' id="prev" className="buttons" onClick={handleLeftClick}>Prev Schedule</Button>
-                <span id="index">{scheduleIndex+1}<span style={{color: 'red'}}>/</span>{schedules.length}</span>
+                <span id="index">{schedules.length > 0 ? scheduleIndex+1 : 0}<span style={{color: 'red'}}>/</span>{schedules.length}</span>
                 <Button variant='outline-dark' id="next" className="buttons" onClick={handleRightClick}>Next Schedule</Button>
             </div>
             <div id="calendar">
                 <FullCalendar
-                    height={500}
                     schedulerLicenseKey={'CC-Attribution-NonCommercial-NoDerivatives'}
                     plugins={[ timeGridPlugin ]}
                     initialView={'timeGridWeek'}
@@ -123,6 +122,8 @@ const Schedule = (props) => {
                     dayHeaderFormat={{weekday: 'long'}}
                     events={schedules[scheduleIndex]}
                     allDaySlot={false}
+                    height={300}
+                    contentHeight={'auto'}
                     slotMinTime={'07:00:00'}
                     slotMaxTime={'22:00:00'}
                     customButtons={{
